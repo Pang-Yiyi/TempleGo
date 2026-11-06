@@ -1,0 +1,100 @@
+// TempleGo 離線快取
+// ⚠️ 新增或改名圖片時：把路徑加進 PRECACHE，並把 VERSION 加 1，遊客手機才會更新快取
+const VERSION = "v1";
+const CACHE = `templego-${VERSION}`;
+const FONT_CACHE = "templego-fonts";
+
+const PRECACHE = [
+  "./",
+  "index.html",
+  "manifest.webmanifest",
+  "css/style.css",
+  "js/data.js",
+  "js/app.js",
+  "assets/img/guide.webp",
+  "assets/img/map.svg",
+  "assets/img/door-gods.webp",
+  "assets/img/sanshan-scroll.svg",
+  "assets/img/kaojiang-scroll.svg",
+  "assets/img/plaza-scroll.svg",
+  "assets/img/bijiao-scroll.svg",
+  "assets/img/main-hall-pano.webp",
+  "assets/icons/icon-192.png",
+  "assets/icons/favicon.png",
+  "https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css",
+  "https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js",
+];
+
+// 程式與文字：先抓網路最新版，2.5 秒抓不到就用快取（廟裡收訊差也不會卡住）
+const NETWORK_FIRST = /\.(html|js|css|webmanifest)$|\/$/;
+
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k !== FONT_CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (e) => {
+  const req = e.request;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+
+  // Google 字型：有快取就先用，背景再更新
+  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+    e.respondWith(staleWhileRevalidate(req, FONT_CACHE));
+    return;
+  }
+
+  const sameOrigin = url.origin === self.location.origin;
+  if (!sameOrigin && url.hostname !== "cdnjs.cloudflare.com") return;
+
+  if (sameOrigin && (req.mode === "navigate" || NETWORK_FIRST.test(url.pathname))) {
+    e.respondWith(networkFirst(req));
+  } else {
+    e.respondWith(cacheFirst(req));
+  }
+});
+
+async function networkFirst(req) {
+  const cache = await caches.open(CACHE);
+  try {
+    const res = await withTimeout(fetch(req), 2500);
+    if (res.ok) cache.put(req, res.clone());
+    return res;
+  } catch {
+    return (await cache.match(req, { ignoreSearch: true }))
+      || (req.mode === "navigate" ? cache.match("index.html") : Response.error());
+  }
+}
+
+async function cacheFirst(req) {
+  const cache = await caches.open(CACHE);
+  const hit = await cache.match(req, { ignoreSearch: true });
+  if (hit) return hit;
+  const res = await fetch(req);
+  if (res.ok) cache.put(req, res.clone());
+  return res;
+}
+
+async function staleWhileRevalidate(req, name) {
+  const cache = await caches.open(name);
+  const hit = await cache.match(req);
+  const update = fetch(req).then((res) => {
+    if (res.ok || res.type === "opaque") cache.put(req, res.clone());
+    return res;
+  }).catch(() => hit);
+  return hit || update;
+}
+
+function withTimeout(promise, ms) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error("timeout")), ms);
+    promise.then((v) => { clearTimeout(t); resolve(v); }, (err) => { clearTimeout(t); reject(err); });
+  });
+}

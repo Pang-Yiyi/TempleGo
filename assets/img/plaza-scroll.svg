@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 500" width="1300" height="500">
+  <!-- 大茅埔聚落俯視示意：背山面溪、中軸大街、環庄護城河、刺竹、隘門、水口轉彎（依文獻繪製，非實測） -->
+  <defs>
+    <pattern id="tile" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#c4553b"/><path d="M0 5.5H6" stroke="#a3402b" stroke-width="1.2"/>
+    </pattern>
+    <pattern id="field" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#cfe0b4"/><path d="M0 7H14" stroke="#b9cf98" stroke-width="1.5"/>
+    </pattern>
+    <path id="hU" d="M-48 -28H48V28H22V-6H-22V28H-48Z"/>
+  </defs>
+
+  <rect width="1300" height="500" fill="url(#field)"/>
+
+  <!-- 莊背山 -->
+  <path d="M0 18H150Q120 80 140 150Q110 230 135 300Q112 380 140 482H0Z" fill="#62845a"/>
+  <path d="M0 18H95Q75 120 92 250Q70 360 90 482H0Z" fill="#4f7249"/>
+  <text x="48" y="250" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="20" font-weight="900" fill="#eef3e4" writing-mode="tb" letter-spacing="6">莊背山</text>
+
+  <!-- 大甲溪 -->
+  <path d="M1190 18Q1220 140 1200 250Q1180 370 1210 482H1300V18Z" fill="#8fb8cf"/>
+  <g fill="none" stroke="#e6f2f8" stroke-width="2.5" stroke-linecap="round">
+    <path d="M1230 90q10 12 0 24M1250 200q10 12 0 24M1235 320q10 12 0 24M1255 420q10 12 0 24"/>
+  </g>
+  <text x="1262" y="160" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="20" font-weight="900" fill="#2f5a72" writing-mode="tb" letter-spacing="6">大甲溪</text>
+
+  <!-- 刺竹（護城河外圈） -->
+  <rect x="150" y="50" width="920" height="400" rx="46" fill="none" stroke="#4f8a3e" stroke-width="12" stroke-linecap="round" stroke-dasharray="1 15"/>
+  <!-- 環庄護城河 -->
+  <rect x="170" y="70" width="880" height="360" rx="30" fill="#e9dfc6" stroke="#7fb6d6" stroke-width="14"/>
+  <!-- 水口：出庄前轉個彎 -->
+  <path d="M1050 404H1112V482" fill="none" stroke="#7fb6d6" stroke-width="14" stroke-linejoin="round"/>
+
+  <!-- 棋盤式道路 -->
+  <g fill="#d3c4a5">
+    <rect x="413" y="78" width="14" height="344"/><rect x="593" y="78" width="14" height="344"/>
+    <rect x="773" y="78" width="14" height="344"/><rect x="953" y="78" width="14" height="344"/>
+  </g>
+  <!-- 中軸大街 -->
+  <rect x="250" y="236" width="940" height="28" fill="#c2b08a"/>
+  <path d="M270 250H1180" stroke="#f4ecdc" stroke-width="2" stroke-dasharray="10 8"/>
+  <text x="700" y="232" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="15" font-weight="900" fill="#6d4a2a" letter-spacing="4">中軸大街</text>
+
+  <!-- 夥房（上下對稱） -->
+  <g fill="url(#tile)" stroke="#7a2a1c" stroke-width="1.5">
+    <use href="#hU" x="510" y="150"/><use href="#hU" x="690" y="150"/><use href="#hU" x="870" y="150"/>
+    <use href="#hU" x="510" y="350" transform="rotate(180 510 350)"/>
+    <use href="#hU" x="690" y="350" transform="rotate(180 690 350)"/>
+    <use href="#hU" x="870" y="350" transform="rotate(180 870 350)"/>
+    <use href="#hU" x="330" y="150"/><use href="#hU" x="330" y="350" transform="rotate(180 330 350)"/>
+  </g>
+
+  <!-- 泰興宮（中軸線起點，背山面溪） -->
+  <g>
+    <rect x="196" y="210" width="62" height="80" rx="3" fill="url(#tile)" stroke="#7a1712" stroke-width="2"/>
+    <path d="M227 206V294" stroke="#e3b54a" stroke-width="4" stroke-linecap="round"/>
+    <rect x="203" y="236" width="48" height="28" rx="4" fill="#fbf5e9" stroke="#7a1712"/>
+    <text x="227" y="255" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="12" font-weight="900" fill="#7a1712">泰興宮</text>
+  </g>
+
+  <!-- 隘門 -->
+  <g>
+    <rect x="1036" y="226" width="30" height="48" fill="#8a5a32" stroke="#4a2c18" stroke-width="1.5"/>
+    <path d="M1028 228H1074L1066 218H1036Z" fill="url(#tile)" stroke="#7a2a1c"/>
+    <rect x="1044" y="238" width="14" height="36" fill="#3b2416"/>
+  </g>
+  <text x="1051" y="300" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="13" font-weight="900" fill="#6d4a2a">隘門</text>
+
+  <!-- 方向提示 -->
+  <text x="290" y="470" font-family="Noto Sans TC, sans-serif" font-size="13" fill="#4a5a3a">背山 ←</text>
+  <text x="1000" y="470" text-anchor="end" font-family="Noto Sans TC, sans-serif" font-size="13" fill="#4a5a3a">→ 面溪</text>
+  <text x="1290" y="476" text-anchor="end" font-family="Noto Sans TC, sans-serif" font-size="11" fill="#2f5a72" opacity=".9">插畫示意</text>
+
+  <rect x="0" y="0" width="1300" height="14" fill="#7a1712"/>
+  <rect x="0" y="486" width="1300" height="14" fill="#7a1712"/>
+  <rect x="0" y="14" width="1300" height="4" fill="#e3b54a"/>
+  <rect x="0" y="482" width="1300" height="4" fill="#e3b54a"/>
+</svg>
