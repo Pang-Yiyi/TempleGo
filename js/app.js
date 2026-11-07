@@ -139,8 +139,10 @@
     clearHotspots();
     destroyPano();
     currentImage = null;
-    if (s.image) {
-      showImage(s.image, () => playStep());
+    // 第一句有指定 image（例如先看實景照片）就直接開那張，不會先閃過長卷
+    const first = s.script[0]?.image || s.image;
+    if (first) {
+      showImage(first, () => playStep());
     } else {
       setScene("pano", s.script[0]?.focus);
       playStep();
