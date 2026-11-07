@@ -97,7 +97,8 @@
     const done = new Set(loadStamps());
     const ready = T.stops.filter((s) => s.ready);
     const got = ready.filter((s) => done.has(s.id)).length;
-    $("mapStamps").textContent = `印章 ${got} / ${ready.length}`;
+    $("mapStamps").textContent = got === ready.length ? "🏅 完成卡" : `印章 ${got} / ${ready.length} ›`;
+    $("mapStamps").classList.toggle("complete", got === ready.length);
     $("mapLine").textContent = fill(got === ready.length && T.map.doneSay ? T.map.doneSay : T.map.say);
     $("mapWrap").querySelectorAll(".pin").forEach((p) => p.remove());
     T.stops.forEach((s, i) => {
@@ -158,9 +159,12 @@
     setScene("image");
     $("sceneHint").textContent = vertical ? "↑ 上下滑動看看 ↓" : "← 左右滑動看看 →";
     showCredit(meta);
-    const done = () => { scene.scrollLeft = 0; scene.scrollTop = 0; onReady?.(); };
+    const inner = $("sceneInner");
+    const done = () => { scene.scrollLeft = 0; scene.scrollTop = 0; inner.classList.remove("fading"); onReady?.(); };
     if (img.getAttribute("src") === src && img.complete) return done();
+    inner.classList.add("fading");
     img.onload = done;
+    img.onerror = done;
     img.alt = meta?.title || stop().title;
     img.src = src;
   }
@@ -350,6 +354,8 @@
     sceneMode = mode;
     const pano = mode === "pano";
     scene.classList.toggle("pano-mode", pano);
+    // 照片與環景滿版（標題列浮在上面）；插畫長卷的標題在圖上，標題列改回一般位置
+    $("stop").classList.toggle("immersive", pano || !!T.photos?.[currentImage]);
     if (pano) scene.classList.remove("vertical");
     $("sceneInner").hidden = pano;
     $("pano").hidden = !pano;
@@ -542,7 +548,184 @@
     $("stampMsg").innerHTML = got >= total
       ? `🎉 恭喜！${total} 枚印章全部收集完成<br>謝謝你走完泰興宮！`
       : `已收集 <b>${got}</b> / ${total} 枚印章`;
-    $("toMapBtn").textContent = got >= total ? "回到地圖" : "回到地圖，選下一站";
+    const complete = got >= total;
+    if (complete && !store.get(DONE_KEY)) store.set(DONE_KEY, new Date().toISOString());
+    $("cardFromStamp").hidden = !complete;
+    $("toMapBtn").className = complete ? "btn ghost" : "btn primary";
+    $("toMapBtn").textContent = complete ? "回到地圖" : "回到地圖，選下一站";
     $("stampLayer").hidden = false;
   }
+
+  // ---------- 集章卡（canvas 畫成 PNG，可分享或存檔） ----------
+  const DONE_KEY = "templego-complete";
+  const NAME_KEY = "templego-name";
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const CW = 1080, CH = 1350;
+  const SERIF = '"Noto Serif TC", serif', SANS = '"Noto Sans TC", sans-serif';
+  let card = { blob: null, url: null, token: 0 };
+
+  const loadImg = (src) => new Promise((res) => {
+    const im = new Image();
+    im.onload = () => res(im); im.onerror = () => res(null);
+    im.src = src;
+  });
+  const fmtDate = (d) => `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+  function rrect(g, x, y, w, h, r) {
+    g.beginPath(); g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+  }
+
+  function drawStamp(g, x, y, r, deg, word, seed) {
+    g.save(); g.translate(x, y); g.rotate(deg * Math.PI / 180);
+    const ink = "rgba(200,42,32,.92)";
+    g.fillStyle = "rgba(217,56,44,.07)"; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill();
+    g.strokeStyle = ink;
+    g.lineWidth = 9; g.beginPath(); g.arc(0, 0, r, 0, 7); g.stroke();
+    g.lineWidth = 3; g.beginPath(); g.arc(0, 0, r - 16, 0, 7); g.stroke();
+    g.fillStyle = ink; g.textAlign = "center"; g.textBaseline = "middle";
+    g.font = `700 24px ${SERIF}`; g.fillText("泰 興 宮", 0, -r * 0.56);
+    g.font = `900 ${word.length > 2 ? 54 : 72}px ${SERIF}`; g.fillText(word, 0, 4);
+    g.font = `700 22px ${SERIF}`; g.fillText("到 此 一 遊", 0, r * 0.56);
+    // 印泥斑駁感：用紙色點掉一些（固定亂數，每次畫都一樣）
+    let s = seed * 9301 + 49297;
+    const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+    g.fillStyle = "rgba(251,245,233,.55)";
+    for (let i = 0; i < 70; i++) {
+      const a = rnd() * 6.283, d = rnd() * (r + 6);
+      g.beginPath(); g.arc(Math.cos(a) * d, Math.sin(a) * d, 1 + rnd() * 3.2, 0, 7); g.fill();
+    }
+    g.restore();
+  }
+  function drawEmpty(g, x, y, r, n) {
+    g.save();
+    g.strokeStyle = "#cdbda6"; g.lineWidth = 4; g.setLineDash([14, 12]);
+    g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke();
+    g.fillStyle = "#cdbda6"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.font = `900 72px ${SERIF}`; g.fillText(String(n), x, y + 4);
+    g.restore();
+  }
+
+  async function renderCard() {
+    const token = ++card.token;
+    const ready = T.stops.filter((s) => s.ready);
+    const done = new Set(loadStamps());
+    const got = ready.filter((s) => done.has(s.id)).length;
+    const complete = got === ready.length;
+    const name = $("cardName").value.trim();
+    const doneAt = store.get(DONE_KEY);
+    const date = complete && doneAt ? new Date(doneAt) : new Date();
+
+    const title = "泰興宮 集章卡";
+    const sub = complete ? `${ready.length} 站全部走完，印章收集完成！` : `已收集 ${got} / ${ready.length} 枚印章`;
+    const say = complete ? ["謝謝你走完泰興宮，", "歡迎再來大茅埔坐坐！"]
+                         : [`還有 ${ready.length - got} 站等你，`, "走完再來領完成卡！"];
+    const who = `${name || "旅人"} 到此一遊`;
+    const labels = ready.map((s) => s.title.split("・")[0]);
+    const allText = [title, sub, ...say, who, ...labels, ...ready.map((s) => s.stamp),
+      "泰興宮到此一遊台中東勢大茅埔手機導覽完成—0123456789./", T.guide.name].join("");
+    try {
+      await Promise.all([
+        document.fonts.load(`900 80px "Noto Serif TC"`, allText),
+        document.fonts.load(`600 40px "Noto Serif TC"`, allText),
+        document.fonts.load(`500 30px "Noto Sans TC"`, allText),
+      ]);
+    } catch {}
+    const guide = await loadImg(T.guide.poses[complete ? "happy" : "default"] || T.guide.poses.default);
+    if (token !== card.token) return;
+
+    const c = document.createElement("canvas"); c.width = CW; c.height = CH;
+    const g = c.getContext("2d");
+    // 底：紅框＋米色紙＋金線
+    g.fillStyle = "#7a1712"; g.fillRect(0, 0, CW, CH);
+    g.fillStyle = "#fbf5e9"; rrect(g, 36, 36, CW - 72, CH - 72, 28); g.fill();
+    g.save(); rrect(g, 36, 36, CW - 72, CH - 72, 28); g.clip();
+
+    g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.fillStyle = "#6d5c4f"; g.font = `500 30px ${SANS}`;
+    g.fillText("台中・東勢・大茅埔", CW / 2, 140);
+    g.fillStyle = "#7a1712"; g.font = `900 92px ${SERIF}`;
+    g.fillText(title, CW / 2, 250);
+    g.fillStyle = "#1d1410"; g.font = `500 34px ${SANS}`;
+    g.fillText(sub, CW / 2, 318);
+
+    // 印章：每排最多 3 個
+    const r = 118, rows = [], degs = [-9, 6, -4, 8, -6, 4];
+    for (let i = 0; i < ready.length; i += 3) rows.push(ready.slice(i, i + 3));
+    rows.forEach((row, ri) => {
+      const y = 510 + ri * 300;
+      row.forEach((s, j) => {
+        const i = ri * 3 + j;
+        const x = CW / 2 + (j - (row.length - 1) / 2) * 300;
+        if (done.has(s.id)) drawStamp(g, x, y, r, degs[i % degs.length], s.stamp, i + 1);
+        else drawEmpty(g, x, y, r, s.pin?.n || i + 1);
+        g.fillStyle = done.has(s.id) ? "#1d1410" : "#a8977f";
+        g.textAlign = "center"; g.textBaseline = "alphabetic";
+        g.font = `600 32px ${SERIF}`; g.fillText(labels[i], x, y + r + 52);
+      });
+    });
+
+    // 志永哥＋對話框
+    const baseY = CH - 60;
+    if (guide) {
+      const h = 330, w = h * guide.width / guide.height;
+      g.drawImage(guide, 250 - w / 2, baseY - h, w, h);
+    }
+    const bx = 430, by = 1004, bw = 570, bh = 150;
+    g.fillStyle = "#fff"; g.strokeStyle = "#7a1712"; g.lineWidth = 4;
+    rrect(g, bx, by, bw, bh, 26); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(bx + 2, by + 60); g.lineTo(bx - 30, by + 88); g.lineTo(bx + 2, by + 96);
+    g.fill(); g.beginPath(); g.moveTo(bx, by + 60); g.lineTo(bx - 30, by + 88); g.lineTo(bx, by + 96); g.stroke();
+    g.textAlign = "left"; g.fillStyle = "#1d1410"; g.font = `600 36px ${SERIF}`;
+    g.fillText(say[0], bx + 32, by + 64); g.fillText(say[1], bx + 32, by + 116);
+
+    g.fillStyle = "#7a1712"; g.font = `900 46px ${SERIF}`;
+    g.fillText(who, bx + 4, 1222, bw);
+    g.fillStyle = "#6d5c4f"; g.font = `500 28px ${SANS}`;
+    g.fillText(`${fmtDate(date)}${complete ? " 完成" : ""}　｜　泰興宮手機導覽`, bx + 4, 1268, bw);
+    g.restore();
+
+    // 金色內框
+    g.strokeStyle = "#e3b54a"; g.lineWidth = 4; rrect(g, 54, 54, CW - 108, CH - 108, 18); g.stroke();
+
+    const blob = await new Promise((res) => c.toBlob(res, "image/png"));
+    if (token !== card.token || !blob) return;
+    if (card.url) URL.revokeObjectURL(card.url);
+    card.blob = blob; card.url = URL.createObjectURL(blob);
+    $("cardImg").src = card.url;
+    const file = new File([blob], "泰興宮集章卡.png", { type: "image/png" });
+    $("cardShare").hidden = !(navigator.canShare && navigator.canShare({ files: [file] }));
+  }
+
+  function openCard() {
+    $("cardName").value = store.get(NAME_KEY) || "";
+    $("cardLayer").hidden = false;
+    renderCard();
+  }
+  let nameTimer = null;
+  $("cardName").oninput = () => {
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(() => { store.set(NAME_KEY, $("cardName").value.trim()); renderCard(); }, 350);
+  };
+  $("mapStamps").onclick = openCard;
+  $("cardFromStamp").onclick = openCard;
+  $("cardClose").onclick = () => ($("cardLayer").hidden = true);
+  $("cardSave").onclick = () => {
+    if (!card.url) return;
+    const a = document.createElement("a");
+    a.href = card.url; a.download = "泰興宮集章卡.png";
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  $("cardShare").onclick = async () => {
+    if (!card.blob) return;
+    const file = new File([card.blob], "泰興宮集章卡.png", { type: "image/png" });
+    try {
+      await navigator.share({ files: [file], title: "泰興宮集章卡", text: "我在台中東勢大茅埔泰興宮集章！" });
+    } catch (e) {
+      if (e.name !== "AbortError") toast("這支手機不支援直接分享，請改用「存成圖片」");
+    }
+  };
 })();

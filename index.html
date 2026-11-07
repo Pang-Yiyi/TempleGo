@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#7a1712">
+  <meta name="theme-color" content="#15120f">
   <title>泰興宮導覽</title>
   <meta name="description" content="跟著在地人，看見東勢大茅埔泰興宮的細節">
   <!-- 測試階段：不讓搜尋引擎收錄。導覽人物簽署肖像同意書後，刪除這行 -->
@@ -49,7 +49,7 @@
       <header class="topbar">
         <button class="icon-btn" id="mapHomeBtn" aria-label="回首頁">‹</button>
         <h2>泰興宮鳥瞰圖</h2>
-        <span class="progress" id="mapStamps"></span>
+        <button class="stamp-chip" id="mapStamps" aria-label="查看集章卡"></button>
       </header>
       <div class="map-area">
         <div class="map-wrap" id="mapWrap">
@@ -87,6 +87,7 @@
         </div>
         <div class="pano" id="pano" hidden></div>
       </div>
+      <div class="scene-shade" aria-hidden="true"></div>
       <div class="scene-hint" id="sceneHint">← 左右滑動看看 →</div>
       <button class="gyro-btn" id="gyroBtn" aria-pressed="false">轉動手機看</button>
       <a class="credit" id="credit" target="_blank" rel="noopener" hidden></a>
@@ -120,10 +121,27 @@
       <div class="stamp-layer" id="stampLayer" hidden>
         <div class="stamp" id="stamp"><small>泰興宮</small><strong id="stampName"></strong><small>到此一遊</small></div>
         <p id="stampMsg"></p>
+        <button class="btn primary" id="cardFromStamp" hidden>領取集章完成卡</button>
         <button class="btn primary" id="toMapBtn">回到地圖，選下一站</button>
         <button class="btn ghost" id="replayBtn">再玩一次</button>
       </div>
     </section>
+
+    <!-- 集章卡 -->
+    <div class="card-layer" id="cardLayer" hidden>
+      <div class="card-box">
+        <img id="cardImg" alt="泰興宮集章卡">
+        <p class="card-tip">也可以長按圖片直接儲存</p>
+        <label class="card-name">卡片上的名字（可不填）
+          <input id="cardName" maxlength="10" placeholder="例如：小明" autocomplete="nickname">
+        </label>
+        <div class="card-actions">
+          <button class="btn primary" id="cardShare" hidden>分享</button>
+          <button class="btn primary" id="cardSave">存成圖片</button>
+        </div>
+        <button class="btn ghost" id="cardClose">關閉</button>
+      </div>
+    </div>
 
     <div class="toast" id="toast" hidden></div>
   </main>
