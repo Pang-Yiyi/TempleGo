@@ -9,15 +9,49 @@ window.TOUR = {
   },
 
   guide: {
-    name: "阿伯", // TODO: 換成本人同意使用的暱稱
-    poses: {
-      default: "assets/img/guide.webp",
-      // wave:  "assets/img/guide-wave.webp",
-      // point: "assets/img/guide-point.webp",
-      // think: "assets/img/guide-think.webp",
-      // happy: "assets/img/guide-happy.webp",
+    name: "志永哥",
+    // ★ 切換人物：同意書簽署前用 "q"；簽署後改成 "real"（步驟見 README「換成真人」）
+    style: "q",
+    styles: {
+      // Q版志永哥（SVG 手繪，依照片特徵：黑色鴨舌帽、白 T、深藍袖套、雙手交握）
+      q: {
+        default: "assets/img/guide-q-default.svg",
+        wave: "assets/img/guide-q-wave.svg",
+        point: "assets/img/guide-q-point.svg",
+        think: "assets/img/guide-q-think.svg",
+        happy: "assets/img/guide-q-happy.svg",
+      },
+      // 真人去背照：目前只有一張，其他動作會自動用 default；補拍後在這裡加上 wave / point / think / happy
+      real: {
+        default: "assets/img/guide.webp",
+      },
     },
   },
+
+  // 網路照片來源（Wikimedia Commons，CC BY-SA 4.0）：畫面上會自動顯示標示，開場「照片與資料來源」也會列出
+  // 這些照片經過縮放／裁切，修改後的版本同樣以 CC BY-SA 4.0 釋出
+  // fit: "width" 的照片會撐滿寬度、改成上下滑動（適合直式照片）
+  photos: {
+    "assets/photos/temple-front.webp": {
+      title: "泰興宮山門", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
+      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-06.jpg" },
+    "assets/photos/front-steps.webp": {
+      title: "山門前的石獅與階梯", author: "Mingwu1977（大茅埔調查團）", edit: "裁切、縮放",
+      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-06.jpg" },
+    "assets/photos/door-gods-photo.webp": {
+      title: "山門門神", author: "Isocyclo", edit: "縮放",
+      page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_190.jpg" },
+    "assets/photos/guowang-board.webp": {
+      title: "「國王宮」木牌", author: "Isocyclo", edit: "裁切、縮放", fit: "width",
+      page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_319.jpg" },
+    "assets/photos/bijiao-front.webp": {
+      title: "後殿弼教堂與天公爐", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
+      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-16.jpg" },
+    "assets/photos/bijiao-altar.webp": {
+      title: "弼教堂神龕", author: "Isocyclo", edit: "縮放",
+      page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_228.jpg" },
+  },
+  photoLicense: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" },
 
   // 鳥瞰地圖：image 之後可換成空拍照或實測平面圖，只要同步調整各站 pin 座標
   map: {
@@ -53,6 +87,13 @@ window.TOUR = {
           desc: "進出庄頭的大門，和護城河、刺竹一起守護庄民。" },
         { id: "bend", x: 85.5, y: 89, title: "水口轉個彎",
           desc: "圳水流出庄之前，特別轉了一個彎再慢慢流出去。客家人說「水主財」、「有曲才有財」，轉個彎就能把財留在庄裡。" },
+        // ↓ 實景照片熱點（img 指定屬於哪張照片）
+        { id: "plaque", img: "assets/photos/temple-front.webp", x: 50, y: 66, title: "「國王廟」匾額",
+          desc: "山門正中央掛著「國王廟」，告訴大家這裡供奉的是三山國王。" },
+        { id: "mountain", img: "assets/photos/temple-front.webp", x: 78, y: 30, title: "背後的山",
+          desc: "廟後面這片山，村民叫它「莊背山」，也叫「龍背林」。泰興宮就是背靠著山、面向大甲溪。" },
+        { id: "lion", img: "assets/photos/temple-front.webp", x: 32, y: 82, title: "石獅",
+          desc: "山門兩側各有一隻石獅，守護著廟門。到現場可以比比看，兩隻長得一不一樣？" },
       ],
 
       script: [
@@ -77,6 +118,11 @@ window.TOUR = {
           right: "沒錯！有曲才有財，轉個彎就能把財留在庄裡。" },
         { focus: 40,
           say: "可惜這些年人口和車子變多，護城河大部分都被加蓋，變成停車場了。" },
+        { image: "assets/photos/temple-front.webp", focus: 50, pose: "wave",
+          say: "這就是現在泰興宮的山門！跟剛剛的地圖對照看看。" },
+        { type: "explore", pose: "point", targets: ["plaque", "mountain", "lion"],
+          say: "照片裡有三個發光的地方，點點看！",
+          done: "下次來，記得站在山門前，對照看看喔！" },
         { type: "lookup",
           say: "站在廟埕往前看，那條直直的大街就是中軸線。等一下在庄裡散步時，留意看看路邊的水圳喔！" },
         { pose: "happy",
@@ -86,35 +132,36 @@ window.TOUR = {
     {
       id: "door-gods",
       title: "三川門・門神",
-      // ⚠️ 照片中的門有「三界神功」對聯，可能是後殿弼教堂的門，待現場確認後調整 pin 位置
+      // 已確認：Commons「202104 WMTW x HPCF workshop 188」拍到同一組門神與對聯，位於山門（三川門）
       pin: { n: 2, x: 50, y: 62 },
       ready: true,
       intro: "大門上的兩位將軍日夜守著廟門。你認得哪一位是誰嗎？",
-      image: "assets/img/door-gods.webp",
+      // 照片：Commons workshop 190（Isocyclo），沒有人入鏡；原本的 young1.jpg 版本被人物擋住，已停用
+      image: "assets/photos/door-gods-photo.webp",
       stamp: "門神",
 
       hotspots: [
-        { id: "weichi", x: 40, y: 48, title: "尉遲恭",
+        { id: "weichi", x: 22, y: 47, title: "尉遲恭",
           desc: "黑臉、圓眼，表情最兇的這位是尉遲恭，唐朝開國名將。臉畫得這麼威猛，就是要把邪祟嚇跑。" },
-        { id: "qin", x: 66, y: 55, title: "秦叔寶",
+        { id: "qin", x: 83, y: 45, title: "秦叔寶",
           desc: "白臉、留長鬍子，神情比較沉穩，他是秦叔寶，民間也叫他「秦瓊」，同樣是唐朝名將。" },
-        { id: "helmet", x: 38, y: 24, title: "華麗的頭盔", explore: true,
+        { id: "helmet", x: 22, y: 27, title: "華麗的頭盔", explore: true,
           desc: "把頭盔放大看：頂上有一隻展翅的鳥形裝飾，旁邊還有捲雲花紋。畫師連這麼小的地方都沒放過。" },
-        { id: "whip", x: 31.5, y: 64, title: "一節一節的兵器", explore: true,
+        { id: "whip", x: 9.5, y: 62, title: "一節一節的兵器", explore: true,
           desc: "尉遲恭手邊這根金色兵器，一節一節像竹子，就是他的招牌武器「竹節鋼鞭」。" },
-        { id: "flags", x: 30, y: 17, title: "背後的旗子", explore: true,
+        { id: "flags", x: 35, y: 28, title: "背後的旗子", explore: true,
           desc: "將軍背後插著好幾支旗，跟戲曲裡武將背上的「靠旗」很像，表示他是領兵打仗的大將。" },
-        { id: "couplet", x: 94, y: 48, title: "門邊的對聯", explore: true,
-          desc: "兩側石柱刻著金字對聯。小提醒：傳統對聯由上往下讀，面對大門時右邊是上聯、左邊是下聯。" },
+        { id: "roof", x: 55, y: 22, title: "門後的屋頂", explore: true,
+          desc: "從兩扇門中間望進去，看得到廟裡屋頂上彩色的人物和花鳥裝飾。等一下進廟，記得抬頭看！" },
       ],
 
       script: [
         { pose: "wave", focus: 50,
           say: "我們就從大門開始吧！" },
-        { pose: "point", focus: 52,
+        { pose: "point", focus: 50,
           say: "進廟之前，先看大門上這兩位。他們是「門神」，專門幫廟守門的將軍。" },
         { say: "一位是秦叔寶，一位是尉遲恭，兩位都是唐朝的大將。" },
-        { type: "quiz", pose: "think", focus: 52,
+        { type: "quiz", pose: "think", focus: 50,
           say: "考考你：黑臉、眼睛瞪得大大的，是哪一位？在畫面上點點看！",
           choices: ["weichi", "qin"], answer: "weichi",
           wrong: "嘿，這位臉比較白、留長鬍子，再找找另一位！",
@@ -157,6 +204,11 @@ window.TOUR = {
         { id: "west", x: 74.5, y: 44, title: "西營・白旗", desc: "西方屬金，令旗是白色。" },
         { id: "east", x: 96, y: 44, title: "東營・綠旗", desc: "東方屬木，令旗是綠色。" },
         { id: "south", x: 86.5, y: 69, title: "南營・紅旗", desc: "南方屬火，令旗是紅色。" },
+        // ↓ 實景照片：山門前的石獅與階梯
+        { id: "dragonSide", img: "assets/photos/front-steps.webp", x: 70, y: 64, title: "龍邊",
+          desc: "面向廟門時，你的右手邊就是龍邊（從神明往外看是左手邊）。馬草和水就放在廟前龍邊的階梯上。" },
+        { id: "tigerSide", img: "assets/photos/front-steps.webp", x: 24, y: 64, title: "虎邊",
+          desc: "面向廟門時，左手邊是虎邊。" },
       ],
 
       script: [
@@ -172,7 +224,13 @@ window.TOUR = {
         { type: "explore", pose: "point", targets: ["grass", "water"],
           say: "點點看階梯上的兩個桶子！",
           done: "戰馬吃飽喝足，才有力氣保護庄頭！" },
-        { focus: 17,
+        { image: "assets/photos/front-steps.webp", focus: 50, pose: "point",
+          say: "來看看真正的廟前！這是山門前的階梯和兩隻石獅。" },
+        { type: "quiz", pose: "think", choices: ["dragonSide", "tigerSide"], answer: "dragonSide",
+          say: "在照片上點出「龍邊」是哪一邊？",
+          wrong: "這邊是虎邊喔！提示：面向廟門，龍邊在右手邊。",
+          right: "答對！面向廟門的右手邊就是龍邊。" },
+        { image: "assets/img/kaojiang-scroll.svg", focus: 17,
           say: "廟裡面也要準備供品。廟祝會擲筊，選出十位「將頭」來負責準備。" },
         { type: "explore", pose: "point", targets: ["sansheng", "wine", "meat", "jiao"],
           say: "供桌上和地上有什麼？點點看！" },
@@ -224,6 +282,16 @@ window.TOUR = {
         { id: "hut", x: 84, y: 66, title: "茅草頂的國王宮",
           desc: "1851 年開始集資，1856 年完工。蓋好之後，張寧壽、楊及億、張登龍等人還捐出水田當廟產，用田租支付祭祀的費用。" },
         // ↓ 環景熱點：yaw 是左右角度（0 = 正前方，180 = 背後），pitch 是上下角度（90 = 正上方）
+        // ↓ 實景照片：「國王宮」木牌（直式，上下滑動）
+        { id: "boardName", img: "assets/photos/guowang-board.webp", x: 65, y: 24, title: "國王宮",
+          desc: "木牌上寫著「國王宮」，就是泰興宮最早的名字。" },
+        { id: "boardYear", img: "assets/photos/guowang-board.webp", x: 81, y: 16, title: "咸豐辛亥元年",
+          desc: "「咸豐辛亥元年」就是 1851 年，也就是大家開始集資建廟的那一年。" },
+        { id: "boardDonors", img: "assets/photos/guowang-board.webp", x: 73, y: 41, title: "三位先賢",
+          desc: "木牌刻著「信士張寧壽、楊及億、張登龍，施出慶福庄大租股半、水田股半敬奉」。三位捐出田產，用田租支持廟裡的祭祀。" },
+        { id: "boardOld", img: "assets/photos/guowang-board.webp", x: 33, y: 37, title: "兩塊木牌",
+          desc: "左邊這塊顏色比較深、看起來比較舊，右邊這塊字跡清楚。仔細比對，兩塊刻的內容幾乎一模一樣。" },
+        // ↓ 環景熱點
         { id: "altar", yaw: 0, pitch: 12, title: "正殿神龕",
           desc: "三山國王就供奉在這裡。進到殿裡，請不要站在神明的正前方擋住別人參拜喔。" },
         { id: "ceiling", yaw: 0, pitch: 72, title: "抬頭看",
@@ -256,6 +324,11 @@ window.TOUR = {
           options: ["泰興宮", "國王宮", "王爺廟"], answer: 1,
           wrong: "提示：跟三山「國王」有關喔！",
           right: "答對！一開始叫「國王宮」，後來才改名泰興宮。" },
+        { image: "assets/photos/guowang-board.webp", focus: 20, pose: "happy",
+          say: "給你看一樣寶貝！這是寫著「國王宮」的木牌，上下滑動看看。" },
+        { type: "explore", pose: "point", targets: ["boardName", "boardYear", "boardDonors", "boardOld"],
+          say: "點點看，木牌上寫了什麼？",
+          done: "一百七十多年前的事，就刻在這塊木牌上！" },
         { scene: "pano", focus: { yaw: 0, pitch: 5 }, pose: "wave",
           say: "故事聽完了，我們走進正殿看看！用手指拖曳畫面，或按「轉動手機看」，原地轉一圈。" },
         { type: "explore", pose: "point", targets: ["altar", "ceiling", "door"],
@@ -290,6 +363,17 @@ window.TOUR = {
           desc: "也就是三國時代的關羽，大家熟悉的「關公」。弼教堂裡還陪祀關平、周倉兩位將軍。" },
         { id: "fuyou", x: 77.8, y: 66, title: "孚佑帝君",
           desc: "也就是八仙之一的呂洞賓。" },
+        // ↓ 實景照片：弼教堂外觀與神龕
+        { id: "tiangonglu", img: "assets/photos/bijiao-front.webp", x: 48, y: 86, title: "天公爐",
+          desc: "一般廟宇的天公爐多放在前殿，泰興宮卻放在後堂弼教堂前面，這是典型的客家廟宇配置。" },
+        { id: "bijiaoRoof", img: "assets/photos/bijiao-front.webp", x: 50, y: 18, title: "屋脊裝飾",
+          desc: "屋脊上有龍和各種彩色裝飾。到現場記得抬頭看！" },
+        { id: "bijiaoSign", img: "assets/photos/bijiao-altar.webp", x: 60, y: 88, title: "「弼教堂」",
+          desc: "神桌前面寫著「弼教堂」三個字（傳統寫法由右往左讀）。" },
+        { id: "bijiaoDragon", img: "assets/photos/bijiao-altar.webp", x: 77, y: 13, title: "金色的龍",
+          desc: "神龕後方有一條金色的龍，盤在雲裡。" },
+        { id: "bijiaoCouplet", img: "assets/photos/bijiao-altar.webp", x: 11, y: 30, title: "柱子上的楹聯",
+          desc: "後殿有兩對楹聯是庄裡的書法家邱丙坤寫的。這是不是其中一對？到現場找找看落款！" },
         { id: "siming", x: 91.4, y: 66, title: "司命真君",
           desc: "也就是灶君，守護一家人的平安。" },
       ],
@@ -317,6 +401,14 @@ window.TOUR = {
           options: ["輔助", "打仗", "下雨"], answer: 0,
           wrong: "再想想，跟「幫忙」有關喔！",
           right: "對！「弼」是輔助的意思，「弼教」可以想成輔助教化，幫大家改掉壞習慣。" },
+        { image: "assets/photos/bijiao-front.webp", focus: 50, pose: "wave",
+          say: "這就是現在的弼教堂！" },
+        { type: "explore", pose: "point", targets: ["tiangonglu", "bijiaoRoof"],
+          say: "照片裡有兩個發光的地方，點點看！" },
+        { image: "assets/photos/bijiao-altar.webp", focus: 55,
+          say: "走進去，這就是弼教堂的神龕。" },
+        { type: "explore", pose: "point", targets: ["bijiaoSign", "bijiaoDragon", "bijiaoCouplet"],
+          say: "左右滑一滑，找找三個發光的地方！" },
         { say: "弼教堂的左殿還有十殿閻王和牛頭、馬面，右殿有城隍爺和文、武判官。" },
         { type: "lookup",
           say: "抬頭看看弼教堂兩邊的對聯，其中有兩對，是庄裡的書法家邱丙坤寫的喔！" },

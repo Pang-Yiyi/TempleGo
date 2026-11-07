@@ -35,6 +35,12 @@
           <li>聲音預設關閉，開啟請戴耳機</li>
           <li>請勿擋在神明正前方、殿內不用閃光燈</li>
         </ul>
+        <button class="link-btn" id="creditsBtn">照片與資料來源</button>
+      </div>
+      <div class="sheet credits-sheet" id="creditsSheet" hidden>
+        <h3>照片與資料來源</h3>
+        <div id="creditsList"></div>
+        <button class="btn" id="creditsClose">關閉</button>
       </div>
     </section>
 
@@ -83,6 +89,7 @@
       </div>
       <div class="scene-hint" id="sceneHint">← 左右滑動看看 →</div>
       <button class="gyro-btn" id="gyroBtn" aria-pressed="false">轉動手機看</button>
+      <a class="credit" id="credit" target="_blank" rel="noopener" hidden></a>
       <div class="counter" id="counter" hidden></div>
       <div class="choice" id="choice" hidden></div>
 

@@ -51,6 +51,7 @@
   // ---------- 開場 ----------
   $("templeName").textContent = T.temple.name;
   $("templeSub").textContent = T.temple.subtitle;
+  T.guide.poses = T.guide.styles[T.guide.style] || T.guide.styles.q;
   $("introGuide").src = T.guide.poses.default;
   $("speaker").textContent = T.guide.name;
   $("guideImg").src = T.guide.poses.default;
@@ -65,6 +66,21 @@
   $("homeBtn").onclick = () => { clearInterval(typing); typing = null; destroyPano(); showMap(); };
   $("replayBtn").onclick = () => startStop(stopIndex);
   $("toMapBtn").onclick = showMap;
+
+  // ---------- 照片與資料來源 ----------
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  function renderCredits() {
+    const lic = T.photoLicense;
+    const photos = Object.values(T.photos || {}).map((p) =>
+      `<li>${esc(p.title)}：${esc(p.author)}／<a href="${esc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>（${esc(p.edit)}）</li>`).join("");
+    $("creditsList").innerHTML = `
+      <p class="note">以下照片依 <a href="${lic.url}" target="_blank" rel="noopener">${lic.name}</a> 授權使用；經縮放、裁切後的版本同樣以 ${lic.name} 釋出。</p>
+      <ul>${photos}</ul>
+      <p class="note">插畫、鳥瞰圖、正殿環景為本團隊繪製的示意圖，非實際比例。</p>
+      <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>`;
+  }
+  $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
+  $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
 
   // ---------- 鳥瞰地圖 ----------
   $("mapImg").src = T.map.image;
@@ -121,27 +137,61 @@
     ["stampLayer", "lookup", "sheet", "counter", "choice"].forEach((id) => ($(id).hidden = true));
     clearHotspots();
     destroyPano();
+    currentImage = null;
     if (s.image) {
-      $("sceneImg").src = s.image;
-      $("sceneImg").alt = s.title;
-      setScene("image");
-      const go = () => playStep();
-      $("sceneImg").complete ? go() : ($("sceneImg").onload = go);
+      showImage(s.image, () => playStep());
     } else {
       setScene("pano", s.script[0]?.focus);
       playStep();
     }
   }
 
+  // ---------- 切換圖片（長卷、照片） ----------
+  // step 加 image: "路徑" 可在同一站換成另一張圖；照片會自動顯示來源標示
+  let currentImage = null;
+  function showImage(src, onReady) {
+    const img = $("sceneImg");
+    const meta = T.photos?.[src];
+    const vertical = meta?.fit === "width";
+    currentImage = src;
+    scene.classList.toggle("vertical", vertical);
+    setScene("image");
+    $("sceneHint").textContent = vertical ? "↑ 上下滑動看看 ↓" : "← 左右滑動看看 →";
+    showCredit(meta);
+    const done = () => { scene.scrollLeft = 0; scene.scrollTop = 0; onReady?.(); };
+    if (img.getAttribute("src") === src && img.complete) return done();
+    img.onload = done;
+    img.alt = meta?.title || stop().title;
+    img.src = src;
+  }
+
+  function showCredit(meta) {
+    const el = $("credit");
+    if (!meta) { el.hidden = true; return; }
+    el.href = meta.page;
+    el.textContent = `照片：${meta.author}／Wikimedia Commons／${T.photoLicense.name}`;
+    el.hidden = false;
+  }
+
   function playStep() {
     const l = line();
     if (!l) return finishStop();
     setPose(l.pose);
+    if (l.image && (l.image !== currentImage || sceneMode !== "image")) {
+      clearHotspots();
+      // 換圖要等圖片載入後，才能捲到 focus 的位置、放熱點
+      return showImage(l.image, () => runStep(l, true));
+    }
+    runStep(l, false);
+  }
+
+  function runStep(l, imageJustChanged) {
     if (l.scene && l.scene !== sceneMode) {
       clearHotspots();
+      showCredit(null);
       setScene(l.scene, l.focus);
     } else if (l.focus != null) {
-      typeof l.focus === "object" ? panoLook(l.focus) : focusOn(l.focus);
+      typeof l.focus === "object" ? panoLook(l.focus) : focusOn(l.focus, imageJustChanged);
     }
 
     mode = "talk";
@@ -203,10 +253,17 @@
 
   // ---------- 場景捲動 ----------
   const scene = $("scene");
-  function focusOn(xPct) {
-    const w = $("sceneInner").scrollWidth;
+  // 橫式圖：pct 是水平位置；直式照片（上下滑動）：pct 是垂直位置
+  function focusOn(pct, instant) {
     gyroPause(800);
-    scene.scrollTo({ left: w * xPct / 100 - scene.clientWidth / 2, behavior: "smooth" });
+    const behavior = instant ? "auto" : "smooth";
+    if (scene.classList.contains("vertical")) {
+      const h = $("sceneInner").scrollHeight;
+      scene.scrollTo({ top: h * pct / 100 - scene.clientHeight / 2, behavior });
+      return;
+    }
+    const w = $("sceneInner").scrollWidth;
+    scene.scrollTo({ left: w * pct / 100 - scene.clientWidth / 2, behavior });
   }
   scene.addEventListener("scroll", () => $("sceneHint").classList.add("gone"), { passive: true });
 
@@ -239,7 +296,7 @@
 
   function gyroLoop() {
     if (!gyro.on) return;
-    if (sceneMode === "image" && gyro.a0 !== null && performance.now() >= gyro.pauseUntil) {
+    if (sceneMode === "image" && !scene.classList.contains("vertical") && gyro.a0 !== null && performance.now() >= gyro.pauseUntil) {
       const cur = scene.scrollLeft;
       const next = cur + (gyro.target - cur) * 0.18;
       if (Math.abs(gyro.target - cur) > 0.5) scene.scrollLeft = next;
@@ -293,6 +350,7 @@
     sceneMode = mode;
     const pano = mode === "pano";
     scene.classList.toggle("pano-mode", pano);
+    if (pano) scene.classList.remove("vertical");
     $("sceneInner").hidden = pano;
     $("pano").hidden = !pano;
     $("sceneHint").textContent = pano ? "拖曳畫面，或轉動手機看四周" : "← 左右滑動看看 →";
@@ -362,6 +420,8 @@
         });
         continue;
       }
+      // 只放屬於目前這張圖的熱點（沒寫 img 的熱點屬於這一站的主圖）
+      if ((h.img || stop().image) !== currentImage) continue;
       const b = document.createElement("button");
       b.className = "hotspot" + (mode === "explore" && seen.has(h.id) ? " seen" : "");
       b.style.left = h.x + "%";
