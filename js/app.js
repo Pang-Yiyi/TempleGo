@@ -656,36 +656,54 @@
     pear: `${STEM}${LEAF}
       <path d="M50 24 C38 24, 36 40, 38 48 C24 58, 22 88, 50 90 C78 88, 76 58, 62 48 C64 40, 62 24, 50 24 Z" fill="#d9d77a" stroke="#9a9a3c" stroke-width="2"/>
       <ellipse cx="40" cy="62" rx="5" ry="10" fill="#fff" opacity=".45"/>`,
-    flower: `<path d="M50 60 C48 74, 40 84, 30 92" stroke="#6b4a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
-      ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="50" cy="26" rx="12" ry="18" fill="#fff" stroke="#d9cfc0" stroke-width="1.5" transform="rotate(${a} 50 44)"/>`).join("")}
-      <circle cx="50" cy="44" r="8" fill="#f2c94c"/>`,
     persimmon: `<path d="M50 32 C82 30, 90 50, 86 66 C82 84, 64 88, 50 88 C36 88, 18 84, 14 66 C10 50, 18 30, 50 32 Z" fill="#e8642c" stroke="#b84418" stroke-width="2"/>
       <path d="M50 66 V86" stroke="#b84418" stroke-width="1.5" opacity=".5"/>
       <path d="M50 36 L28 26 L38 40 L24 46 L50 42 L76 46 L62 40 L72 26 Z" fill="#4f7a2c"/>
       <path d="M50 22 v10" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/>
       <ellipse cx="36" cy="54" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
-    lantern: `<circle cx="50" cy="60" r="40" fill="#f6c76b" opacity=".35"/>
-      <path d="M50 4 v24" stroke="#6b4a2a" stroke-width="3"/>
-      <ellipse cx="50" cy="60" rx="30" ry="26" fill="#e8642c" stroke="#b84418" stroke-width="2"/>
-      <path d="M50 34 L38 28 L44 38 L34 42 L66 42 L56 38 L62 28 Z" fill="#4f7a2c"/>
-      <ellipse cx="40" cy="56" rx="6" ry="9" fill="#fff" opacity=".35"/>`,
-    mountain: `<path d="M4 88 L36 34 L52 58 L68 26 L96 88 Z" fill="#6f9a4a"/>
-      <path d="M36 34 L44 48 L36 46 L30 44 Z M68 26 L77 44 L68 42 L60 40 Z" fill="#fff" opacity=".7"/>
-      ${[70, 78].map((y) => `<path d="M14 ${y} Q50 ${y - 6} 88 ${y}" stroke="#4d7a30" stroke-width="2.5" fill="none"/>`).join("")}
-      <circle cx="80" cy="16" r="8" fill="#f2c94c"/>`,
-    sprout: `<path d="M8 84 Q50 64 92 84 L92 94 L8 94 Z" fill="#8a5a34"/>
-      <path d="M50 74 V40" stroke="#4f7a2c" stroke-width="5" stroke-linecap="round"/>
-      <path d="M50 50 C36 50, 26 40, 24 30 C38 28, 48 36, 50 50 Z M50 44 C62 44, 74 34, 76 22 C62 20, 52 30, 50 44 Z" fill="#6fae3e"/>
-      <circle cx="80" cy="16" r="8" fill="#f2c94c"/>`,
-    shears: `<path d="M44 52 L84 14 M56 52 L16 14" stroke="#8a9196" stroke-width="7" stroke-linecap="round"/>
-      <circle cx="50" cy="50" r="4" fill="#555"/>
-      <path d="M46 54 L30 80 M54 54 L70 80" stroke="#b5452f" stroke-width="10" stroke-linecap="round"/>
-      <circle cx="84" cy="74" r="10" fill="#d9d77a" stroke="#9a9a3c" stroke-width="2"/>`,
     citrus: `${STEM}${LEAF}
       <ellipse cx="50" cy="58" rx="36" ry="32" fill="#f39a1e" stroke="#c96f0c" stroke-width="2"/>
       ${[[36, 48], [58, 44], [66, 64], [44, 70], [52, 58]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.8" fill="#c96f0c"/>`).join("")}
       <ellipse cx="36" cy="52" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
-    river: [30, 52, 74].map((y, i) => `<path d="M6 ${y} q11 -12 22 0 t22 0 t22 0 t22 0" stroke="${["#7fb8d8", "#4f97c4", "#2f73a6"][i]}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join(""),
+    tree: `<path d="M6 90 H94" stroke="#8a5a34" stroke-width="4" stroke-linecap="round"/>
+      <path d="M40 90 C42 74, 42 62, 44 52 H56 C58 62, 58 74, 60 90 Z" fill="#7a4e2c"/>
+      <circle cx="50" cy="34" r="24" fill="#4f7a2c"/><circle cx="30" cy="46" r="16" fill="#5f8f3a"/>
+      <circle cx="70" cy="46" r="16" fill="#5f8f3a"/><circle cx="50" cy="22" r="14" fill="#6fae3e"/>
+      <rect x="42" y="64" width="16" height="6" fill="#c2401c"/>
+      <path d="M84 90 V74" stroke="#4f7a2c" stroke-width="3" stroke-linecap="round"/>
+      <path d="M84 80 C77 80, 75 74, 75 71 C81 71, 84 75, 84 80 Z M84 77 C91 77, 93 71, 93 68 C87 68, 84 72, 84 77 Z" fill="#6fae3e"/>`,
+    firefly: `<circle cx="50" cy="50" r="46" fill="#1f2a44"/>
+      ${[[24, 30, 5], [70, 24, 4], [80, 58, 5], [30, 70, 4], [56, 80, 3], [16, 52, 3]].map(([x, y, r]) =>
+        `<circle cx="${x}" cy="${y}" r="${r * 2.4}" fill="#f6e27a" opacity=".25"/><circle cx="${x}" cy="${y}" r="${r}" fill="#fff6a8"/>`).join("")}
+      <circle cx="56" cy="52" r="14" fill="#f6e27a" opacity=".3"/>
+      <ellipse cx="50" cy="44" rx="6" ry="9" fill="#3a2a22" transform="rotate(-30 50 44)"/>
+      <ellipse cx="56" cy="52" rx="6" ry="7" fill="#fff6a8"/>
+      <path d="M46 40 L36 30 M50 38 L46 26" stroke="#3a2a22" stroke-width="2" stroke-linecap="round"/>`,
+    leopardcat: `<path d="M18 40 L24 10 L44 28 Z M82 40 L76 10 L56 28 Z" fill="#b8874a"/>
+      <path d="M24 34 L27 18 L38 29 Z M76 34 L73 18 L62 29 Z" fill="#5a3a22"/>
+      <ellipse cx="50" cy="56" rx="36" ry="32" fill="#c99a5b"/>
+      <path d="M44 26 C44 34, 44 40, 45 46 M56 26 C56 34, 56 40, 55 46" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M40 30 C40 36, 40 40, 41 44 M60 30 C60 36, 60 40, 59 44" stroke="#3a2a22" stroke-width="2.5" stroke-linecap="round"/>
+      ${[[24, 54], [76, 54], [28, 68], [72, 68], [22, 44], [78, 44]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3" fill="#5a3a22"/>`).join("")}
+      <ellipse cx="50" cy="72" rx="16" ry="11" fill="#f4ead8"/>
+      <ellipse cx="38" cy="54" rx="6" ry="7" fill="#e8c34a"/><ellipse cx="62" cy="54" rx="6" ry="7" fill="#e8c34a"/>
+      <ellipse cx="38" cy="54" rx="2.2" ry="5" fill="#1d1410"/><ellipse cx="62" cy="54" rx="2.2" ry="5" fill="#1d1410"/>
+      <path d="M46 66 H54 L50 71 Z" fill="#d9707a"/>
+      <path d="M36 70 H16 M36 74 L18 80 M64 70 H84 M64 74 L82 80" stroke="#fff" stroke-width="1.5"/>`,
+    peach: `${STEM}${LEAF}
+      <path d="M50 30 C70 20, 92 36, 86 60 C80 82, 62 90, 50 90 C38 90, 20 82, 14 60 C8 36, 30 20, 50 30 Z" fill="#f6b3a8" stroke="#d9707a" stroke-width="2"/>
+      <ellipse cx="66" cy="62" rx="16" ry="20" fill="#ee6b7a" opacity=".45"/>
+      <path d="M50 32 C44 50, 44 70, 50 88" stroke="#d9707a" stroke-width="2" fill="none"/>
+      <ellipse cx="32" cy="52" rx="6" ry="10" fill="#fff" opacity=".4"/>`,
+    grape: `<path d="M50 6 V18" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M52 14 C62 4, 82 6, 86 16 C76 22, 62 22, 52 14 Z" fill="#5f8f3a"/>
+      ${[[38, 26], [50, 26], [62, 26], [32, 38], [44, 38], [56, 38], [68, 38], [38, 50], [50, 50], [62, 50], [44, 62], [56, 62], [50, 74]].map(([x, y]) =>
+        `<circle cx="${x}" cy="${y}" r="7.5" fill="#5b2d6e" stroke="#3e1c4c" stroke-width="1.2"/><circle cx="${x - 2.5}" cy="${y - 2.5}" r="2" fill="#fff" opacity=".45"/>`).join("")}`,
+    canal: `<path d="M50 8 C88 8, 94 50, 90 66 C84 88, 66 92, 50 92 C30 92, 12 86, 10 64 C6 40, 14 8, 50 8 Z" fill="#cfe6f2" stroke="#4f97c4" stroke-width="7"/>
+      <path d="M22 76 q6 -5 12 0 t12 0 M58 82 q6 -5 12 0 t12 0" stroke="#4f97c4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M30 52 L50 34 L70 52 Z" fill="#b5452f"/>
+      <rect x="34" y="52" width="32" height="20" fill="#f4e7c8" stroke="#7a4e2c" stroke-width="2"/>
+      <rect x="46" y="58" width="8" height="14" fill="#7a4e2c"/>`,
     dew: `${STEM}${LEAF}
       <ellipse cx="46" cy="60" rx="34" ry="30" fill="#ef8a1a" stroke="#c96f0c" stroke-width="2"/>
       <path d="M80 50 C86 60, 90 66, 84 72 C78 74, 74 68, 80 50 Z" fill="#9fd3f0" stroke="#4f97c4" stroke-width="1.5"/>
@@ -816,7 +834,7 @@
         <div class="poem">${sg.poem.map((l) => `<span>${l}</span>`).join("")}</div>
         <dl class="advice">${Object.entries(sg.advice).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
         ${rel ? `<p class="born"><b>本命 ${qian.born}${ganWx(qian.born)}</b>${rel}</p>` : ""}
-        <p class="fruit-note"><b>果語</b>${sg.fruitNote}</p>
+        <p class="fruit-note"><b>${sg.noteLabel || "果語"}</b>${sg.note}</p>
         <p class="season${ss.now ? " now" : ""}">${ss.text}</p>
         <p class="note">${Y.disclaimer}</p>
       </div>
@@ -831,9 +849,12 @@
   // 籤卡：canvas 畫成 PNG（直排籤詩＋四項建議＋本命）
   function wrapText(g, text, maxW) {
     const lines = []; let cur = "";
+    // 避頭尾：標點不放行首，「（ 不放行尾
     for (const ch of text) {
-      if (g.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; }
-      else cur += ch;
+      if (g.measureText(cur + ch).width > maxW && cur && !"，。、；：！？」』）".includes(ch)) {
+        const open = /[「『（]$/.test(cur) ? cur.slice(-1) : "";
+        lines.push(open ? cur.slice(0, -1) : cur); cur = open + ch;
+      } else cur += ch;
     }
     if (cur) lines.push(cur);
     return lines;
@@ -841,9 +862,10 @@
   async function renderQianCard() {
     const sg = Y.signs[qian.num - 1];
     const rel = qian.born ? `本命 ${qian.born}${ganWx(qian.born)}｜${relation(ganWx(qian.born), sg.wx)}` : "";
-    const QW = 1080, QH = 1620;
+    const QW = 1080, PAD = 130, QR = 210;
     const all = ["東勢果籤第一二三四五六七八九十籤", sg.gan, sg.wx, sg.luck, sg.title, ...sg.poem,
-      ...Object.entries(sg.advice).flat(), rel, Y.disclaimer, "台中東勢大茅埔泰興宮手機導覽0123456789.｜：，！"].join("");
+      ...Object.entries(sg.advice).flat(), rel, sg.note, sg.noteLabel || "", Y.disclaimer, QIAN_CTA, QIAN_CTA2,
+      "果語台中東勢大茅埔泰興宮手機導覽0123456789.｜：，！"].join("");
     try {
       await Promise.all([
         document.fonts.load(`900 80px "Noto Serif TC"`, all),
@@ -853,8 +875,15 @@
     } catch {}
     const icon = await loadImg("data:image/svg+xml;charset=utf-8," +
       encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">${ICONS[sg.icon]}</svg>`));
-    const c = document.createElement("canvas"); c.width = QW; c.height = QH;
-    const g = c.getContext("2d");
+    const qr = await loadImg("assets/img/qr-site.png");
+    // 先量本命和果語要幾行，再決定卡片高度
+    const c = document.createElement("canvas"); let g = c.getContext("2d");
+    g.font = `600 30px ${SANS}`; const relLines = rel ? wrapText(g, rel, QW - PAD * 2).slice(0, 2) : [];
+    g.font = `500 30px ${SANS}`; const noteLines = wrapText(g, sg.note, QW - PAD * 2 - 56).slice(0, 4);
+    const relY = 1412, noteTop = relY + relLines.length * 42 + (relLines.length ? 8 : -26);
+    const noteH = 26 + 40 + noteLines.length * 44 + 14, footTop = noteTop + noteH + 44;
+    const QH = footTop + 34 + QR + 120;
+    c.width = QW; c.height = QH; g = c.getContext("2d");
     const red = "#7a1712", col = WX_COLOR[sg.wx];
     g.fillStyle = red; g.fillRect(0, 0, QW, QH);
     g.fillStyle = "#f4e7c8"; rrect(g, 36, 36, QW - 72, QH - 72, 24); g.fill();
@@ -888,17 +917,34 @@
       g.fillStyle = col; g.font = `900 34px ${SERIF}`; g.fillText(k, 130, y);
       g.fillStyle = "#1d1410"; g.font = `500 34px ${SANS}`; g.fillText(v, 240, y, QW - 370);
     });
-    let y = 1172 + 4 * 58 + 8;
-    if (rel) {
-      g.fillStyle = red; g.font = `600 30px ${SANS}`;
-      wrapText(g, rel, QW - 260).slice(0, 2).forEach((l) => { g.fillText(l, 130, y); y += 42; });
+    // 本命
+    g.fillStyle = red; g.font = `600 30px ${SANS}`;
+    relLines.forEach((l, i) => g.fillText(l, PAD, relY + i * 42));
+    // 果語（淡色底框）
+    g.fillStyle = "rgba(255,255,255,.6)"; rrect(g, PAD - 16, noteTop, QW - PAD * 2 + 32, noteH, 18); g.fill();
+    g.fillStyle = col; g.font = `900 32px ${SERIF}`; g.fillText(sg.noteLabel || "果語", PAD + 12, noteTop + 56);
+    g.fillStyle = "#1d1410"; g.font = `500 30px ${SANS}`;
+    noteLines.forEach((l, i) => g.fillText(l, PAD + 12, noteTop + 104 + i * 44));
+    // 底部：QR Code（掃了直接開網站）＋說明
+    g.strokeStyle = "#c9a77b"; g.setLineDash([10, 8]); g.lineWidth = 2;
+    g.beginPath(); g.moveTo(110, footTop); g.lineTo(QW - 110, footTop); g.stroke(); g.setLineDash([]);
+    const qx = QW - PAD - QR + 10, qy = footTop + 34;
+    if (qr) {
+      g.fillStyle = "#fff"; rrect(g, qx - 10, qy - 10, QR + 20, QR + 20, 14); g.fill();
+      g.imageSmoothingEnabled = false; g.drawImage(qr, qx, qy, QR, QR); g.imageSmoothingEnabled = true;
     }
-    g.textAlign = "center"; g.fillStyle = "#6d5c4f"; g.font = `500 26px ${SANS}`;
-    g.fillText(`${fmtDate(new Date())}｜台中東勢大茅埔泰興宮手機導覽`, QW / 2, QH - 116);
-    g.font = `500 22px ${SANS}`; g.fillText(Y.disclaimer, QW / 2, QH - 80, QW - 160);
+    const tw = qx - PAD - 40;
+    g.fillStyle = red; g.font = `900 40px ${SERIF}`; g.fillText(QIAN_CTA, PAD, qy + 52, tw);
+    g.fillStyle = "#1d1410"; g.font = `500 28px ${SANS}`; g.fillText(QIAN_CTA2, PAD, qy + 102, tw);
+    g.fillStyle = "#6d5c4f"; g.font = `500 24px ${SANS}`;
+    g.fillText("pang-yiyi.github.io/TempleGo", PAD, qy + 150, tw);
+    g.fillText(`${fmtDate(new Date())}｜台中東勢大茅埔泰興宮手機導覽`, PAD, qy + 192, tw);
+    g.textAlign = "center"; g.font = `500 22px ${SANS}`;
+    g.fillText(Y.disclaimer, QW / 2, QH - 86, QW - 160);
 
     return new Promise((res) => c.toBlob(res, "image/png"));
   }
+  const QIAN_CTA = "掃一下，換你抽！", QIAN_CTA2 = "跟著志永哥逛泰興宮，抽一支東勢果籤";
   let qCardUrl = null;
   async function qianCard() {
     $("qCard").disabled = true; $("qCard").textContent = "製作中…";
