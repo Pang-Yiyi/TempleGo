@@ -72,8 +72,8 @@ window.TOUR = {
       title: "「後堂供奉」紅牌與「國王宮」木牌", own: true, edit: "IMG_6331 縮放", fit: "width" },
     "assets/photos/main-hall-altar.webp": {
       title: "正殿神龕", own: true, edit: "IMG_6340 縮放" },
-    "assets/photos/houyuan.webp": {
-      title: "關聖帝君背面的庭園（全景）", own: true, edit: "IMG_6348 手機全景，縮放" },
+    "assets/photos/houyuan-pano.webp": {
+      title: "泰興宮最裡面的庭園（半圈環景）", own: true, edit: "IMG_6348 手機全景，縮放" },
     "assets/photos/longshen.webp": {
       title: "龍神與大榕樹", own: true, edit: "IMG_6344 縮放" },
   },
@@ -634,6 +634,9 @@ window.TOUR = {
       ready: true,
       intro: "泰興宮最裡面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
+      // 半圈環景：團隊手機全景（IMG_6348，弼教堂關聖帝君背面的庭園），水平約 187°
+      pano: "assets/photos/houyuan-pano.webp",
+      panoView: { haov: 187, vaov: 80 },
       stamp: "龍神",
 
       // 內容來源：中央社〈從龍神信仰變成最美慶典 大茅埔調查團找回客家根〉、臺中觀光旅遊網〈東勢大茅埔 尋龍探圳〉、
@@ -653,8 +656,8 @@ window.TOUR = {
       ],
 
       script: [
-        { image: "assets/photos/houyuan.webp", focus: 50, pose: "wave",
-          say: "穿過弼教堂，來到關聖帝君的背面，這裡是一座小庭園。" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "穿過弼教堂，來到泰興宮的最裡面。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
         { image: "assets/photos/longshen.webp", focus: 48,
           say: "再往泰興宮的最裡面走，就是這棵大榕樹。" },
         { say: "樹下這座小亭子，供奉的是大茅埔的「龍神」。" },
