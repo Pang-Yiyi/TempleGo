@@ -62,6 +62,8 @@ window.TOUR = {
       title: "後殿弼教堂與天公爐", own: true, edit: "IMG_6342 裁切、縮放" },
     "assets/photos/bijiao-altar.webp": {
       title: "弼教堂", own: true, edit: "IMG_6343 裁切、縮放" },
+    "assets/photos/longshen.webp": {
+      title: "龍神與大榕樹", own: true, edit: "IMG_6344 縮放" },
   },
   photoLicense: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" },
 
@@ -70,7 +72,7 @@ window.TOUR = {
     image: "assets/img/map.svg",
     aspect: 360 / 520,
     say: "歡迎來到泰興宮！點地圖上的號碼，我帶你去看！",
-    doneSay: "五個地方都走完了，謝謝你來大茅埔！點右上角「完成卡」，可以存起來做紀念喔！",
+    doneSay: "六個地方都走完了，謝謝你來大茅埔！點右上角「完成卡」，可以存起來做紀念喔！",
   },
 
   // 大茅埔總覽圖：在泰興宮鳥瞰圖之前。依使用者手繪稿（素材/照片/map.png）重繪，示意非實測
@@ -595,7 +597,57 @@ window.TOUR = {
         { type: "lookup",
           say: "抬頭看看弼教堂兩邊的對聯，其中有兩對，是庄裡的書法家邱丙坤寫的喔！" },
         { pose: "happy",
-          say: "弼教堂也看完了，蓋個章！回地圖看看你收集了幾個章吧！" },
+          say: "弼教堂也看完了，蓋個章！弼教堂後面還有一棵大榕樹，是第 6 站喔！" },
+      ],
+    },
+    {
+      id: "longshen",
+      title: "後山・龍神",
+      pin: { n: 6, x: 76.5, y: 15.5 },
+      ready: true,
+      intro: "弼教堂後面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
+      image: "assets/photos/longshen.webp",
+      stamp: "龍神",
+
+      // 內容來源：中央社〈從龍神信仰變成最美慶典 大茅埔調查團找回客家根〉、臺中觀光旅遊網〈東勢大茅埔 尋龍探圳〉、
+      //           教育部數位走讀〈大茅埔泰興宮〉
+      // TODO：兩側石雕是什麼動物、左邊貼紅紙的小屋供奉什麼，請志永哥確認後補進台詞
+      hotspots: [
+        { id: "longshenSign", img: "assets/photos/longshen.webp", x: 47.5, y: 49, title: "「龍神」",
+          desc: "亭子上的匾寫著「龍神」。龍神就設在弼教堂後面的大榕樹前，這棵榕樹本身也被當作龍神來祭拜。" },
+        { id: "banyanCloth", img: "assets/photos/longshen.webp", x: 48, y: 59, title: "綁著紅布的樹幹",
+          desc: "樹幹上圍著紅布，代表這棵樹受到大家敬重。經過的時候，記得不要攀爬、不要折樹枝喔！" },
+        { id: "banyan", img: "assets/photos/longshen.webp", x: 33, y: 18, title: "老榕樹",
+          desc: "枝葉往四面八方伸展，夏天樹下特別涼快，是庄裡人休息聊天的好地方。" },
+        { id: "stoneL", img: "assets/photos/longshen.webp", x: 6.5, y: 66, title: "左邊的石雕",
+          desc: "脖子上綁著紅布的石雕。牠是什麼動物？到現場仔細看看！" },
+        { id: "stoneR", img: "assets/photos/longshen.webp", x: 86, y: 64, title: "右邊的石雕",
+          desc: "右邊也有一隻，跟左邊的是一對。" },
+      ],
+
+      script: [
+        { image: "assets/photos/longshen.webp", focus: 48, pose: "wave",
+          say: "從弼教堂旁邊繞到後面，就是這棵大榕樹。" },
+        { say: "樹下這座小亭子，供奉的是大茅埔的「龍神」。" },
+        { type: "explore", pose: "point", targets: ["longshenSign", "banyanCloth", "banyan"],
+          say: "左右滑一滑，找找三個發光的地方！",
+          done: "龍神就住在這棵大榕樹前。那「龍神」到底是什麼神呢？" },
+        { type: "choice", pose: "think",
+          say: "客家人說的「龍」，指的是什麼？",
+          options: ["山", "河", "天上的雲"], answer: 0,
+          wrong: "提示：轉身看看廟的後面是什麼？",
+          right: "答對！客家人把山叫作「龍」。大茅埔庄子後面有一座像蟠龍的大山，所以龍神其實就是山神。" },
+        { type: "lookup",
+          say: "抬頭看看廟後面的山，像不像一條趴著的龍？" },
+        { say: "泰興宮後面有一塊用土填高、像半個月亮的地，叫作「化胎」。客家人蓋房子，會把後山的龍脈引到這裡，保佑大家平安。" },
+        { type: "explore", pose: "point", targets: ["stoneL", "stoneR"],
+          say: "大樹兩邊各有一隻石雕，脖子還綁著紅布，找找看！",
+          done: "牠們是什麼動物呢？到現場看看，也可以問問庄裡的人！" },
+        { say: "龍神信仰原本慢慢被大家淡忘。後來大茅埔調查團辦起「龍神山水祭」，晚上會在河上放五行祈福紙船，像一條發光的星河。" },
+        { pose: "fruit",
+          say: "說到五行，回地圖右上角可以抽一支「東勢果籤」，看看金木水火土想跟你說什麼！" },
+        { pose: "happy",
+          say: "龍神也拜訪過了，蓋個章！回地圖看看你收集了幾個章吧！" },
       ],
     },
   ],
