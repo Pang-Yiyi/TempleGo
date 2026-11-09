@@ -748,7 +748,8 @@
     $("qRedo").onclick = () => { qian.fails = 0; qianPick(); };
     $("qBack").onclick = () => ($("qianLayer").hidden = true);
   }
-  $("qianBtn").onclick = openQian;
+  // 藥籤因法規不公開（2026-11-10 下架）；這套搖籤、擲筊畫面之後改給果籤用
+  if (Y) { $("qianBtn").hidden = false; $("qianBtn").onclick = openQian; }
   $("qianClose").onclick = () => ($("qianLayer").hidden = true);
 
   // ---------- 集章卡（canvas 畫成 PNG，可分享或存檔） ----------
