@@ -46,7 +46,7 @@ window.TOUR = {
     "assets/photos/temple-front.webp": {
       title: "泰興宮山門", own: true, edit: "IMG_6327 裁切、縮放，車牌模糊" },
     "assets/photos/front-steps.webp": {
-      title: "山門前的石獅與階梯", own: true, edit: "IMG_6329 裁切、縮放，人物臉部模糊" },
+      title: "山門前的石獅與階梯", own: true, edit: "IMG_6329 裁切、縮放（入鏡者已同意）" },
     "assets/photos/door-gods-photo.webp": {
       title: "山門門神", author: "Isocyclo", edit: "縮放",
       page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_190.jpg" },
@@ -62,6 +62,18 @@ window.TOUR = {
       title: "後殿弼教堂與天公爐", own: true, edit: "IMG_6342 裁切、縮放" },
     "assets/photos/bijiao-altar.webp": {
       title: "弼教堂", own: true, edit: "IMG_6343 裁切、縮放" },
+    "assets/photos/plaza-end.webp": {
+      title: "廟埕與山門（全景）", own: true, edit: "IMG_6326 手機全景，縮放，車牌模糊" },
+    "assets/photos/sanchuan-back.webp": {
+      title: "三川門背面（從廟裡面對大門）", own: true, edit: "IMG_6334 手機全景，縮放，車牌模糊" },
+    "assets/photos/main-hall-front.webp": {
+      title: "正殿外觀（全景）", own: true, edit: "IMG_6337 手機全景，縮放" },
+    "assets/photos/board-wide.webp": {
+      title: "「後堂供奉」紅牌與「國王宮」木牌", own: true, edit: "IMG_6331 縮放", fit: "width" },
+    "assets/photos/main-hall-altar.webp": {
+      title: "正殿神龕", own: true, edit: "IMG_6340 縮放" },
+    "assets/photos/houyuan.webp": {
+      title: "關聖帝君背面的庭園（全景）", own: true, edit: "IMG_6348 手機全景，縮放" },
     "assets/photos/longshen.webp": {
       title: "龍神與大榕樹", own: true, edit: "IMG_6344 縮放" },
   },
@@ -292,8 +304,8 @@ window.TOUR = {
           right: "沒錯！有曲才有財，轉個彎就能把財留在庄裡。" },
         { focus: 40,
           say: "可惜這些年人口和車子變多，護城河大部分都被加蓋，變成停車場了。" },
-        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "回到現在的廟埕。兩百年前的規劃，到今天都還看得到喔！" },
+        { image: "assets/photos/plaza-end.webp", focus: 50, pose: "wave",
+          say: "回到現在的廟埕，往後退幾步看看整座山門。兩百年前的規劃，到今天都還看得到喔！" },
         { type: "lookup",
           say: "轉身背對山門往前看，那條直直的大街就是中軸線。等一下在庄裡散步時，留意看看路邊的水圳喔！" },
         { pose: "happy",
@@ -322,6 +334,12 @@ window.TOUR = {
           desc: "尉遲恭手邊這根金色兵器，一節一節像竹子，就是他的招牌武器「竹節鋼鞭」。" },
         { id: "flags", x: 35, y: 28, title: "背後的旗子", explore: true,
           desc: "將軍背後插著好幾支旗，跟戲曲裡武將背上的「靠旗」很像，表示他是領兵打仗的大將。" },
+        { id: "minan", img: "assets/photos/sanchuan-back.webp", x: 36, y: 37, title: "「民安」",
+          desc: "側門上的匾寫著「民安」，另一邊是「國泰」，合起來就是「國泰民安」：國家太平、百姓平安。" },
+        { id: "guotai", img: "assets/photos/sanchuan-back.webp", x: 56.3, y: 37.4, title: "「國泰」",
+          desc: "「國泰」是國家太平的意思，跟另一邊的「民安」配成一對。" },
+        { id: "backCouplet", img: "assets/photos/sanchuan-back.webp", x: 30.6, y: 50, title: "門內的對聯",
+          desc: "大門裡面的柱子上也刻著金色的對聯。進廟、出廟的時候都可以停下來讀讀看。" },
         { id: "roof", x: 55, y: 22, title: "門後的屋頂", explore: true,
           desc: "從兩扇門中間望進去，看得到廟裡屋頂上彩色的人物和花鳥裝飾。等一下進廟，記得抬頭看！" },
       ],
@@ -343,8 +361,15 @@ window.TOUR = {
           say: "畫裡還藏了很多細節！把畫面左右滑一滑，發光的地方都點開看看。" },
         { type: "lookup",
           say: "好，現在把手機放下，抬頭看看真正的門神，找找剛剛看到的鋼鞭和頭盔在哪裡？" },
+        { image: "assets/photos/sanchuan-back.webp", focus: 45, pose: "wave",
+          say: "跨過門檻走進廟裡，轉身面對大門。這是三川門的背面。" },
+        { type: "explore", pose: "point", targets: ["minan", "guotai", "backCouplet"],
+          say: "大門背面也藏了東西，左右滑一滑找找看！",
+          done: "門神在外面守著，門裡面寫著給大家的祝福。" },
+        { image: "assets/photos/main-hall-front.webp", focus: 50,
+          say: "再轉回來，前面這座就是正殿，三山國王就在裡面。" },
         { pose: "happy",
-          say: "門神這關過了，來蓋個章！等一下我們往廟裡面走。" },
+          say: "門神這關過了，來蓋個章！接下來走進正殿看看。" },
       ],
     },
     {
@@ -418,7 +443,7 @@ window.TOUR = {
           options: ["綠色", "紅色", "黑色"], answer: 2,
           wrong: "提示：北方屬「水」喔！",
           right: "答對！北方屬水，所以是黑色。" },
-        { image: "assets/photos/front-steps.webp", focus: 50, pose: "wave", say: "{lunarHint}" },
+        { focus: 52, pose: "wave", say: "{lunarHint}" },
         { type: "lookup",
           say: "走到廟前右手邊的龍邊階梯看看。如果剛好遇到犒將，請在旁邊安靜觀看，不要碰供品喔！" },
         { pose: "happy",
@@ -431,7 +456,7 @@ window.TOUR = {
       pin: { n: 4, x: 50, y: 48 },
       ready: true,
       intro: "三山國王是廣東巾山、明山、獨山三座山的山神，跟著客家先民一路來到大茅埔。",
-      // 故事長卷插畫；之後可加入正殿實拍照片
+      // 一進來先看正殿半圈環景，再看木牌、進插畫聽故事，最後回到環景
       image: "assets/img/sanshan-scroll.svg",
       // 360° 環景（等距長方投影 2:1）。目前是程式產生的示意圖，拍到正殿實景後直接替換，並調整下方熱點的 yaw / pitch
       // 正殿半圈環景：團隊用手機全景模式拍（IMG_6338），只有水平約 220°，上下約 80°
@@ -455,11 +480,11 @@ window.TOUR = {
         // ↓ 實景照片：「國王宮」木牌（直式，上下滑動）
         { id: "boardName", img: "assets/photos/guowang-board.webp", x: 71, y: 21, title: "國王宮",
           desc: "木牌上寫著「國王宮」，就是泰興宮最早的名字。" },
-        { id: "boardYear", img: "assets/photos/guowang-board.webp", x: 82, y: 16, title: "咸豐辛亥元年",
+        { id: "boardYear", img: "assets/photos/board-wide.webp", x: 50.2, y: 25, title: "咸豐辛亥元年",
           desc: "「咸豐辛亥元年」就是 1851 年，也就是大家開始集資建廟的那一年。" },
-        { id: "boardDonors", img: "assets/photos/guowang-board.webp", x: 75, y: 52, title: "三位先賢",
+        { id: "boardDonors", img: "assets/photos/board-wide.webp", x: 47.8, y: 42, title: "三位先賢",
           desc: "木牌刻著「信士張寧壽、楊及億、張登龍，施出慶福庄大租股半、水田股半敬奉」。三位捐出田產，用田租支持廟裡的祭祀。" },
-        { id: "houtang", img: "assets/photos/guowang-board.webp", x: 23, y: 41, title: "旁邊的紅牌",
+        { id: "houtang", img: "assets/photos/board-wide.webp", x: 30.6, y: 36, title: "旁邊的紅牌",
           desc: "木牌旁邊的紅牌寫著「後堂供奉　十殿冥君、三尊恩主、城隍老爺」，告訴大家後面的弼教堂拜哪些神明。等一下第 5 站就會看到！" },
         // ↓ 環景熱點
         { id: "altar", yaw: 2, pitch: 2, title: "正殿神龕",
@@ -473,10 +498,15 @@ window.TOUR = {
       // 順序：先看實物（國王宮木牌）→ 進插畫聽故事 → 回到木牌 → 環景
       // 木牌照片是團隊實拍（IMG_6332）；正殿實景（IMG_6340、6341）之後可改成正殿開場
       script: [
-        { image: "assets/photos/guowang-board.webp", focus: 20, pose: "wave",
-          say: "這裡是正殿，供奉我們大茅埔的「王爺公」，也就是三山國王。" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "這裡是正殿，供奉我們大茅埔的「王爺公」，也就是三山國王。用手指左右拖曳畫面，或按「轉動手機看」，看看四周。" },
+        { type: "explore", pose: "point", targets: ["altar", "ceiling", "lantern"],
+          say: "找找看三個發光的地方，有一個要往右邊轉才看得到喔！",
+          done: "正殿看過一遍了！殿裡還有一樣寶貝，我們走近看。" },
+        { image: "assets/photos/guowang-board.webp", focus: 20,
+          say: "就是這塊木牌，上面寫著廟最早的名字。" },
         { type: "explore", pose: "point", targets: ["boardName"],
-          say: "先給你看一樣廟裡的寶貝！這塊木牌上，找找看「國王宮」三個字在哪裡？",
+          say: "找找看，「國王宮」三個字在哪裡？",
           done: "「國王宮」就是泰興宮最早的名字。為什麼叫國王宮？我們從頭說起！" },
         { image: "assets/img/sanshan-scroll.svg", focus: 20,
           say: "三山國王不是三座山，是三座山的山神喔！這三座山在廣東揭陽。" },
@@ -500,16 +530,13 @@ window.TOUR = {
           options: ["泰興宮", "國王宮", "王爺廟"], answer: 1,
           wrong: "提示：回想一下剛剛木牌上的三個字！",
           right: "答對！一開始叫「國王宮」，後來才改名泰興宮。" },
-        { image: "assets/photos/guowang-board.webp", focus: 20, pose: "happy",
-          say: "回到這塊木牌。上面還刻著蓋廟的年份，和捐出田地的人，上下滑動看看。" },
+        { image: "assets/photos/board-wide.webp", focus: 30, pose: "happy",
+          say: "退後一步再看這塊木牌。上面還刻著蓋廟的年份，和捐出田地的人，旁邊還有一塊紅牌，上下滑動看看。" },
         { type: "explore", pose: "point", targets: ["boardYear", "boardDonors", "houtang"],
           say: "點點看，木牌上還寫了什麼？",
           done: "一百七十多年前的事，就刻在這塊木牌上！" },
-        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "故事聽完了，我們走進正殿看看！用手指左右拖曳畫面，或按「轉動手機看」，像站在殿裡轉頭看。" },
-        { type: "explore", pose: "point", targets: ["altar", "ceiling", "lantern"],
-          say: "找找看三個發光的地方，有一個要往右邊轉才看得到喔！",
-          done: "正殿看過一遍了！到現場記得也抬頭看看樑上的木雕。" },
+        { image: "assets/photos/main-hall-altar.webp", focus: 50, pose: "wave",
+          say: "故事聽完了，走到神龕正前方。到現場記得也抬頭看看樑上的木雕！" },
         { type: "lookup",
           say: "現在抬頭看看正殿裡的三位王爺，比一比他們的臉色和鬍子，有什麼不一樣？" },
         { say: "民國 88 年 921 大地震，庄裡的老屋全倒了，廟卻安然無恙，庄民都說是王爺公在保佑。" },
@@ -626,8 +653,10 @@ window.TOUR = {
       ],
 
       script: [
-        { image: "assets/photos/longshen.webp", focus: 48, pose: "wave",
-          say: "穿過弼教堂，走到泰興宮的最裡面，就是這棵大榕樹。" },
+        { image: "assets/photos/houyuan.webp", focus: 50, pose: "wave",
+          say: "穿過弼教堂，來到關聖帝君的背面，這裡是一座小庭園。" },
+        { image: "assets/photos/longshen.webp", focus: 48,
+          say: "再往泰興宮的最裡面走，就是這棵大榕樹。" },
         { say: "樹下這座小亭子，供奉的是大茅埔的「龍神」。" },
         { type: "explore", pose: "point", targets: ["longshenSign", "banyanCloth", "banyan"],
           say: "左右滑一滑，找找三個發光的地方！",
