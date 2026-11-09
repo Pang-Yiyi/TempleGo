@@ -11,7 +11,7 @@ window.TOUR = {
   guide: {
     name: "志永哥",
     // ★ 切換人物：同意書簽署前用 "q"；簽署後改成 "real"（步驟見 README「換成真人」）
-    style: "real",
+    style: "real",   // "real" 黑衣多動作版；"realWhite" 原本白 T 單張版
     styles: {
       // Q版志永哥（SVG 手繪，依照片特徵：黑色鴨舌帽、白 T、深藍袖套、雙手交握）
       q: {
@@ -21,8 +21,18 @@ window.TOUR = {
         think: "assets/img/guide-q-think.svg",
         happy: "assets/img/guide-q-happy.svg",
       },
-      // 真人去背照：目前只有一張，其他動作會自動用 default；補拍後在這裡加上 wave / point / think / happy
+      // 真人去背：2026-11-08 現場影片截圖（黑色「有求必應」上衣），intro 是開場用的笑臉
       real: {
+        intro: "assets/img/guide-real-happy.webp",
+        default: "assets/img/guide-real-default.webp",
+        wave: "assets/img/guide-real-wave.webp",
+        point: "assets/img/guide-real-point.webp",
+        think: "assets/img/guide-real-think.webp",
+        happy: "assets/img/guide-real-happy.webp",
+        fruit: "assets/img/guide-real-fruit.webp",
+      },
+      // 原本的白 T 照片（只有一張）
+      realWhite: {
         default: "assets/img/guide.webp",
       },
     },

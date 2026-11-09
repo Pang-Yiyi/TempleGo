@@ -52,7 +52,7 @@
   $("templeName").textContent = T.temple.name;
   $("templeSub").textContent = T.temple.subtitle;
   T.guide.poses = T.guide.styles[T.guide.style] || T.guide.styles.q;
-  $("introGuide").src = T.guide.poses.default;
+  $("introGuide").src = T.guide.poses.intro || T.guide.poses.default;
   $("speaker").textContent = T.guide.name;
   $("guideImg").src = T.guide.poses.default;
   $("guideImg").alt = T.guide.name;
