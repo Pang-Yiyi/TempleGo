@@ -603,7 +603,7 @@ window.TOUR = {
     {
       id: "longshen",
       title: "宮內深處・龍神",
-      pin: { n: 6, x: 76.5, y: 17.5 },
+      pin: { n: 6, x: 50, y: 16 },
       ready: true,
       intro: "泰興宮最裡面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
