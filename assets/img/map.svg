@@ -46,7 +46,7 @@
   <text x="222" y="513" font-family="Noto Sans TC, sans-serif" font-size="10" fill="#6d5c4f">往大甲溪 ↓</text>
 
   <!-- 廟宇基地 -->
-  <rect x="56" y="96" width="248" height="268" rx="4" fill="#efe6d3" stroke="#b9a888" stroke-width="1.5"/>
+  <rect x="56" y="76" width="248" height="288" rx="4" fill="#efe6d3" stroke="#b9a888" stroke-width="1.5"/>
 
   <!-- 後殿 弼教堂 -->
   <g filter="url(#sh)">
@@ -55,14 +55,14 @@
     <path d="M90 142q-8-2-10-12M270 142q8-2 10-12" fill="none" stroke="#e3b54a" stroke-width="3" stroke-linecap="round"/>
   </g>
 
-  <!-- 化胎（後殿後方半月形隆起的土地）＋ 龍神大榕樹 -->
-  <path d="M112 110Q180 80 248 110Z" fill="#a9c08e" stroke="#7f9f68" stroke-width="1.2"/>
+  <!-- 化胎（後殿後方半月形隆起的土地）＋ 宮內最裡面的龍神大榕樹 -->
+  <path d="M112 110Q180 82 248 110Z" fill="#a9c08e" stroke="#7f9f68" stroke-width="1.2"/>
   <text x="180" y="104" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="9" font-weight="600" fill="#4d6b3c">化胎</text>
   <g filter="url(#sh)">
-    <rect x="273" y="88" width="6" height="16" fill="#7a4e2c"/>
-    <circle cx="262" cy="84" r="12" fill="#5f8f3a"/><circle cx="290" cy="84" r="12" fill="#5f8f3a"/>
-    <circle cx="276" cy="76" r="15" fill="#4f7a2c"/>
-    <path d="M268 100L276 94L284 100Z" fill="#b5452f"/><rect x="270" y="100" width="12" height="7" fill="#e8d6b0" stroke="#7a2a1c" stroke-width=".8"/>
+    <rect x="273" y="92" width="6" height="14" fill="#7a4e2c"/>
+    <circle cx="264" cy="92" r="10" fill="#5f8f3a"/><circle cx="288" cy="92" r="10" fill="#5f8f3a"/>
+    <circle cx="276" cy="86" r="12" fill="#4f7a2c"/>
+    <path d="M268 102L276 96L284 102Z" fill="#b5452f"/><rect x="270" y="102" width="12" height="6" fill="#e8d6b0" stroke="#7a2a1c" stroke-width=".8"/>
   </g>
 
   <!-- 天井 -->

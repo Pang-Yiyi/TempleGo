@@ -597,15 +597,15 @@ window.TOUR = {
         { type: "lookup",
           say: "抬頭看看弼教堂兩邊的對聯，其中有兩對，是庄裡的書法家邱丙坤寫的喔！" },
         { pose: "happy",
-          say: "弼教堂也看完了，蓋個章！弼教堂後面還有一棵大榕樹，是第 6 站喔！" },
+          say: "弼教堂也看完了，蓋個章！泰興宮最裡面還有一棵大榕樹，是第 6 站喔！" },
       ],
     },
     {
       id: "longshen",
-      title: "後山・龍神",
-      pin: { n: 6, x: 76.5, y: 15.5 },
+      title: "宮內深處・龍神",
+      pin: { n: 6, x: 76.5, y: 17.5 },
       ready: true,
-      intro: "弼教堂後面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
+      intro: "泰興宮最裡面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
       stamp: "龍神",
 
@@ -614,7 +614,7 @@ window.TOUR = {
       // TODO：兩側石雕是什麼動物、左邊貼紅紙的小屋供奉什麼，請志永哥確認後補進台詞
       hotspots: [
         { id: "longshenSign", img: "assets/photos/longshen.webp", x: 47.5, y: 49, title: "「龍神」",
-          desc: "亭子上的匾寫著「龍神」。龍神就設在弼教堂後面的大榕樹前，這棵榕樹本身也被當作龍神來祭拜。" },
+          desc: "亭子上的匾寫著「龍神」。龍神就設在泰興宮最裡面的大榕樹前，這棵榕樹本身也被當作龍神來祭拜。" },
         { id: "banyanCloth", img: "assets/photos/longshen.webp", x: 48, y: 59, title: "綁著紅布的樹幹",
           desc: "樹幹上圍著紅布，代表這棵樹受到大家敬重。經過的時候，記得不要攀爬、不要折樹枝喔！" },
         { id: "banyan", img: "assets/photos/longshen.webp", x: 33, y: 18, title: "老榕樹",
@@ -627,7 +627,7 @@ window.TOUR = {
 
       script: [
         { image: "assets/photos/longshen.webp", focus: 48, pose: "wave",
-          say: "從弼教堂旁邊繞到後面，就是這棵大榕樹。" },
+          say: "穿過弼教堂，走到泰興宮的最裡面，就是這棵大榕樹。" },
         { say: "樹下這座小亭子，供奉的是大茅埔的「龍神」。" },
         { type: "explore", pose: "point", targets: ["longshenSign", "banyanCloth", "banyan"],
           say: "左右滑一滑，找找三個發光的地方！",
