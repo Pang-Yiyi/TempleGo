@@ -635,25 +635,81 @@
     $("stampLayer").hidden = false;
   }
 
-  // ---------- 求藥籤（文化體驗，不顯示藥方） ----------
-  const Y = T.yaoqian;
-  const zhNum = (n) => {
-    const d = "零一二三四五六七八九";
-    if (n === 100) return "一百";
-    if (n < 10) return d[n];
-    const t = Math.floor(n / 10), o = n % 10;
-    return (t === 1 ? "十" : d[t] + "十") + (o ? d[o] : "");
-  };
-  const TUBE_SVG = `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
+  // ---------- 東勢果籤（在地創作的趣味籤詩） ----------
+  const Y = T.guoqian;
+  const GAN = "甲乙丙丁戊己庚辛壬癸";
+  const zhNum = (n) => "一二三四五六七八九十"[n - 1];
+  const tubeSvg = () => `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
     ${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
       `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}
     <path d="M18 70 h124 l-8 150 a8 8 0 0 1 -8 8 h-92 a8 8 0 0 1 -8 -8 z" fill="#7a1712"/>
     <path d="M18 70 h124 l-1.2 18 h-121.6 z" fill="#a3241b"/>
     <rect x="22" y="196" width="116" height="10" fill="#5a100c"/>
     <rect x="52" y="104" width="56" height="78" rx="4" fill="#f4e7c8"/>
-    <text x="80" y="136" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">藥</text>
-    <text x="80" y="168" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">籤</text>
+    <text x="80" y="136" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">${Y.tube[0]}</text>
+    <text x="80" y="168" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">${Y.tube[1]}</text>
   </svg>`;
+  // 籤紙上的小插圖（viewBox 0 0 100 100）
+  const LEAF = `<path d="M52 18 C62 6, 80 8, 84 14 C74 22, 60 24, 52 18 Z" fill="#5f8f3a"/>`;
+  const STEM = `<path d="M50 14 v10" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/>`;
+  const ICONS = {
+    pear: `${STEM}${LEAF}
+      <path d="M50 24 C38 24, 36 40, 38 48 C24 58, 22 88, 50 90 C78 88, 76 58, 62 48 C64 40, 62 24, 50 24 Z" fill="#d9d77a" stroke="#9a9a3c" stroke-width="2"/>
+      <ellipse cx="40" cy="62" rx="5" ry="10" fill="#fff" opacity=".45"/>`,
+    flower: `<path d="M50 60 C48 74, 40 84, 30 92" stroke="#6b4a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="50" cy="26" rx="12" ry="18" fill="#fff" stroke="#d9cfc0" stroke-width="1.5" transform="rotate(${a} 50 44)"/>`).join("")}
+      <circle cx="50" cy="44" r="8" fill="#f2c94c"/>`,
+    persimmon: `<path d="M50 32 C82 30, 90 50, 86 66 C82 84, 64 88, 50 88 C36 88, 18 84, 14 66 C10 50, 18 30, 50 32 Z" fill="#e8642c" stroke="#b84418" stroke-width="2"/>
+      <path d="M50 66 V86" stroke="#b84418" stroke-width="1.5" opacity=".5"/>
+      <path d="M50 36 L28 26 L38 40 L24 46 L50 42 L76 46 L62 40 L72 26 Z" fill="#4f7a2c"/>
+      <path d="M50 22 v10" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="36" cy="54" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
+    lantern: `<circle cx="50" cy="60" r="40" fill="#f6c76b" opacity=".35"/>
+      <path d="M50 4 v24" stroke="#6b4a2a" stroke-width="3"/>
+      <ellipse cx="50" cy="60" rx="30" ry="26" fill="#e8642c" stroke="#b84418" stroke-width="2"/>
+      <path d="M50 34 L38 28 L44 38 L34 42 L66 42 L56 38 L62 28 Z" fill="#4f7a2c"/>
+      <ellipse cx="40" cy="56" rx="6" ry="9" fill="#fff" opacity=".35"/>`,
+    mountain: `<path d="M4 88 L36 34 L52 58 L68 26 L96 88 Z" fill="#6f9a4a"/>
+      <path d="M36 34 L44 48 L36 46 L30 44 Z M68 26 L77 44 L68 42 L60 40 Z" fill="#fff" opacity=".7"/>
+      ${[70, 78].map((y) => `<path d="M14 ${y} Q50 ${y - 6} 88 ${y}" stroke="#4d7a30" stroke-width="2.5" fill="none"/>`).join("")}
+      <circle cx="80" cy="16" r="8" fill="#f2c94c"/>`,
+    sprout: `<path d="M8 84 Q50 64 92 84 L92 94 L8 94 Z" fill="#8a5a34"/>
+      <path d="M50 74 V40" stroke="#4f7a2c" stroke-width="5" stroke-linecap="round"/>
+      <path d="M50 50 C36 50, 26 40, 24 30 C38 28, 48 36, 50 50 Z M50 44 C62 44, 74 34, 76 22 C62 20, 52 30, 50 44 Z" fill="#6fae3e"/>
+      <circle cx="80" cy="16" r="8" fill="#f2c94c"/>`,
+    shears: `<path d="M44 52 L84 14 M56 52 L16 14" stroke="#8a9196" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="50" cy="50" r="4" fill="#555"/>
+      <path d="M46 54 L30 80 M54 54 L70 80" stroke="#b5452f" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="84" cy="74" r="10" fill="#d9d77a" stroke="#9a9a3c" stroke-width="2"/>`,
+    citrus: `${STEM}${LEAF}
+      <ellipse cx="50" cy="58" rx="36" ry="32" fill="#f39a1e" stroke="#c96f0c" stroke-width="2"/>
+      ${[[36, 48], [58, 44], [66, 64], [44, 70], [52, 58]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.8" fill="#c96f0c"/>`).join("")}
+      <ellipse cx="36" cy="52" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
+    river: [30, 52, 74].map((y, i) => `<path d="M6 ${y} q11 -12 22 0 t22 0 t22 0 t22 0" stroke="${["#7fb8d8", "#4f97c4", "#2f73a6"][i]}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join(""),
+    dew: `${STEM}${LEAF}
+      <ellipse cx="46" cy="60" rx="34" ry="30" fill="#ef8a1a" stroke="#c96f0c" stroke-width="2"/>
+      <path d="M80 50 C86 60, 90 66, 84 72 C78 74, 74 68, 80 50 Z" fill="#9fd3f0" stroke="#4f97c4" stroke-width="1.5"/>
+      <ellipse cx="34" cy="54" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
+  };
+  const iconSvg = (k, cls = "") => `<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true">${ICONS[k] || ""}</svg>`;
+  const WX_COLOR = { "木": "#4f7a2c", "火": "#c2401c", "土": "#a8742a", "金": "#9a7b1c", "水": "#2f73a6" };
+
+  // 本命天干：出生年尾數 4 = 甲、5 = 乙……3 = 癸
+  const bornGan = (d) => GAN[(d + 6) % 10];
+  const ganWx = (g) => "木木火火土土金金水水"[GAN.indexOf(g)];
+  function relation(meWx, qWx) {
+    const W = Y.wuxing;
+    const t = meWx === qWx ? W.same
+      : W.sheng[qWx] === meWx ? W.helpMe
+      : W.sheng[meWx] === qWx ? W.iHelp
+      : W.ke[meWx] === qWx ? W.iWin : W.winMe;
+    return t.replaceAll("{me}", meWx).replaceAll("{q}", qWx);
+  }
+  function seasonLine(s) {
+    const m = new Date().getMonth() + 1;
+    return s.months?.includes(m) && s.now ? { now: true, text: s.now } : { now: false, text: s.text };
+  }
+
   // 筊杯：flat = 平面朝上，round = 凸面朝上
   const jiaoSvg = (face, cls) => `<svg class="jiao ${cls}" viewBox="0 0 120 70" aria-hidden="true">
     <path d="M6 58 C14 2, 106 2, 114 58 C92 46, 28 46, 6 58 Z"
@@ -663,13 +719,16 @@
       : `<path d="M28 30 C40 14, 70 10, 86 18" stroke="#fff" stroke-opacity=".4" stroke-width="6" fill="none" stroke-linecap="round"/>`}
   </svg>`;
 
-  let qian = { kind: null, num: 0, fails: 0, introStep: 0 };
+  let qian = { num: 0, last: 0, fails: 0, introStep: 0, born: null };
   const qSay = (s) => ($("qianLine").textContent = s);
-  const qStage = (html) => ($("qianStage").innerHTML = html);
+  const qStage = (html) => { $("qianStage").innerHTML = html; $("qianStage").scrollTop = 0; };
+  const qPose = (p) => ($("qianGuide").src = T.guide.poses[p] || T.guide.poses.default);
+  const qClose = () => ($("qianLayer").hidden = true);
+  const qRedo = () => { qian.fails = 0; qianShake(); };
 
   function openQian() {
-    qian = { kind: null, num: 0, fails: 0, introStep: 0 };
-    $("qianGuide").src = T.guide.poses.wave || T.guide.poses.default;
+    qian = { num: 0, last: qian.last, fails: 0, introStep: 0, born: qian.born };
+    qPose("wave");
     $("qianSpeaker").textContent = T.guide.name;
     $("qianLayer").hidden = false;
     qianIntro();
@@ -677,37 +736,45 @@
   function qianIntro() {
     const last = qian.introStep >= Y.intro.length - 1;
     qSay(Y.intro[qian.introStep]);
-    qStage(`${TUBE_SVG}<button class="btn primary" id="qNext">${last ? "我要求籤" : "繼續聽"}</button>`);
+    qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "繼續聽"}</button>`);
     $("qNext").onclick = () => {
-      if (last) return qianPick();
+      if (last) return qian.born === null ? qianBorn() : qianShake();
       qian.introStep++;
-      $("qianGuide").src = T.guide.poses.default;
+      qPose(qian.introStep === 1 ? "fruit" : "default");
       qianIntro();
     };
   }
-  function qianPick() {
-    $("qianGuide").src = T.guide.poses.point || T.guide.poses.default;
-    qSay("先選要抽哪一種籤。");
-    qStage(`${TUBE_SVG}<div class="qian-kinds">${Y.kinds.map((k) =>
-      `<button data-k="${k.id}">${k.label}<small>${k.sub}</small></button>`).join("")}</div>`);
-    $("qianStage").querySelectorAll("[data-k]").forEach((b) => {
-      b.onclick = () => { qian.kind = Y.kinds.find((k) => k.id === b.dataset.k); qianShake(); };
+  function qianBorn() {
+    qPose("point");
+    qSay(Y.bornSay);
+    const digits = [4, 5, 6, 7, 8, 9, 0, 1, 2, 3];
+    qStage(`<p class="qian-ask">出生年的最後一個數字</p>
+      <div class="born-grid">${digits.map((d) =>
+        `<button data-d="${d}"><b>${d}</b><small>${bornGan(d)}${ganWx(bornGan(d))}</small></button>`).join("")}</div>
+      <p class="qian-hint">${Y.bornNote}</p>
+      <button class="btn ghost" id="qSkip">跳過</button>`);
+    $("qianStage").querySelectorAll("[data-d]").forEach((b) => {
+      b.onclick = () => { qian.born = bornGan(+b.dataset.d); qianShake(); };
     });
+    $("qSkip").onclick = () => { qian.born = ""; qianShake(); };
   }
   function qianShake() {
-    $("qianGuide").src = T.guide.poses.default;
-    qSay(Y.shakeSay);
-    qStage(`${TUBE_SVG}<button class="btn primary" id="qShake">搖籤筒</button>`);
+    qPose("default");
+    const me = qian.born ? `你的本命是「${qian.born}${ganWx(qian.born)}」。` : "";
+    qSay(me + Y.shakeSay);
+    qStage(`${tubeSvg()}<button class="btn primary" id="qShake">搖籤筒</button>`);
     $("qShake").onclick = () => {
       $("qShake").disabled = true;
       $("qianStage").querySelector(".tube").classList.add("shaking");
       setTimeout(() => {
-        qian.num = 1 + Math.floor(Math.random() * 100);
-        const label = `${qian.kind.name}第${zhNum(qian.num)}首`;
+        // 不要連續抽到同一支
+        do { qian.num = 1 + Math.floor(Math.random() * Y.signs.length); } while (qian.num === qian.last && Y.signs.length > 1);
+        qian.last = qian.num;
+        const sg = Y.signs[qian.num - 1];
         qSay(Y.jiaoSay);
-        $("qianGuide").src = T.guide.poses.think || T.guide.poses.default;
-        qStage(`<div class="stick">${label}</div>
-          <p class="qian-num">抽到：${label}</p>
+        qPose("think");
+        qStage(`<div class="stick">第${zhNum(qian.num)}籤 ${sg.gan}</div>
+          <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>
           <button class="btn primary" id="qJiao">擲筊</button>`);
         $("qJiao").onclick = qianJiao;
       }, 1250);
@@ -724,7 +791,7 @@
       const j = Y.jiao[r];
       $("qRes").innerHTML = `<b>${j.name}</b>${j.desc}`;
       if (r === "sheng") {
-        $("qianGuide").src = T.guide.poses.happy || T.guide.poses.default;
+        qPose("happy");
         $("qAct").innerHTML = `<button class="btn primary" id="qShow">看籤</button>`;
         $("qShow").onclick = qianResult;
       } else {
@@ -735,22 +802,130 @@
     }, 900);
   }
   function qianResult() {
-    const bless = Y.blessings[(qian.num - 1) % Y.blessings.length];
-    qSay(Y.resultSay);
-    qStage(`<div class="qian-paper">
-        <h3>第${zhNum(qian.num)}首</h3>
-        <p class="kind">${qian.kind.name}藥籤</p>
-        <p class="bless">${bless}</p>
+    const sg = Y.signs[qian.num - 1];
+    const ss = seasonLine(sg.season);
+    const rel = qian.born ? relation(ganWx(qian.born), sg.wx) : "";
+    qPose("fruit");
+    qSay(sg.say);
+    qStage(`<div class="qian-paper guo" style="--wx:${WX_COLOR[sg.wx]}">
+        <p class="kind">東勢果籤</p>
+        <h3>第${zhNum(qian.num)}籤</h3>
+        <p class="gan"><span class="wx">${sg.gan}・${sg.wx}</span><span class="luck">${sg.luck}</span></p>
+        ${iconSvg(sg.icon, "guo-icon")}
+        <p class="guo-title">${sg.title}</p>
+        <div class="poem">${sg.poem.map((l) => `<span>${l}</span>`).join("")}</div>
+        <dl class="advice">${Object.entries(sg.advice).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+        ${rel ? `<p class="born"><b>本命 ${qian.born}${ganWx(qian.born)}</b>${rel}</p>` : ""}
+        <p class="fruit-note"><b>果語</b>${sg.fruitNote}</p>
+        <p class="season${ss.now ? " now" : ""}">${ss.text}</p>
         <p class="note">${Y.disclaimer}</p>
       </div>
-      <button class="btn primary" id="qRedo">再抽一支</button>
+      <button class="btn primary" id="qCard">存成籤卡</button>
+      <button class="btn" id="qRedo">再抽一支</button>
       <button class="btn ghost" id="qBack">回到地圖</button>`);
-    $("qRedo").onclick = () => { qian.fails = 0; qianPick(); };
-    $("qBack").onclick = () => ($("qianLayer").hidden = true);
+    $("qCard").onclick = qianCard;
+    $("qRedo").onclick = qRedo;
+    $("qBack").onclick = qClose;
   }
-  // 藥籤因法規不公開（2026-11-10 下架）；這套搖籤、擲筊畫面之後改給果籤用
+
+  // 籤卡：canvas 畫成 PNG（直排籤詩＋四項建議＋本命）
+  function wrapText(g, text, maxW) {
+    const lines = []; let cur = "";
+    for (const ch of text) {
+      if (g.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; }
+      else cur += ch;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  async function renderQianCard() {
+    const sg = Y.signs[qian.num - 1];
+    const rel = qian.born ? `本命 ${qian.born}${ganWx(qian.born)}｜${relation(ganWx(qian.born), sg.wx)}` : "";
+    const QW = 1080, QH = 1620;
+    const all = ["東勢果籤第一二三四五六七八九十籤", sg.gan, sg.wx, sg.luck, sg.title, ...sg.poem,
+      ...Object.entries(sg.advice).flat(), rel, Y.disclaimer, "台中東勢大茅埔泰興宮手機導覽0123456789.｜：，！"].join("");
+    try {
+      await Promise.all([
+        document.fonts.load(`900 80px "Noto Serif TC"`, all),
+        document.fonts.load(`600 40px "Noto Serif TC"`, all),
+        document.fonts.load(`500 30px "Noto Sans TC"`, all),
+      ]);
+    } catch {}
+    const icon = await loadImg("data:image/svg+xml;charset=utf-8," +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">${ICONS[sg.icon]}</svg>`));
+    const c = document.createElement("canvas"); c.width = QW; c.height = QH;
+    const g = c.getContext("2d");
+    const red = "#7a1712", col = WX_COLOR[sg.wx];
+    g.fillStyle = red; g.fillRect(0, 0, QW, QH);
+    g.fillStyle = "#f4e7c8"; rrect(g, 36, 36, QW - 72, QH - 72, 24); g.fill();
+    g.strokeStyle = "#e3b54a"; g.lineWidth = 4; rrect(g, 56, 56, QW - 112, QH - 112, 14); g.stroke();
+
+    g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.fillStyle = "#6d5c4f"; g.font = `500 32px ${SANS}`; g.fillText("東 勢 果 籤", QW / 2, 140);
+    g.fillStyle = red; g.font = `900 96px ${SERIF}`; g.fillText(`第${zhNum(qian.num)}籤`, QW / 2, 250);
+    // 天干五行＋吉凶
+    g.font = `900 46px ${SERIF}`;
+    g.fillStyle = col; rrect(g, QW / 2 - 200, 284, 190, 72, 36); g.fill();
+    g.fillStyle = "#fff"; g.fillText(`${sg.gan}・${sg.wx}`, QW / 2 - 105, 337);
+    g.strokeStyle = red; g.lineWidth = 4; rrect(g, QW / 2 + 10, 284, 190, 72, 36); g.stroke();
+    g.fillStyle = red; g.fillText(sg.luck, QW / 2 + 105, 337);
+
+    if (icon) g.drawImage(icon, QW / 2 - 90, 380, 180, 180);
+    g.fillStyle = "#1d1410"; g.font = `600 44px ${SERIF}`; g.fillText(sg.title, QW / 2, 616);
+    // 詩：四句直排，由右到左
+    g.font = `900 52px ${SERIF}`; g.textBaseline = "top";
+    sg.poem.forEach((line, i) => {
+      const x = QW / 2 + 150 - i * 100;
+      [...line].forEach((ch, j) => g.fillText(ch, x, 664 + j * 60));
+    });
+    g.textBaseline = "alphabetic";
+    g.strokeStyle = "#c9a77b"; g.setLineDash([10, 8]); g.lineWidth = 2;
+    g.beginPath(); g.moveTo(110, 1110); g.lineTo(QW - 110, 1110); g.stroke(); g.setLineDash([]);
+    // 四項建議
+    g.textAlign = "left";
+    Object.entries(sg.advice).forEach(([k, v], i) => {
+      const y = 1172 + i * 58;
+      g.fillStyle = col; g.font = `900 34px ${SERIF}`; g.fillText(k, 130, y);
+      g.fillStyle = "#1d1410"; g.font = `500 34px ${SANS}`; g.fillText(v, 240, y, QW - 370);
+    });
+    let y = 1172 + 4 * 58 + 8;
+    if (rel) {
+      g.fillStyle = red; g.font = `600 30px ${SANS}`;
+      wrapText(g, rel, QW - 260).slice(0, 2).forEach((l) => { g.fillText(l, 130, y); y += 42; });
+    }
+    g.textAlign = "center"; g.fillStyle = "#6d5c4f"; g.font = `500 26px ${SANS}`;
+    g.fillText(`${fmtDate(new Date())}｜台中東勢大茅埔泰興宮手機導覽`, QW / 2, QH - 116);
+    g.font = `500 22px ${SANS}`; g.fillText(Y.disclaimer, QW / 2, QH - 80, QW - 160);
+
+    return new Promise((res) => c.toBlob(res, "image/png"));
+  }
+  let qCardUrl = null;
+  async function qianCard() {
+    $("qCard").disabled = true; $("qCard").textContent = "製作中…";
+    const blob = await renderQianCard();
+    if (!blob) { toast("籤卡做不出來，請改用截圖保存"); $("qCard").disabled = false; $("qCard").textContent = "存成籤卡"; return; }
+    if (qCardUrl) URL.revokeObjectURL(qCardUrl);
+    qCardUrl = URL.createObjectURL(blob);
+    const name = `東勢果籤第${zhNum(qian.num)}籤.png`;
+    const file = new File([blob], name, { type: "image/png" });
+    const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+    qPose("happy");
+    qSay("籤卡做好了！可以存下來，或分享給朋友，看看東勢的水果跟你說了什麼。");
+    qStage(`<img class="qian-card" src="${qCardUrl}" alt="東勢果籤籤卡">
+      <p class="qian-hint">也可以長按圖片直接儲存</p>
+      ${canShare ? `<button class="btn primary" id="qShare">分享</button>` : ""}
+      <a class="btn primary" href="${qCardUrl}" download="${name}">存成圖片</a>
+      <button class="btn" id="qRedo">再抽一支</button>
+      <button class="btn ghost" id="qBack">回到地圖</button>`);
+    if (canShare) $("qShare").onclick = async () => {
+      try { await navigator.share({ files: [file], title: "東勢果籤", text: "我在台中東勢大茅埔泰興宮抽到一支果籤！" }); }
+      catch (e) { if (e.name !== "AbortError") toast("這支手機不支援直接分享，請改用「存成圖片」"); }
+    };
+    $("qRedo").onclick = qRedo;
+    $("qBack").onclick = qClose;
+  }
   if (Y) { $("qianBtn").hidden = false; $("qianBtn").onclick = openQian; }
-  $("qianClose").onclick = () => ($("qianLayer").hidden = true);
+  $("qianClose").onclick = qClose;
 
   // ---------- 集章卡（canvas 畫成 PNG，可分享或存檔） ----------
   const DONE_KEY = "templego-complete";

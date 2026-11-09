@@ -414,7 +414,7 @@ h1 {
 .stamp-layer p { margin: 0; color: var(--gold-soft); }
 .stamp-layer .btn { width: min(100%, 280px); }
 
-/* ---------- 求藥籤 ---------- */
+/* ---------- 東勢果籤 ---------- */
 .map-area { position: relative; }
 .qian-entry {
   position: absolute; right: 12px; top: 12px; z-index: 2;
@@ -423,7 +423,7 @@ h1 {
   padding: 0 16px; min-height: 42px; box-shadow: 0 8px 24px rgba(0,0,0,.24);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
 }
-.qian-entry::before { content: "🎋 "; }
+.qian-entry::before { content: "🍊 "; }
 .qian-layer {
   position: absolute; inset: 0; z-index: 7; display: flex; flex-direction: column;
   background: radial-gradient(circle at 50% 35%, #3a2a1e 0%, var(--night) 70%); color: #fff;
@@ -433,9 +433,13 @@ h1 {
 .qian-top h2 { margin: 0; font: 600 18px var(--serif); letter-spacing: .08em; }
 .qian-stage {
   flex: 1; min-height: 0; overflow-y: auto;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center;
   gap: 16px; padding: 8px 16px 16px; text-align: center;
 }
+/* 內容比畫面高時不能用 justify-content:center（上面會被切掉），改用 auto margin 置中 */
+.qian-stage > :first-child { margin-top: auto; }
+.qian-stage > :last-child { margin-bottom: auto; }
+.qian-stage a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-sizing: border-box; }
 .qian-stage .btn { width: min(100%, 280px); }
 .qian-guide { position: relative; height: 30dvh; min-height: 190px; flex-shrink: 0;
   background: linear-gradient(var(--night-2), var(--night)); border-top: 1px solid rgba(255,255,255,.12); }
@@ -487,6 +491,48 @@ h1 {
 .qian-paper .kind { margin: 2px 0 12px; font-size: 13px; color: var(--muted); letter-spacing: .3em; }
 .qian-paper .bless { margin: 0 0 12px; font: 600 19px/1.6 var(--serif); }
 .qian-paper .note { margin: 0; padding-top: 10px; border-top: 1px dashed #c9a77b; font-size: 12px; color: var(--muted); }
+/* 本命天干 */
+.qian-ask { margin: 0; font: 600 18px var(--serif); color: var(--cream); }
+.qian-hint { margin: -4px 0 0; font-size: 12px; color: var(--text-soft); }
+.born-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: min(100%, 330px); }
+.born-grid button {
+  padding: 8px 0; border-radius: 14px; cursor: pointer; color: #fff;
+  background: var(--glass); border: 1px solid var(--glass-line);
+}
+.born-grid b { display: block; font: 900 24px var(--serif); }
+.born-grid small { font-size: 12px; color: var(--cream); letter-spacing: .1em; }
+.born-grid button:active { transform: scale(.95); }
+
+/* 果籤籤紙 */
+.qian-paper.guo { padding: 18px 18px 14px; }
+.qian-paper.guo .kind { margin: 0 0 2px; }
+.qian-paper .gan { display: flex; justify-content: center; gap: 8px; margin: 8px 0 4px; }
+.qian-paper .gan span { padding: 3px 12px; border-radius: 99px; font: 900 16px var(--serif); letter-spacing: .1em; }
+.qian-paper .gan .wx { background: var(--wx); color: #fff; }
+.qian-paper .gan .luck { border: 2px solid #8e1f16; color: #8e1f16; }
+.guo-icon { display: block; width: 76px; height: 76px; margin: 4px auto 0; }
+.guo-title { margin: 0 0 10px; font: 600 17px var(--serif); }
+.qian-paper .poem {
+  writing-mode: vertical-rl; display: flex; flex-direction: column; justify-content: center; gap: 4px;
+  height: 8em; white-space: nowrap; margin: 0 auto 12px; font: 900 21px/1.5 var(--serif); letter-spacing: .1em;
+}
+.qian-paper .advice {
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin: 0 0 10px; padding-top: 10px;
+  border-top: 1px dashed #c9a77b; text-align: left; font-size: 14px;
+}
+.qian-paper .advice dt { font: 900 14px var(--serif); color: var(--wx); }
+.qian-paper .advice dd { margin: 0; }
+.qian-paper .born, .qian-paper .fruit-note {
+  margin: 0 0 8px; padding: 8px 10px; border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.6;
+  background: rgba(255,255,255,.55);
+}
+.qian-paper .born { color: #8e1f16; }
+.qian-paper .born b, .qian-paper .fruit-note b { display: block; font: 900 14px var(--serif); }
+.qian-paper .fruit-note b { color: var(--wx); }
+.qian-paper .season { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+.qian-paper .season.now { color: #8e1f16; font-weight: 700; }
+.qian-paper .season.now::before { content: "🍊 "; }
+.qian-card { width: min(100%, 300px); border-radius: 8px; box-shadow: 0 14px 40px rgba(0,0,0,.5); }
 @media (prefers-reduced-motion: reduce) { .tube.shaking, .jiao.toss, .stick, .qian-paper { animation: none; } }
 
 /* ---------- 集章卡 ---------- */
