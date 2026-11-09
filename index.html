@@ -44,10 +44,36 @@
       </div>
     </section>
 
+    <!-- 大茅埔總覽圖 -->
+    <section id="overview" class="screen">
+      <header class="topbar">
+        <button class="icon-btn" id="ovHomeBtn" aria-label="回首頁">‹</button>
+        <h2>大茅埔總覽圖</h2>
+      </header>
+      <div class="ov-area" id="ovArea">
+        <div class="ov-wrap" id="ovWrap">
+          <img id="ovImg" alt="大茅埔總覽示意圖">
+        </div>
+      </div>
+      <div class="map-guide">
+        <img class="guide" id="ovGuideImg" alt="">
+        <div class="bubble">
+          <span class="speaker" id="ovSpeaker"></span>
+          <p id="ovLine"></p>
+        </div>
+      </div>
+
+      <div class="sheet" id="campSheet" hidden>
+        <h3 id="campTitle"></h3>
+        <p id="campDesc"></p>
+        <button class="btn" id="campClose">知道了</button>
+      </div>
+    </section>
+
     <!-- 鳥瞰地圖 -->
     <section id="map" class="screen">
       <header class="topbar">
-        <button class="icon-btn" id="mapHomeBtn" aria-label="回首頁">‹</button>
+        <button class="icon-btn" id="mapHomeBtn" aria-label="回大茅埔總覽圖">‹</button>
         <h2>泰興宮鳥瞰圖</h2>
         <button class="stamp-chip" id="mapStamps" aria-label="查看集章卡"></button>
       </header>
@@ -55,6 +81,7 @@
         <div class="map-wrap" id="mapWrap">
           <img id="mapImg" alt="泰興宮鳥瞰示意圖">
         </div>
+        <button class="qian-entry" id="qianBtn">求一支藥籤</button>
       </div>
       <div class="map-guide">
         <img class="guide" id="mapGuideImg" alt="">
@@ -126,6 +153,22 @@
         <button class="btn ghost" id="replayBtn">再玩一次</button>
       </div>
     </section>
+
+    <!-- 求藥籤 -->
+    <div class="qian-layer" id="qianLayer" hidden>
+      <header class="qian-top">
+        <button class="icon-btn" id="qianClose" aria-label="關閉">‹</button>
+        <h2>求藥籤</h2>
+      </header>
+      <div class="qian-stage" id="qianStage"></div>
+      <div class="qian-guide">
+        <img class="guide" id="qianGuide" alt="">
+        <div class="bubble">
+          <span class="speaker" id="qianSpeaker"></span>
+          <p id="qianLine"></p>
+        </div>
+      </div>
+    </div>
 
     <!-- 集章卡 -->
     <div class="card-layer" id="cardLayer" hidden>

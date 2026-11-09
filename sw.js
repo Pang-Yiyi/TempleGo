@@ -1,6 +1,6 @@
 // TempleGo 離線快取
 // ⚠️ 新增或改名圖片時：把路徑加進 PRECACHE，並把 VERSION 加 1，遊客手機才會更新快取
-const VERSION = "v6";
+const VERSION = "v16";
 const CACHE = `templego-${VERSION}`;
 const FONT_CACHE = "templego-fonts";
 
@@ -11,11 +11,13 @@ const PRECACHE = [
   "css/style.css",
   "js/data.js",
   "js/app.js",
+  "assets/img/guide.webp",
   "assets/img/guide-q-default.svg",
   "assets/img/guide-q-wave.svg",
   "assets/img/guide-q-point.svg",
   "assets/img/guide-q-think.svg",
   "assets/img/guide-q-happy.svg",
+  "assets/img/damaopu-overview.svg",
   "assets/img/map.svg",
   "assets/photos/temple-front.webp",
   "assets/photos/front-steps.webp",
@@ -27,18 +29,22 @@ const PRECACHE = [
   "assets/img/kaojiang-scroll.svg",
   "assets/img/plaza-scroll.svg",
   "assets/img/bijiao-scroll.svg",
-  "assets/img/main-hall-pano.webp",
+  "assets/photos/main-hall-pano.webp",
+  "assets/photos/courtyard-pano.webp",
+  "assets/photos/plaza-pano.webp",
   "assets/icons/icon-192.png",
   "assets/icons/favicon.png",
   "https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css",
   "https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js",
 ];
 
-// 程式與文字：先抓網路最新版，2.5 秒抓不到就用快取（廟裡收訊差也不會卡住）
+// 程式與文字：先抓網路最新版，4 秒抓不到就用快取（廟裡收訊差也不會卡住）
 const NETWORK_FIRST = /\.(html|js|css|webmanifest)$|\/$/;
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  // cache: "reload"：略過瀏覽器自己的暫存，確保存進來的是伺服器上的最新版
+  const reqs = PRECACHE.map((u) => new Request(u, { cache: "reload" }));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(reqs)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
@@ -73,7 +79,8 @@ self.addEventListener("fetch", (e) => {
 async function networkFirst(req) {
   const cache = await caches.open(CACHE);
   try {
-    const res = await withTimeout(fetch(req), 2500);
+    // cache: "no-cache"：每次都跟伺服器確認是不是最新版（沒改過只回 304，很快）
+    const res = await withTimeout(fetch(req, { cache: "no-cache" }), 4000);
     if (res.ok) cache.put(req, res.clone());
     return res;
   } catch {

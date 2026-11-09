@@ -61,8 +61,9 @@
     document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
   };
 
-  $("startBtn").onclick = showMap;
-  $("mapHomeBtn").onclick = () => show("intro");
+  $("startBtn").onclick = showOverview;
+  $("mapHomeBtn").onclick = showOverview;
+  $("ovHomeBtn").onclick = () => show("intro");
   $("homeBtn").onclick = () => { clearInterval(typing); typing = null; destroyPano(); showMap(); };
   $("replayBtn").onclick = () => startStop(stopIndex);
   $("toMapBtn").onclick = showMap;
@@ -71,16 +72,63 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   function renderCredits() {
     const lic = T.photoLicense;
-    const photos = Object.values(T.photos || {}).map((p) =>
+    const all = Object.values(T.photos || {});
+    const own = all.filter((p) => p.own).map((p) => esc(p.title)).join("、");
+    const photos = all.filter((p) => !p.own).map((p) =>
       `<li>${esc(p.title)}：${esc(p.author)}／<a href="${esc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>（${esc(p.edit)}）</li>`).join("");
     $("creditsList").innerHTML = `
       <p class="note">以下照片依 <a href="${lic.url}" target="_blank" rel="noopener">${lic.name}</a> 授權使用；經縮放、裁切後的版本同樣以 ${lic.name} 釋出。</p>
       <ul>${photos}</ul>
+      ${own ? `<p class="note">${own}：本團隊 2026 年 11 月實地拍攝，路人臉部與車牌已模糊處理。</p>` : ""}
       <p class="note">插畫、鳥瞰圖、正殿環景為本團隊繪製的示意圖，非實際比例。</p>
       <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>`;
   }
   $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
   $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
+
+  // ---------- 大茅埔總覽圖 ----------
+  const OV = T.overview;
+  $("ovImg").src = OV.image;
+  $("ovWrap").style.setProperty("--ov-aspect", OV.aspect);
+  $("ovGuideImg").src = T.guide.poses.point || T.guide.poses.default;
+  $("ovSpeaker").textContent = T.guide.name;
+  $("ovLine").textContent = fill(OV.say);
+  {
+    const t = document.createElement("button");
+    t.className = "ov-temple";
+    t.style.left = OV.temple.x + "%"; t.style.top = OV.temple.y + "%";
+    t.textContent = OV.temple.label;
+    t.onclick = showMap;
+    $("ovWrap").appendChild(t);
+    OV.camps.forEach((c) => {
+      const b = document.createElement("button");
+      b.className = "ov-camp";
+      b.style.left = c.x + "%"; b.style.top = c.y + "%";
+      b.setAttribute("aria-label", c.name);
+      b.onclick = () => {
+        $("campTitle").textContent = c.name;
+        $("campDesc").textContent = c.desc || OV.campDesc;
+        $("campSheet").hidden = false;
+      };
+      $("ovWrap").appendChild(b);
+    });
+  }
+  $("campClose").onclick = () => ($("campSheet").hidden = true);
+
+  let ovCentered = false;
+  function showOverview() {
+    show("overview");
+    $("campSheet").hidden = true;
+    if (ovCentered) return;
+    const center = () => {
+      const a = $("ovArea"), w = $("ovWrap").offsetWidth;
+      if (!w) return;
+      a.scrollLeft = Math.max(0, w * OV.focus / 100 - a.clientWidth / 2);
+      ovCentered = true;
+    };
+    requestAnimationFrame(center);
+    $("ovImg").addEventListener("load", center, { once: true });
+  }
 
   // ---------- 鳥瞰地圖 ----------
   $("mapImg").src = T.map.image;
@@ -140,7 +188,8 @@
     destroyPano();
     currentImage = null;
     // 第一句有指定 image（例如先看實景照片）就直接開那張，不會先閃過長卷
-    const first = s.script[0]?.image || s.image;
+    // 第一句是 scene: "pano" 的站（例如先看中庭環景），直接開環景
+    const first = s.script[0]?.scene === "pano" && s.pano ? null : s.script[0]?.image || s.image;
     if (first) {
       showImage(first, () => playStep());
     } else {
@@ -174,8 +223,13 @@
   function showCredit(meta) {
     const el = $("credit");
     if (!meta) { el.hidden = true; return; }
-    el.href = meta.page;
-    el.textContent = `照片：${meta.author}／Wikimedia Commons／${T.photoLicense.name}`;
+    if (meta.own) {
+      el.removeAttribute("href");
+      el.textContent = "照片：團隊實地拍攝";
+    } else {
+      el.href = meta.page;
+      el.textContent = `照片：${meta.author}／Wikimedia Commons／${T.photoLicense.name}`;
+    }
     el.hidden = false;
   }
 
@@ -358,7 +412,7 @@
     scene.classList.toggle("pano-mode", pano);
     // 照片與環景滿版（標題列浮在上面）；插畫長卷的標題在圖上，標題列改回一般位置
     $("stop").classList.toggle("immersive", pano || !!T.photos?.[currentImage]);
-    if (pano) scene.classList.remove("vertical");
+    if (pano) { scene.classList.remove("vertical"); showCredit(T.photos?.[stop().pano]); }
     $("sceneInner").hidden = pano;
     $("pano").hidden = !pano;
     $("sceneHint").textContent = pano ? "拖曳畫面，或轉動手機看四周" : "← 左右滑動看看 →";
@@ -368,13 +422,27 @@
     const f = typeof focus === "object" && focus ? focus : { yaw: 0, pitch: 0 };
     if (viewer) return panoLook(f);
     if (!window.pannellum) { toast("環景元件載入失敗，請確認網路連線"); return; }
+    // 半圈環景（手機全景模式拍的）：panoView 設定水平 / 垂直涵蓋角度，畫面不會轉出照片外
+    const pv = stop().panoView;
+    let fov = { hfov: 100, minHfov: 50, maxHfov: 115 };
+    if (pv) {
+      // 直式螢幕的上下視角比左右大，依螢幕比例算出不會露出照片上下邊界的最大左右視角
+      const el = $("pano"), ar = (el.clientHeight || 600) / (el.clientWidth || 390);
+      const rad = Math.PI / 180;
+      const fit = 2 * Math.atan(Math.tan((pv.vaov / 2) * rad) / ar) / rad * 0.96;
+      const h = Math.min(100, fit);
+      fov = { hfov: h, minHfov: Math.min(30, h), maxHfov: h };
+    }
     viewer = pannellum.viewer("pano", {
       type: "equirectangular",
       panorama: stop().pano,
       autoLoad: true,
       showControls: false,
       compass: false,
-      hfov: 100, minHfov: 50, maxHfov: 115,
+      ...fov,
+      // 不用 avoidShowingBackground（Pannellum 2.5.6 搭配半圈環景會算出 NaN、畫面變黑），改用明確的上下左右邊界
+      ...(pv ? { haov: pv.haov, vaov: pv.vaov, vOffset: pv.vOffset || 0,
+        minYaw: -pv.haov / 2, maxYaw: pv.haov / 2, minPitch: -pv.vaov / 2, maxPitch: pv.vaov / 2 } : {}),
       yaw: f.yaw, pitch: f.pitch,
       hotSpots: [],
     });
@@ -537,6 +605,15 @@
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").catch(() => {});
     });
+    // 有新版離線快取接手時，自動重新整理一次，遊客就不會一直看到舊版
+    // （第一次造訪沒有舊版，不需要重新整理）
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hadController || reloaded) return;
+      reloaded = true;
+      location.reload();
+    });
   }
   window.addEventListener("offline", () => toast("目前沒有網路，導覽會使用手機裡已存好的內容"));
 
@@ -557,6 +634,122 @@
     $("toMapBtn").textContent = complete ? "回到地圖" : "回到地圖，選下一站";
     $("stampLayer").hidden = false;
   }
+
+  // ---------- 求藥籤（文化體驗，不顯示藥方） ----------
+  const Y = T.yaoqian;
+  const zhNum = (n) => {
+    const d = "零一二三四五六七八九";
+    if (n === 100) return "一百";
+    if (n < 10) return d[n];
+    const t = Math.floor(n / 10), o = n % 10;
+    return (t === 1 ? "十" : d[t] + "十") + (o ? d[o] : "");
+  };
+  const TUBE_SVG = `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
+    ${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
+      `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}
+    <path d="M18 70 h124 l-8 150 a8 8 0 0 1 -8 8 h-92 a8 8 0 0 1 -8 -8 z" fill="#7a1712"/>
+    <path d="M18 70 h124 l-1.2 18 h-121.6 z" fill="#a3241b"/>
+    <rect x="22" y="196" width="116" height="10" fill="#5a100c"/>
+    <rect x="52" y="104" width="56" height="78" rx="4" fill="#f4e7c8"/>
+    <text x="80" y="136" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">藥</text>
+    <text x="80" y="168" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">籤</text>
+  </svg>`;
+  // 筊杯：flat = 平面朝上，round = 凸面朝上
+  const jiaoSvg = (face, cls) => `<svg class="jiao ${cls}" viewBox="0 0 120 70" aria-hidden="true">
+    <path d="M6 58 C14 2, 106 2, 114 58 C92 46, 28 46, 6 58 Z"
+      fill="${face === "flat" ? "#d9573f" : "#9b2418"}" stroke="#4a0d08" stroke-width="2.5" stroke-linejoin="round"/>
+    ${face === "flat"
+      ? `<path d="M20 50 C28 16, 92 16, 100 50 C82 42, 38 42, 20 50 Z" fill="#f0b48f" opacity=".55"/>`
+      : `<path d="M28 30 C40 14, 70 10, 86 18" stroke="#fff" stroke-opacity=".4" stroke-width="6" fill="none" stroke-linecap="round"/>`}
+  </svg>`;
+
+  let qian = { kind: null, num: 0, fails: 0, introStep: 0 };
+  const qSay = (s) => ($("qianLine").textContent = s);
+  const qStage = (html) => ($("qianStage").innerHTML = html);
+
+  function openQian() {
+    qian = { kind: null, num: 0, fails: 0, introStep: 0 };
+    $("qianGuide").src = T.guide.poses.wave || T.guide.poses.default;
+    $("qianSpeaker").textContent = T.guide.name;
+    $("qianLayer").hidden = false;
+    qianIntro();
+  }
+  function qianIntro() {
+    const last = qian.introStep >= Y.intro.length - 1;
+    qSay(Y.intro[qian.introStep]);
+    qStage(`${TUBE_SVG}<button class="btn primary" id="qNext">${last ? "我要求籤" : "繼續聽"}</button>`);
+    $("qNext").onclick = () => {
+      if (last) return qianPick();
+      qian.introStep++;
+      $("qianGuide").src = T.guide.poses.default;
+      qianIntro();
+    };
+  }
+  function qianPick() {
+    $("qianGuide").src = T.guide.poses.point || T.guide.poses.default;
+    qSay("先選要抽哪一種籤。");
+    qStage(`${TUBE_SVG}<div class="qian-kinds">${Y.kinds.map((k) =>
+      `<button data-k="${k.id}">${k.label}<small>${k.sub}</small></button>`).join("")}</div>`);
+    $("qianStage").querySelectorAll("[data-k]").forEach((b) => {
+      b.onclick = () => { qian.kind = Y.kinds.find((k) => k.id === b.dataset.k); qianShake(); };
+    });
+  }
+  function qianShake() {
+    $("qianGuide").src = T.guide.poses.default;
+    qSay(Y.shakeSay);
+    qStage(`${TUBE_SVG}<button class="btn primary" id="qShake">搖籤筒</button>`);
+    $("qShake").onclick = () => {
+      $("qShake").disabled = true;
+      $("qianStage").querySelector(".tube").classList.add("shaking");
+      setTimeout(() => {
+        qian.num = 1 + Math.floor(Math.random() * 100);
+        const label = `${qian.kind.name}第${zhNum(qian.num)}首`;
+        qSay(Y.jiaoSay);
+        $("qianGuide").src = T.guide.poses.think || T.guide.poses.default;
+        qStage(`<div class="stick">${label}</div>
+          <p class="qian-num">抽到：${label}</p>
+          <button class="btn primary" id="qJiao">擲筊</button>`);
+        $("qJiao").onclick = qianJiao;
+      }, 1250);
+    };
+  }
+  function qianJiao() {
+    // 擲兩次沒擲到聖筊，第三次一定是聖筊，免得遊客卡太久
+    const r = qian.fails >= 2 ? "sheng" : ["sheng", "sheng", "xiao", "yin"][Math.floor(Math.random() * 4)];
+    const faces = r === "sheng" ? (Math.random() < .5 ? ["flat", "round"] : ["round", "flat"])
+                : r === "xiao" ? ["flat", "flat"] : ["round", "round"];
+    qStage(`<div class="jiao-pair">${jiaoSvg(faces[0], "toss a")}${jiaoSvg(faces[1], "toss b")}</div>
+      <p class="jiao-result" id="qRes"></p><div id="qAct"></div>`);
+    setTimeout(() => {
+      const j = Y.jiao[r];
+      $("qRes").innerHTML = `<b>${j.name}</b>${j.desc}`;
+      if (r === "sheng") {
+        $("qianGuide").src = T.guide.poses.happy || T.guide.poses.default;
+        $("qAct").innerHTML = `<button class="btn primary" id="qShow">看籤</button>`;
+        $("qShow").onclick = qianResult;
+      } else {
+        qian.fails++;
+        $("qAct").innerHTML = `<button class="btn primary" id="qAgain">重抽一支</button>`;
+        $("qAgain").onclick = qianShake;
+      }
+    }, 900);
+  }
+  function qianResult() {
+    const bless = Y.blessings[(qian.num - 1) % Y.blessings.length];
+    qSay(Y.resultSay);
+    qStage(`<div class="qian-paper">
+        <h3>第${zhNum(qian.num)}首</h3>
+        <p class="kind">${qian.kind.name}藥籤</p>
+        <p class="bless">${bless}</p>
+        <p class="note">${Y.disclaimer}</p>
+      </div>
+      <button class="btn primary" id="qRedo">再抽一支</button>
+      <button class="btn ghost" id="qBack">回到地圖</button>`);
+    $("qRedo").onclick = () => { qian.fails = 0; qianPick(); };
+    $("qBack").onclick = () => ($("qianLayer").hidden = true);
+  }
+  $("qianBtn").onclick = openQian;
+  $("qianClose").onclick = () => ($("qianLayer").hidden = true);
 
   // ---------- 集章卡（canvas 畫成 PNG，可分享或存檔） ----------
   const DONE_KEY = "templego-complete";

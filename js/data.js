@@ -11,7 +11,7 @@ window.TOUR = {
   guide: {
     name: "志永哥",
     // ★ 切換人物：同意書簽署前用 "q"；簽署後改成 "real"（步驟見 README「換成真人」）
-    style: "q",
+    style: "real",
     styles: {
       // Q版志永哥（SVG 手繪，依照片特徵：黑色鴨舌帽、白 T、深藍袖套、雙手交握）
       q: {
@@ -28,28 +28,30 @@ window.TOUR = {
     },
   },
 
-  // 網路照片來源（Wikimedia Commons，CC BY-SA 4.0）：畫面上會自動顯示標示，開場「照片與資料來源」也會列出
+  // 照片來源（own: true 是團隊自己拍的，其餘是 Wikimedia Commons，CC BY-SA 4.0）：畫面上會自動顯示標示，開場「照片與資料來源」也會列出
   // 這些照片經過縮放／裁切，修改後的版本同樣以 CC BY-SA 4.0 釋出
   // fit: "width" 的照片會撐滿寬度、改成上下滑動（適合直式照片）
   photos: {
+    // own: true = 團隊 2026-11-08 實地拍攝（原檔在 素材/照片/20261108_現場/），車牌與路人臉部已模糊
     "assets/photos/temple-front.webp": {
-      title: "泰興宮山門", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
-      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-06.jpg" },
+      title: "泰興宮山門", own: true, edit: "IMG_6327 裁切、縮放，車牌模糊" },
     "assets/photos/front-steps.webp": {
-      title: "山門前的石獅與階梯", author: "Mingwu1977（大茅埔調查團）", edit: "裁切、縮放",
-      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-06.jpg" },
+      title: "山門前的石獅與階梯", own: true, edit: "IMG_6329 裁切、縮放，人物臉部模糊" },
     "assets/photos/door-gods-photo.webp": {
       title: "山門門神", author: "Isocyclo", edit: "縮放",
       page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_190.jpg" },
+    "assets/photos/main-hall-pano.webp": {
+      title: "正殿半圈環景", own: true, edit: "IMG_6338 手機全景，縮放" },
+    "assets/photos/courtyard-pano.webp": {
+      title: "中庭半圈環景", own: true, edit: "IMG_6347 手機全景，縮放" },
+    "assets/photos/plaza-pano.webp": {
+      title: "廟埕半圈環景", own: true, edit: "IMG_6323 手機全景，縮放，車牌模糊" },
     "assets/photos/guowang-board.webp": {
-      title: "「國王宮」木牌", author: "Isocyclo", edit: "裁切、縮放", fit: "width",
-      page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_319.jpg" },
+      title: "「國王宮」木牌與後堂供奉牌", own: true, edit: "IMG_6332 裁切、縮放", fit: "width" },
     "assets/photos/bijiao-front.webp": {
-      title: "後殿弼教堂與天公爐", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
-      page: "https://commons.wikimedia.org/wiki/File:浪漫台三線-台灣台中東勢-大茅埔-泰興宮-16.jpg" },
+      title: "後殿弼教堂與天公爐", own: true, edit: "IMG_6342 裁切、縮放" },
     "assets/photos/bijiao-altar.webp": {
-      title: "弼教堂神龕", author: "Isocyclo", edit: "縮放",
-      page: "https://commons.wikimedia.org/wiki/File:202104_WMTW_x_HPCF_workshop_228.jpg" },
+      title: "弼教堂", own: true, edit: "IMG_6343 裁切、縮放" },
   },
   photoLicense: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hant" },
 
@@ -59,6 +61,59 @@ window.TOUR = {
     aspect: 360 / 520,
     say: "歡迎來到泰興宮！點地圖上的號碼，我帶你去看！",
     doneSay: "五個地方都走完了，謝謝你來大茅埔！點右上角「完成卡」，可以存起來做紀念喔！",
+  },
+
+  // 大茅埔總覽圖：在泰興宮鳥瞰圖之前。依使用者手繪稿（素材/照片/map.png）重繪，示意非實測
+  // 熱點 x / y 是圖片寬高的百分比
+  // TODO：請志永哥或廟方確認四營的實際位置、各營的故事，確認後補進 desc
+  overview: {
+    image: "assets/img/damaopu-overview.svg",
+    aspect: 1600 / 1131,
+    focus: 53,
+    say: "這就是大茅埔庄！左右滑一滑，找找守著庄子的四個營頭；再點中間的泰興宮，我們進去看看！",
+    temple: { x: 53, y: 47, label: "泰興宮 ›" },
+    camps: [
+      { name: "東營", x: 37, y: 47 },
+      { name: "南營", x: 67.5, y: 42 },
+      { name: "西營", x: 70, y: 65 },
+      { name: "北營", x: 35.5, y: 79 },
+    ],
+    campDesc: "五營是守護庄頭的神兵營寨。東、南、西、北四營守在庄子四周，中營通常就在主廟裡，由廟裡的神明調度，一起守住整個聚落。",
+  },
+
+  // 求藥籤：地圖上的獨立體驗（藥籤放在哪一殿還沒確認，確認後可移到對應的站）
+  // 資料來源：使用者提供（男人一百首、婦人一百首），見 research/泰興宮資料彙整.md 第 5 節
+  // ⚠️ 只做文化體驗，不顯示任何藥方
+  yaoqian: {
+    intro: [
+      "以前庄裡的人要出去看醫生，可不容易。",
+      "所以生病的時候，大家會直接到廟裡，向神明求一支「藥籤」。",
+      "泰興宮的藥籤分成兩種：男人一百首，婦人一百首。你也來試試看！",
+    ],
+    kinds: [
+      { id: "man", label: "男人籤", sub: "一百首", name: "男人" },
+      { id: "woman", label: "婦人籤", sub: "一百首", name: "婦人" },
+    ],
+    shakeSay: "心裡想著想問的事，輕輕搖籤筒，直到有一支籤跳出來。",
+    jiaoSay: "抽到籤以後，還要擲筊問神明：是不是這一支？要擲到「聖筊」才算數喔！",
+    jiao: {
+      sheng: { name: "聖筊", desc: "一平一凸，神明同意了！" },
+      xiao: { name: "笑筊", desc: "兩個平面朝上，神明在笑，意思還不明確。重抽一支吧！" },
+      yin: { name: "陰筊", desc: "兩個凸面朝上，神明不同意。重抽一支吧！" },
+    },
+    resultSay: "以前抽到籤，會去找廟方拿對應號碼的籤紙，上面寫著藥材和份量，再拿去中藥店抓藥。",
+    // 網站不提供藥方，改送一句祝福
+    blessings: [
+      "身體健康，吃飯香，睡得好。",
+      "出入平安，一路順風。",
+      "多喝水、早點睡，精神就會好起來。",
+      "全家平安，大小都健健康康。",
+      "心情放輕鬆，身體自然就輕鬆。",
+      "有空多走走，來大茅埔散散步。",
+      "好天氣、好心情，百病不上身。",
+      "照顧好自己，也照顧身邊的人。",
+    ],
+    disclaimer: "這是文化體驗，不是醫療建議。身體不舒服，請找醫生。",
   },
 
   // ready: false 的站會出現在地圖上，但顯示「製作中」
@@ -71,6 +126,9 @@ window.TOUR = {
       ready: true,
       intro: "泰興宮背山面溪，是大茅埔中軸大街的起點，整個庄頭的格局就從這裡展開。",
       image: "assets/img/plaza-scroll.svg",
+      // 廟埕半圈環景：團隊手機全景（IMG_6323），水平約 193°，車牌已模糊
+      pano: "assets/photos/plaza-pano.webp",
+      panoView: { haov: 193, vaov: 80 },
       stamp: "開庄",
 
       // 內容來源：《茅埔成庄》、邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉、農業部〈我的幸福小地方〉
@@ -88,21 +146,24 @@ window.TOUR = {
         { id: "bend", x: 85.5, y: 89, title: "水口轉個彎",
           desc: "圳水流出庄之前，特別轉了一個彎再慢慢流出去。客家人說「水主財」、「有曲才有財」，轉個彎就能把財留在庄裡。" },
         // ↓ 實景照片熱點（img 指定屬於哪張照片）
-        { id: "plaque", img: "assets/photos/temple-front.webp", x: 50, y: 66, title: "「國王廟」匾額",
-          desc: "山門正中央掛著「國王廟」，告訴大家這裡供奉的是三山國王。" },
-        { id: "mountain", img: "assets/photos/temple-front.webp", x: 78, y: 30, title: "背後的山",
-          desc: "廟後面這片山，村民叫它「莊背山」，也叫「龍背林」。泰興宮就是背靠著山、面向大甲溪。" },
-        { id: "lion", img: "assets/photos/temple-front.webp", x: 32, y: 82, title: "石獅",
+        { id: "plaque", img: "assets/photos/temple-front.webp", x: 50, y: 49.5, title: "「國王廟」匾額",
+          desc: "山門正中央掛著「國王廟」，告訴大家這裡供奉的是三山國王。老匾額要從右往左讀喔！" },
+        { id: "sanshan", img: "assets/photos/temple-front.webp", x: 50, y: 39, title: "屋簷下的小匾",
+          desc: "再往上看，屋簷下還有一塊小匾，寫著「三山國王」，一樣從右往左讀。" },
+        { id: "lion", img: "assets/photos/temple-front.webp", x: 35, y: 64, title: "石獅",
           desc: "山門兩側各有一隻石獅，守護著廟門。到現場可以比比看，兩隻長得一不一樣？" },
       ],
 
       // 順序：先看眼前實景 → 進插畫聽故事 → 回到實景
       script: [
-        { image: "assets/photos/temple-front.webp", focus: 50, pose: "wave",
-          say: "歡迎來到大茅埔！你現在站的地方是泰興宮的廟埕，眼前就是山門。" },
-        { type: "explore", pose: "point", targets: ["plaque", "mountain", "lion"],
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "歡迎來到大茅埔！你現在站的地方是泰興宮的廟埕。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+        { say: "正前方就是泰興宮的山門，我們走近一點看！" },
+        { image: "assets/photos/temple-front.webp", focus: 50,
+          say: "這就是山門。" },
+        { type: "explore", pose: "point", targets: ["plaque", "sanshan", "lion"],
           say: "先跟眼前的廟打個招呼！照片裡有三個發光的地方，點點看。",
-          done: "等一下記得對照看看實物喔！" },
+          done: "廟後面還有一片山，村民叫它「莊背山」，也叫「龍背林」。泰興宮就是背靠著山、面向大甲溪。" },
         { image: "assets/img/plaza-scroll.svg", focus: 17,
           say: "這座廟不只是一座廟，整個庄頭都是從這裡規劃出去的。我們飛到天上，看看兩百年前的大茅埔！" },
         { say: "道光二年（1822），張寧壽帶著二十八股的夥伴來這裡開墾。那時候，這裡是一大片茅草荒埔。" },
@@ -123,7 +184,7 @@ window.TOUR = {
           right: "沒錯！有曲才有財，轉個彎就能把財留在庄裡。" },
         { focus: 40,
           say: "可惜這些年人口和車子變多，護城河大部分都被加蓋，變成停車場了。" },
-        { image: "assets/photos/temple-front.webp", focus: 50, pose: "wave",
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
           say: "回到現在的廟埕。兩百年前的規劃，到今天都還看得到喔！" },
         { type: "lookup",
           say: "轉身背對山門往前看，那條直直的大街就是中軸線。等一下在庄裡散步時，留意看看路邊的水圳喔！" },
@@ -207,9 +268,9 @@ window.TOUR = {
         { id: "east", x: 96, y: 44, title: "東營・綠旗", desc: "東方屬木，令旗是綠色。" },
         { id: "south", x: 86.5, y: 69, title: "南營・紅旗", desc: "南方屬火，令旗是紅色。" },
         // ↓ 實景照片：山門前的石獅與階梯
-        { id: "dragonSide", img: "assets/photos/front-steps.webp", x: 70, y: 64, title: "龍邊",
+        { id: "dragonSide", img: "assets/photos/front-steps.webp", x: 61, y: 82, title: "龍邊",
           desc: "面向廟門時，你的右手邊就是龍邊（從神明往外看是左手邊）。馬草和水就放在廟前龍邊的階梯上。" },
-        { id: "tigerSide", img: "assets/photos/front-steps.webp", x: 24, y: 64, title: "虎邊",
+        { id: "tigerSide", img: "assets/photos/front-steps.webp", x: 39, y: 82, title: "虎邊",
           desc: "面向廟門時，左手邊是虎邊。" },
       ],
 
@@ -265,7 +326,9 @@ window.TOUR = {
       // 故事長卷插畫；之後可加入正殿實拍照片
       image: "assets/img/sanshan-scroll.svg",
       // 360° 環景（等距長方投影 2:1）。目前是程式產生的示意圖，拍到正殿實景後直接替換，並調整下方熱點的 yaw / pitch
-      pano: "assets/img/main-hall-pano.webp",
+      // 正殿半圈環景：團隊用手機全景模式拍（IMG_6338），只有水平約 220°，上下約 80°
+      pano: "assets/photos/main-hall-pano.webp",
+      panoView: { haov: 220, vaov: 80 },
       stamp: "國王",
 
       // 內容來源：research/泰興宮資料彙整.md 第 2、4 節（邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉、維基百科）
@@ -282,25 +345,25 @@ window.TOUR = {
           desc: "1851 年開始集資，1856 年完工。蓋好之後，張寧壽、楊及億、張登龍等人還捐出水田當廟產，用田租支付祭祀的費用。" },
         // ↓ 環景熱點：yaw 是左右角度（0 = 正前方，180 = 背後），pitch 是上下角度（90 = 正上方）
         // ↓ 實景照片：「國王宮」木牌（直式，上下滑動）
-        { id: "boardName", img: "assets/photos/guowang-board.webp", x: 65, y: 24, title: "國王宮",
+        { id: "boardName", img: "assets/photos/guowang-board.webp", x: 71, y: 21, title: "國王宮",
           desc: "木牌上寫著「國王宮」，就是泰興宮最早的名字。" },
-        { id: "boardYear", img: "assets/photos/guowang-board.webp", x: 81, y: 16, title: "咸豐辛亥元年",
+        { id: "boardYear", img: "assets/photos/guowang-board.webp", x: 82, y: 16, title: "咸豐辛亥元年",
           desc: "「咸豐辛亥元年」就是 1851 年，也就是大家開始集資建廟的那一年。" },
-        { id: "boardDonors", img: "assets/photos/guowang-board.webp", x: 73, y: 41, title: "三位先賢",
+        { id: "boardDonors", img: "assets/photos/guowang-board.webp", x: 75, y: 52, title: "三位先賢",
           desc: "木牌刻著「信士張寧壽、楊及億、張登龍，施出慶福庄大租股半、水田股半敬奉」。三位捐出田產，用田租支持廟裡的祭祀。" },
-        { id: "boardOld", img: "assets/photos/guowang-board.webp", x: 33, y: 37, title: "兩塊木牌",
-          desc: "左邊這塊顏色比較深、看起來比較舊，右邊這塊字跡清楚。仔細比對，兩塊刻的內容幾乎一模一樣。" },
+        { id: "houtang", img: "assets/photos/guowang-board.webp", x: 23, y: 41, title: "旁邊的紅牌",
+          desc: "木牌旁邊的紅牌寫著「後堂供奉　十殿冥君、三尊恩主、城隍老爺」，告訴大家後面的弼教堂拜哪些神明。等一下第 5 站就會看到！" },
         // ↓ 環景熱點
-        { id: "altar", yaw: 0, pitch: 12, title: "正殿神龕",
+        { id: "altar", yaw: 2, pitch: 2, title: "正殿神龕",
           desc: "三山國王就供奉在這裡。進到殿裡，請不要站在神明的正前方擋住別人參拜喔。" },
-        { id: "ceiling", yaw: 0, pitch: 72, title: "抬頭看",
+        { id: "ceiling", yaw: -14, pitch: 18, title: "抬頭看",
           desc: "廟裡的屋頂和樑上，常有精細的彩繪和木雕。到現場的時候，記得抬頭找找有什麼圖案！" },
-        { id: "door", yaw: 180, pitch: 8, title: "回頭看",
-          desc: "從正殿往外看，正對著的就是廟埕和中軸大街。泰興宮背山面溪，整個庄頭就在王爺公的眼前。" },
+        { id: "lantern", yaw: 33, pitch: 20, title: "合家平安",
+          desc: "燈籠上寫著「合家平安」，是大家來這裡最常求的心願。" },
       ],
 
       // 順序：先看實物（國王宮木牌）→ 進插畫聽故事 → 回到木牌 → 環景
-      // 目前沒有正殿實景照片，所以用木牌開場；拍到正殿照片後可改成正殿開場
+      // 木牌照片是團隊實拍（IMG_6332）；正殿實景（IMG_6340、6341）之後可改成正殿開場
       script: [
         { image: "assets/photos/guowang-board.webp", focus: 20, pose: "wave",
           say: "這裡是正殿，供奉我們大茅埔的「王爺公」，也就是三山國王。" },
@@ -331,14 +394,14 @@ window.TOUR = {
           right: "答對！一開始叫「國王宮」，後來才改名泰興宮。" },
         { image: "assets/photos/guowang-board.webp", focus: 20, pose: "happy",
           say: "回到這塊木牌。上面還刻著蓋廟的年份，和捐出田地的人，上下滑動看看。" },
-        { type: "explore", pose: "point", targets: ["boardYear", "boardDonors", "boardOld"],
+        { type: "explore", pose: "point", targets: ["boardYear", "boardDonors", "houtang"],
           say: "點點看，木牌上還寫了什麼？",
           done: "一百七十多年前的事，就刻在這塊木牌上！" },
-        { scene: "pano", focus: { yaw: 0, pitch: 5 }, pose: "wave",
-          say: "故事聽完了，我們走進正殿看看！用手指拖曳畫面，或按「轉動手機看」，原地轉一圈。" },
-        { type: "explore", pose: "point", targets: ["altar", "ceiling", "door"],
-          say: "找找看三個發光的地方，記得要抬頭，也要回頭喔！",
-          done: "正殿轉一圈了！" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "故事聽完了，我們走進正殿看看！用手指左右拖曳畫面，或按「轉動手機看」，像站在殿裡轉頭看。" },
+        { type: "explore", pose: "point", targets: ["altar", "ceiling", "lantern"],
+          say: "找找看三個發光的地方，有一個要往右邊轉才看得到喔！",
+          done: "正殿看過一遍了！到現場記得也抬頭看看樑上的木雕。" },
         { type: "lookup",
           say: "現在抬頭看看正殿裡的三位王爺，比一比他們的臉色和鬍子，有什麼不一樣？" },
         { say: "民國 88 年 921 大地震，庄裡的老屋全倒了，廟卻安然無恙，庄民都說是王爺公在保佑。" },
@@ -353,6 +416,10 @@ window.TOUR = {
       ready: true,
       intro: "清末鴉片流進庄裡，庄民請來關聖帝君幫忙戒煙，1906 年蓋了這座後殿。",
       image: "assets/img/bijiao-scroll.svg",
+      // 中庭半圈環景：團隊手機全景（IMG_6347），水平約 195°
+      // TODO：中庭地面的羅盤圖案、兩側兩座塔形建築的名稱與用途，請廟方確認後再加熱點
+      pano: "assets/photos/courtyard-pano.webp",
+      panoView: { haov: 195, vaov: 80 },
       stamp: "弼教",
 
       // 內容來源：維基百科〈慶東泰興宮〉、農業部〈我的幸福小地方〉、東勢後生添手團〈泰興宮裝置藝術調查〉
@@ -369,15 +436,15 @@ window.TOUR = {
         { id: "fuyou", x: 77.8, y: 66, title: "孚佑帝君",
           desc: "也就是八仙之一的呂洞賓。" },
         // ↓ 實景照片：弼教堂外觀與神龕
-        { id: "tiangonglu", img: "assets/photos/bijiao-front.webp", x: 48, y: 86, title: "天公爐",
+        { id: "tiangonglu", img: "assets/photos/bijiao-front.webp", x: 50, y: 62, title: "天公爐",
           desc: "一般廟宇的天公爐多放在前殿，泰興宮卻放在後堂弼教堂前面，這是典型的客家廟宇配置。" },
-        { id: "bijiaoRoof", img: "assets/photos/bijiao-front.webp", x: 50, y: 25, title: "屋頂裝飾",
+        { id: "bijiaoRoof", img: "assets/photos/bijiao-front.webp", x: 47, y: 27, title: "屋頂裝飾",
           desc: "屋頂上有龍和各種彩色裝飾。到現場記得抬頭看！" },
-        { id: "bijiaoSign", img: "assets/photos/bijiao-altar.webp", x: 60, y: 88, title: "「弼教堂」",
+        { id: "bijiaoSign", img: "assets/photos/bijiao-altar.webp", x: 50, y: 89, title: "「弼教堂」",
           desc: "神桌前面寫著「弼教堂」三個字（傳統寫法由右往左讀）。" },
-        { id: "bijiaoDragon", img: "assets/photos/bijiao-altar.webp", x: 77, y: 13, title: "金色的龍",
-          desc: "神龕後方有一條金色的龍，盤在雲裡。" },
-        { id: "bijiaoCouplet", img: "assets/photos/bijiao-altar.webp", x: 11, y: 30, title: "柱子上的楹聯",
+        { id: "bijiaoLantern", img: "assets/photos/bijiao-altar.webp", x: 34, y: 22, title: "燈籠上的名字",
+          desc: "燈籠上寫著「關聖帝君」「孚佑帝君」「司命真君」，就是弼教堂供奉的三恩主。" },
+        { id: "bijiaoCouplet", img: "assets/photos/bijiao-altar.webp", x: 18, y: 41, title: "柱子上的楹聯",
           desc: "後殿有兩對楹聯是庄裡的書法家邱丙坤寫的。這是不是其中一對？到現場找找看落款！" },
         { id: "siming", x: 91.4, y: 66, title: "司命真君",
           desc: "也就是灶君，守護一家人的平安。" },
@@ -385,8 +452,11 @@ window.TOUR = {
 
       // 順序：先看眼前實景 → 進插畫聽故事 → 回到實景（神龕）
       script: [
-        { image: "assets/photos/bijiao-front.webp", focus: 50, pose: "wave",
-          say: "穿過正殿，後面這座就是「弼教堂」。" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "穿過正殿，來到後面的中庭。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+        { say: "正前方這座就是「弼教堂」，我們走近一點看！" },
+        { image: "assets/photos/bijiao-front.webp", focus: 50,
+          say: "這就是弼教堂的正面。" },
         { type: "explore", pose: "point", targets: ["tiangonglu", "bijiaoRoof"],
           say: "先看看眼前！照片裡有兩個發光的地方，點點看。",
           done: "弼教堂的故事，跟清朝末年的鴉片有關。我們回到一百多年前！" },
@@ -411,9 +481,9 @@ window.TOUR = {
           options: ["輔助", "打仗", "下雨"], answer: 0,
           wrong: "再想想，跟「幫忙」有關喔！",
           right: "對！「弼」是輔助的意思，「弼教」可以想成輔助教化，幫大家改掉壞習慣。" },
-        { image: "assets/photos/bijiao-altar.webp", focus: 55, pose: "wave",
-          say: "回到現在，走進弼教堂，這就是供奉三恩主的神龕。" },
-        { type: "explore", pose: "point", targets: ["bijiaoSign", "bijiaoDragon", "bijiaoCouplet"],
+        { image: "assets/photos/bijiao-altar.webp", focus: 45, pose: "wave",
+          say: "回到現在，這就是弼教堂，三恩主就供奉在裡面。" },
+        { type: "explore", pose: "point", targets: ["bijiaoSign", "bijiaoLantern", "bijiaoCouplet"],
           say: "左右滑一滑，找找三個發光的地方！" },
         { say: "弼教堂的左殿還有十殿閻王和牛頭、馬面，右殿有城隍爺和文、武判官。" },
         { type: "lookup",
