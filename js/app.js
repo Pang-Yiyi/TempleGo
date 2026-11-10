@@ -123,7 +123,7 @@
     const all = Object.values(T.photos || {});
     const own = all.filter((p) => p.own).map((p) => esc(p.title)).join("、");
     const photos = all.filter((p) => !p.own).map((p) =>
-      `<li>${esc(p.title)}：${esc(p.author)}／<a href="${esc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>（${esc(p.edit)}）</li>`).join("");
+      `<li>${esc(p.title)}：${esc(p.author)}／<a href="${esc(p.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>${p.license ? `（${esc(p.license)}）` : ""}（${esc(p.edit)}）</li>`).join("");
     $("creditsList").innerHTML = `
       <p class="note">以下照片依 <a href="${lic.url}" target="_blank" rel="noopener">${lic.name}</a> 授權使用；經縮放、裁切後的版本同樣以 ${lic.name} 釋出。</p>
       <ul>${photos}</ul>
@@ -328,7 +328,7 @@
       el.textContent = "照片：團隊實地拍攝";
     } else {
       el.href = meta.page;
-      el.textContent = `照片：${meta.author}／Wikimedia Commons／${T.photoLicense.name}`;
+      el.textContent = `照片：${meta.author}／Wikimedia Commons／${meta.license || T.photoLicense.name}`;
     }
     el.hidden = false;
   }
@@ -760,10 +760,10 @@
     }
   }
 
-  // ---------- 東勢果籤（在地創作的趣味籤詩） ----------
+  // ---------- 大茅埔山水籤（在地創作的趣味籤詩） ----------
   const Y = T.guoqian;
   const GAN = "甲乙丙丁戊己庚辛壬癸";
-  const zhNum = (n) => "一二三四五六七八九十"[n - 1];
+  const zhNum = (n) => { const d = "一二三四五六七八九"; return n <= 10 ? (d + "十")[n - 1] : (n < 20 ? "十" : d[Math.floor(n / 10) - 1] + "十") + (n % 10 ? d[n % 10 - 1] : ""); };
   const tubeSvg = () => `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
     ${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
       `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}
@@ -829,6 +829,62 @@
       <path d="M30 52 L50 34 L70 52 Z" fill="#b5452f"/>
       <rect x="34" y="52" width="32" height="20" fill="#f4e7c8" stroke="#7a4e2c" stroke-width="2"/>
       <rect x="46" y="58" width="8" height="14" fill="#7a4e2c"/>`,
+    banyan: `<path d="M18 86 Q50 70 82 86 L84 92 L16 92 Z" fill="#a8742a"/>
+      <path d="M30 86 C32 70, 36 60, 42 54 M50 86 V52 M70 86 C68 70, 64 60, 58 54" stroke="#7a4e2c" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M36 66 V84 M44 62 V84 M58 62 V84 M64 66 V84" stroke="#8a5e38" stroke-width="2" opacity=".8"/>
+      <ellipse cx="50" cy="34" rx="40" ry="22" fill="#4f7a2c"/><ellipse cx="30" cy="40" rx="18" ry="12" fill="#5f8f3a"/>
+      <ellipse cx="70" cy="40" rx="18" ry="12" fill="#5f8f3a"/><ellipse cx="50" cy="24" rx="22" ry="12" fill="#6fae3e"/>
+      <path d="M44 66 Q50 70 56 66" stroke="#c2401c" stroke-width="3" fill="none"/>`,
+    pearflower: `<path d="M20 90 C40 70, 52 60, 80 30" stroke="#6b4a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      ${[[36, 58, 1], [62, 40, 1.15], [52, 70, .85]].map(([x, y, k]) => `<g transform="translate(${x} ${y}) scale(${k})">${[0, 72, 144, 216, 288].map((a) =>
+        `<ellipse cx="0" cy="-10" rx="7" ry="10" fill="#fff" stroke="#d9cfc0" stroke-width="1.2" transform="rotate(${a})"/>`).join("")}
+        <circle r="4" fill="#f2c94c"/></g>`).join("")}
+      <path d="M74 74 L88 60" stroke="#8a5a34" stroke-width="4" stroke-linecap="round"/><path d="M70 78 L76 72" stroke="#e8d6b0" stroke-width="7" stroke-linecap="round"/>`,
+    urtica: `<path d="M50 94 V58" stroke="#4f7a2c" stroke-width="4"/>
+      <path d="M50 60 L30 54 L36 48 L24 40 L34 36 L26 26 L38 26 L36 14 L46 22 L50 8 L54 22 L64 14 L62 26 L74 26 L66 36 L76 40 L64 48 L70 54 Z" fill="#5f9a3a" stroke="#3f6a24" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M50 58 V14 M50 40 L36 30 M50 40 L64 30 M50 50 L38 44 M50 50 L62 44" stroke="#3f6a24" stroke-width="1.5" fill="none"/>
+      ${[[50, 66], [50, 74], [50, 82], [44, 70], [56, 78], [42, 80], [58, 68]].map(([x, y]) => `<path d="M${x} ${y} l${x < 50 ? -6 : 6} -3" stroke="#e8f0e4" stroke-width="1.5" stroke-linecap="round"/>`).join("")}`,
+    paperboat: `<rect x="0" y="0" width="100" height="100" rx="18" fill="#1f2a44"/>
+      <path d="M0 72 Q25 66 50 72 T100 72 V100 H0 Z" fill="#16303f"/>
+      <circle cx="50" cy="56" r="24" fill="#f6d77a" opacity=".22"/>
+      <path d="M22 64 L40 48 L48 64 Z M52 64 L60 48 L78 64 Z M38 64 L50 36 L62 64 Z" fill="#d9382c" stroke="#8e1f16" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M18 64 H82 L72 76 H28 Z" fill="#d9382c" stroke="#8e1f16" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24 70 H76 L72 76 H28 Z" fill="#e8b54a"/>
+      <circle cx="20" cy="20" r="1.6" fill="#fff8d8"/><circle cx="78" cy="16" r="1.4" fill="#fff8d8"/><circle cx="62" cy="28" r="1.2" fill="#fff8d8"/>`,
+    mountain: `<path d="M2 70 L30 30 L46 50 L66 18 L98 70 Z" fill="#4f7a49"/>
+      <path d="M2 70 L30 44 L48 62 L70 40 L98 70 Z" fill="#6f9a4a"/>
+      <path d="M0 74 H100 V96 H0 Z" fill="#8fb8cf"/><path d="M8 84 q8 -5 16 0 t16 0 t16 0 t16 0 t16 0" stroke="#e6f2f8" stroke-width="2" fill="none"/>
+      <path d="M42 70 L50 63 L58 70 Z" fill="#c4553b"/><rect x="44" y="70" width="12" height="5" fill="#e3d4b4"/>`,
+    muntjac: `<circle cx="80" cy="18" r="10" fill="#f6e7a8"/><circle cx="76" cy="15" r="9" fill="#1f2a44" opacity="0"/>
+      <path d="M36 22 L32 8 M36 16 L42 10 M64 22 L68 8 M64 16 L58 10" stroke="#6b4a2a" stroke-width="3" stroke-linecap="round"/>
+      <path d="M26 30 L36 22 L44 32 Z M74 30 L64 22 L56 32 Z" fill="#a86a3a"/>
+      <path d="M34 30 Q50 22 66 30 L62 66 Q50 80 38 66 Z" fill="#b8783e"/>
+      <path d="M44 30 L48 52 M56 30 L52 52" stroke="#5a3a22" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="42" cy="46" r="3.2" fill="#1d1410"/><circle cx="58" cy="46" r="3.2" fill="#1d1410"/>
+      <ellipse cx="50" cy="70" rx="7" ry="5" fill="#3a2a1e"/>`,
+    doorgod: `<rect x="10" y="12" width="80" height="80" rx="4" fill="#7a1712"/>
+      <rect x="16" y="18" width="33" height="70" fill="#a3241b" stroke="#e3b54a" stroke-width="2"/>
+      <rect x="51" y="18" width="33" height="70" fill="#a3241b" stroke="#e3b54a" stroke-width="2"/>
+      <circle cx="32" cy="38" r="9" fill="#2b2f3a"/><circle cx="68" cy="38" r="9" fill="#f0d4b0"/>
+      <path d="M24 30 L32 22 L40 30 Z M60 30 L68 22 L76 30 Z" fill="#e3b54a"/>
+      <path d="M22 52 H42 V78 H22 Z M58 52 H78 V78 H58 Z" fill="#c9a24a" opacity=".85"/>
+      <path d="M20 46 L26 84" stroke="#e3b54a" stroke-width="3"/><path d="M80 46 L74 84" stroke="#e3b54a" stroke-width="3"/>`,
+    osmanthus: `<path d="M20 88 C40 70, 50 50, 82 22" stroke="#6b4a2a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      ${[[30, 70, -30], [46, 54, 20], [62, 38, -25], [70, 52, 30], [40, 40, -40]].map(([x, y, a]) =>
+        `<ellipse cx="${x}" cy="${y}" rx="12" ry="5" fill="#4f7a2c" transform="rotate(${a} ${x} ${y})"/>`).join("")}
+      ${[[50, 62], [54, 58], [48, 56], [66, 44], [70, 40], [64, 40], [36, 62], [40, 66]].map(([x, y]) =>
+        `<circle cx="${x}" cy="${y}" r="3.2" fill="#f2a531" stroke="#c97a10" stroke-width=".8"/>`).join("")}`,
+    bucket: `<path d="M8 84 q10 -6 20 0 t20 0 t20 0 t20 0 t20 0" stroke="#7fb6d6" stroke-width="3" fill="none"/>
+      <path d="M28 40 H72 L66 82 H34 Z" fill="#8a5a32" stroke="#5a3a1e" stroke-width="2"/>
+      <path d="M30 54 H70 M32 70 H68" stroke="#5a3a1e" stroke-width="2"/>
+      <ellipse cx="50" cy="40" rx="22" ry="6" fill="#7fb6d6" stroke="#4a7f9a" stroke-width="1.5"/>
+      <path d="M28 40 Q50 6 72 40" stroke="#5a3a1e" stroke-width="2.5" fill="none"/>
+      <path d="M50 22 C54 28, 56 32, 52 35 C48 36, 46 32, 50 22 Z" fill="#9fd3f0"/>`,
+    spring: `<path d="M4 50 Q20 30 40 40 L46 60 L10 66 Z" fill="#8a8f86"/><path d="M60 36 Q82 26 96 44 L92 64 L56 58 Z" fill="#9aa096"/>
+      <path d="M44 46 C48 60, 44 74, 50 92" stroke="#7fb6d6" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M44 46 C48 60, 44 74, 50 92" stroke="#e6f2f8" stroke-width="2" fill="none" stroke-dasharray="4 6"/>
+      ${[[58, 72], [36, 80], [64, 88]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#f6e27a" opacity=".3"/><circle cx="${x}" cy="${y}" r="2" fill="#fff6a8"/>`).join("")}
+      <path d="M8 66 Q30 60 46 64 M56 60 Q76 62 92 66" stroke="#5f8f3a" stroke-width="4" fill="none" stroke-linecap="round"/>`,
     dew: `${STEM}${LEAF}
       <ellipse cx="46" cy="60" rx="34" ry="30" fill="#ef8a1a" stroke="#c96f0c" stroke-width="2"/>
       <path d="M80 50 C86 60, 90 66, 84 72 C78 74, 74 68, 80 50 Z" fill="#9fd3f0" stroke="#4f97c4" stroke-width="1.5"/>
@@ -951,7 +1007,7 @@
     qPose("fruit");
     qSay(sg.say);
     qStage(`<div class="qian-paper guo" style="--wx:${WX_COLOR[sg.wx]}">
-        <p class="kind">東勢果籤</p>
+        <p class="kind">大茅埔山水籤</p>
         <h3>第${zhNum(qian.num)}籤</h3>
         <p class="gan"><span class="wx">${sg.gan}・${sg.wx}</span><span class="luck">${sg.luck}</span></p>
         ${iconSvg(sg.icon, "guo-icon")}
@@ -959,7 +1015,8 @@
         <div class="poem">${sg.poem.map((l) => `<span>${l}</span>`).join("")}</div>
         <dl class="advice">${Object.entries(sg.advice).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
         ${rel ? `<p class="born"><b>本命 ${qian.born}${ganWx(qian.born)}</b>${rel}</p>` : ""}
-        <p class="fruit-note"><b>${sg.noteLabel || "果語"}</b>${sg.note}</p>
+        <p class="fruit-note"><b>小知識</b>${sg.note}</p>
+        ${sg.caution ? `<p class="caution"><b>⚠️ 碰到咬人貓怎麼辦</b>${sg.caution}</p>` : ""}
         <p class="season${ss.now ? " now" : ""}">${ss.text}</p>
         <p class="note">${Y.disclaimer}</p>
       </div>
@@ -990,9 +1047,9 @@
     const sg = Y.signs[qian.num - 1];
     const rel = qian.born ? `本命 ${qian.born}${ganWx(qian.born)}｜${relation(ganWx(qian.born), sg.wx)}` : "";
     const QW = 1080, PAD = 130, QR = 210;
-    const all = ["東勢果籤第一二三四五六七八九十籤", sg.gan, sg.wx, sg.luck, sg.title, ...sg.poem,
-      ...Object.entries(sg.advice).flat(), rel, sg.note, sg.noteLabel || "", Y.disclaimer, QIAN_CTA, QIAN_CTA2,
-      "果語台中東勢大茅埔泰興宮手機導覽0123456789.｜：，！"].join("");
+    const all = ["大茅埔山水籤第一二三四五六七八九十籤", sg.gan, sg.wx, sg.luck, sg.title, ...sg.poem,
+      ...Object.entries(sg.advice).flat(), rel, sg.note, sg.caution || "", "碰到咬人貓怎麼辦", Y.disclaimer, QIAN_CTA, QIAN_CTA2,
+      "小知識東勢泰興宮手機導覽二十0123456789.｜：，！"].join("");
     try {
       await Promise.all([
         document.fonts.load(`900 80px "Noto Serif TC"`, all),
@@ -1003,13 +1060,17 @@
     const icon = await loadImg("data:image/svg+xml;charset=utf-8," +
       encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400">${ICONS[sg.icon]}</svg>`));
     const qr = await loadImg("assets/img/qr-site.png");
-    // 先量本命和果語要幾行，再決定卡片高度
+    // 先量本命和小知識要幾行，再決定卡片高度
     const c = document.createElement("canvas"); let g = c.getContext("2d");
     g.font = `600 30px ${SANS}`; const relLines = rel ? wrapText(g, rel, QW - PAD * 2).slice(0, 2) : [];
     g.font = `500 30px ${SANS}`; const noteLines = wrapText(g, sg.note, QW - PAD * 2 - 56).slice(0, 4);
     const relY = 1412, noteTop = relY + relLines.length * 42 + (relLines.length ? 8 : -26);
-    const noteH = 26 + 40 + noteLines.length * 44 + 14, footTop = noteTop + noteH + 44;
-    const QH = footTop + 34 + QR + 120;
+    const noteH = 26 + 40 + noteLines.length * 44 + 14;
+    // 注意事項（例如咬人貓）：橘色框，放在小知識下面
+    const cauLines = sg.caution ? wrapText(g, sg.caution, QW - PAD * 2 - 56).slice(0, 6) : [];
+    const cauTop = noteTop + noteH + 20, cauH = cauLines.length ? 26 + 40 + cauLines.length * 44 + 14 : 0;
+    const footTop = (cauH ? cauTop + cauH : noteTop + noteH) + 44;
+    const QH = footTop + 34 + QR + 70;
     c.width = QW; c.height = QH; g = c.getContext("2d");
     const red = "#7a1712", col = WX_COLOR[sg.wx];
     g.fillStyle = red; g.fillRect(0, 0, QW, QH);
@@ -1017,7 +1078,7 @@
     g.strokeStyle = "#e3b54a"; g.lineWidth = 4; rrect(g, 56, 56, QW - 112, QH - 112, 14); g.stroke();
 
     g.textAlign = "center"; g.textBaseline = "alphabetic";
-    g.fillStyle = "#6d5c4f"; g.font = `500 32px ${SANS}`; g.fillText("東 勢 果 籤", QW / 2, 140);
+    g.fillStyle = "#6d5c4f"; g.font = `500 32px ${SANS}`; g.fillText("大 茅 埔 山 水 籤", QW / 2, 140);
     g.fillStyle = red; g.font = `900 96px ${SERIF}`; g.fillText(`第${zhNum(qian.num)}籤`, QW / 2, 250);
     // 天干五行＋吉凶
     g.font = `900 46px ${SERIF}`;
@@ -1047,11 +1108,18 @@
     // 本命
     g.fillStyle = red; g.font = `600 30px ${SANS}`;
     relLines.forEach((l, i) => g.fillText(l, PAD, relY + i * 42));
-    // 果語（淡色底框）
+    // 小知識（淡色底框）
     g.fillStyle = "rgba(255,255,255,.6)"; rrect(g, PAD - 16, noteTop, QW - PAD * 2 + 32, noteH, 18); g.fill();
-    g.fillStyle = col; g.font = `900 32px ${SERIF}`; g.fillText(sg.noteLabel || "果語", PAD + 12, noteTop + 56);
+    g.fillStyle = col; g.font = `900 32px ${SERIF}`; g.fillText("小知識", PAD + 12, noteTop + 56);
     g.fillStyle = "#1d1410"; g.font = `500 30px ${SANS}`;
     noteLines.forEach((l, i) => g.fillText(l, PAD + 12, noteTop + 104 + i * 44));
+    if (cauH) {
+      g.fillStyle = "#fff1e0"; rrect(g, PAD - 16, cauTop, QW - PAD * 2 + 32, cauH, 18); g.fill();
+      g.strokeStyle = "#e3a24a"; g.lineWidth = 3; rrect(g, PAD - 16, cauTop, QW - PAD * 2 + 32, cauH, 18); g.stroke();
+      g.fillStyle = "#a3401c"; g.font = `900 32px ${SERIF}`; g.fillText("⚠ 碰到咬人貓怎麼辦", PAD + 12, cauTop + 56);
+      g.fillStyle = "#6b3a10"; g.font = `500 30px ${SANS}`;
+      cauLines.forEach((l, i) => g.fillText(l, PAD + 12, cauTop + 104 + i * 44));
+    }
     // 底部：QR Code（掃了直接開網站）＋說明
     g.strokeStyle = "#c9a77b"; g.setLineDash([10, 8]); g.lineWidth = 2;
     g.beginPath(); g.moveTo(110, footTop); g.lineTo(QW - 110, footTop); g.stroke(); g.setLineDash([]);
@@ -1062,16 +1130,13 @@
     }
     const tw = qx - PAD - 40;
     g.fillStyle = red; g.font = `900 40px ${SERIF}`; g.fillText(QIAN_CTA, PAD, qy + 52, tw);
-    g.fillStyle = "#1d1410"; g.font = `500 28px ${SANS}`; g.fillText(QIAN_CTA2, PAD, qy + 102, tw);
+    g.fillStyle = "#1d1410"; g.font = `700 30px ${SANS}`; g.fillText(QIAN_SITE, PAD, qy + 108, tw);
     g.fillStyle = "#6d5c4f"; g.font = `500 24px ${SANS}`;
-    g.fillText("pang-yiyi.github.io/TempleGo", PAD, qy + 150, tw);
-    g.fillText(`${fmtDate(new Date())}｜台中東勢大茅埔泰興宮手機導覽`, PAD, qy + 192, tw);
-    g.textAlign = "center"; g.font = `500 22px ${SANS}`;
-    g.fillText(Y.disclaimer, QW / 2, QH - 86, QW - 160);
+    wrapText(g, Y.disclaimer, tw).slice(0, 3).forEach((l, i) => g.fillText(l, PAD, qy + 156 + i * 34));
 
     return new Promise((res) => c.toBlob(res, "image/png"));
   }
-  const QIAN_CTA = "掃一下，換你抽！", QIAN_CTA2 = "跟著志永哥逛泰興宮，抽一支東勢果籤";
+  const QIAN_CTA = "掃一下，換你抽！", QIAN_CTA2 = "跟著志永哥逛泰興宮，抽一支大茅埔山水籤", QIAN_SITE = "東勢泰興宮手機導覽";
   let qCardUrl = null;
   async function qianCard() {
     $("qCard").disabled = true; $("qCard").textContent = "製作中…";
@@ -1079,19 +1144,19 @@
     if (!blob) { toast("籤卡做不出來，請改用截圖保存"); $("qCard").disabled = false; $("qCard").textContent = "存成籤卡"; return; }
     if (qCardUrl) URL.revokeObjectURL(qCardUrl);
     qCardUrl = URL.createObjectURL(blob);
-    const name = `東勢果籤第${zhNum(qian.num)}籤.png`;
+    const name = `大茅埔山水籤第${zhNum(qian.num)}籤.png`;
     const file = new File([blob], name, { type: "image/png" });
     const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
     qPose("happy");
     qSay("籤卡做好了！可以存下來，或分享給朋友，看看東勢的水果跟你說了什麼。");
-    qStage(`<img class="qian-card" src="${qCardUrl}" alt="東勢果籤籤卡">
+    qStage(`<img class="qian-card" src="${qCardUrl}" alt="大茅埔山水籤籤卡">
       <p class="qian-hint">也可以長按圖片直接儲存</p>
       ${canShare ? `<button class="btn primary" id="qShare">分享</button>` : ""}
       <a class="btn primary" href="${qCardUrl}" download="${name}">存成圖片</a>
       <button class="btn" id="qRedo">再抽一支</button>
       <button class="btn ghost" id="qBack">回到地圖</button>`);
     if (canShare) $("qShare").onclick = async () => {
-      try { await navigator.share({ files: [file], title: "東勢果籤", text: "我在台中東勢大茅埔泰興宮抽到一支果籤！" }); }
+      try { await navigator.share({ files: [file], title: "大茅埔山水籤", text: "我在台中東勢大茅埔泰興宮抽到一支山水籤！" }); }
       catch (e) { if (e.name !== "AbortError") toast("這支手機不支援直接分享，請改用「存成圖片」"); }
     };
     $("qRedo").onclick = qRedo;
@@ -1120,7 +1185,7 @@
   const bClose = () => ($("boatLayer").hidden = true);
 
   function openBoat(suggestWx) {
-    // 抽過果籤：建議用本命的五行顏色（沒有本命就用籤的五行）
+    // 抽過山水籤：建議用本命的五行顏色（沒有本命就用籤的五行）
     const sg = qian.num ? Y?.signs[qian.num - 1] : null;
     boat = { step: 0, color: null, wish: "", suggest: suggestWx || (qian.born ? ganWx(qian.born) : sg?.wx) || null };
     $("boatSpeaker").textContent = T.guide.name;
@@ -1220,7 +1285,7 @@
       bPose("happy");
       bSay(BT.doneSay);
       $("boatStage").insertAdjacentHTML("beforeend", `
-        <p class="qian-hint">${BT.disclaimer}</p>
+        <p class="qian-hint">${BT.disclaimer}${T.links?.team ? `<br><a class="boat-link" href="${T.links.team.url}" target="_blank" rel="noopener">${T.links.team.label} ↗</a>` : ""}</p>
         <button class="btn primary" id="bCard">存成祈福卡</button>
         <button class="btn" id="bAgain">再放一艘</button>
         <button class="btn ghost" id="bBack">回到地圖</button>`);

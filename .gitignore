@@ -1,7 +1,7 @@
-# 只發布網站本身；原始照片、研究筆記與說明文件留在本機
+# 只發布網站本身與 README；原始照片、研究筆記與開發筆記留在本機
 young1.jpg
 research/
-README.md
+開發筆記.md
 qrcode-templego.png
 # 真人肖像衍生圖：guide.webp 已取得志永哥同意（2026-11-09），可上傳；door-gods.webp 網站沒用到，仍不上傳
 assets/img/door-gods.webp
