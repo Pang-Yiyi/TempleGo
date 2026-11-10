@@ -14,11 +14,12 @@
 2. [在自己電腦上打開](#在自己電腦上打開)
 3. [檔案結構](#檔案結構)
 4. [改內容：只要動 `js/data.js`](#改內容只要動-jsdatajs)
-5. [加照片的規則](#加照片的規則)
-6. [更新網站（部署）](#更新網站部署)
-7. [內容原則（一定要遵守）](#內容原則一定要遵守)
-8. [待辦與待確認](#待辦與待確認)
-9. [資料與照片來源](#資料與照片來源)
+5. [大茅埔山水籤：二十支籤一覽](#大茅埔山水籤二十支籤一覽)
+6. [加照片的規則](#加照片的規則)
+7. [更新網站（部署）](#更新網站部署)
+8. [內容原則（一定要遵守）](#內容原則一定要遵守)
+9. [待辦與待確認](#待辦與待確認)
+10. [資料與照片來源](#資料與照片來源)
 
 ---
 
@@ -79,6 +80,7 @@ css/style.css         樣式與動畫
 js/data.js            ★ 所有內容：對白、熱點、題目、籤詩、照片來源
 js/app.js             互動邏輯（對話、問答、環景、蓋章、山水籤、紙船、卡片）
 sw.js                 離線快取（改了檔案要把 VERSION 加 1）
+docs/qian/            二十支籤的籤卡截圖（README 用，網站不會載入）
 manifest.webmanifest  加到主畫面用的設定
 assets/
   img/guide-real-*.webp   志永哥的動作照（intro 全身；其他是統一大小的半身）
@@ -159,6 +161,51 @@ assets/
 ### 台詞裡的特殊字
 - `{name}`：導覽員名字
 - `{lunarHint}`：依今天農曆自動產生的犒將日提示
+
+
+## 大茅埔山水籤：二十支籤一覽
+
+籤的內容都在 `js/data.js` 的 `guoqian.signs`，依籤號順序排列（第一籤在最前面）。下表的「位置」可以直接點到 GitHub 上那一支籤的程式碼；改過檔案後行號可能會變，找不到時在 `data.js` 搜尋籤的標題即可。
+
+![二十支籤總覽](docs/qian/overview.jpg)
+
+| 籤 | 天干五行 | 吉凶 | 主題 | 位置（data.js） | 籤卡 |
+|---|---|---|---|---|---|
+| 第一籤 | 甲・木 | 上上 | 高接梨・老樹接新花 | [第 191 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L191) | [看圖](docs/qian/qian-01.jpg) |
+| 第二籤 | 甲・木 | 大吉 | 龍神榕・化胎護庄頭 | [第 200 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L200) | [看圖](docs/qian/qian-02.jpg) |
+| 第三籤 | 乙・木 | 上吉 | 伯公樹・種子傳新苗 | [第 209 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L209) | [看圖](docs/qian/qian-03.jpg) |
+| 第四籤 | 乙・木 | 中吉 | 梨花・一朵一朵親手授 | [第 218 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L218) | [看圖](docs/qian/qian-04.jpg) |
+| 第五籤 | 丙・火 | 大吉 | 甜柿・秋陽曬得紅 | [第 227 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L227) | [看圖](docs/qian/qian-05.jpg) |
+| 第六籤 | 丙・火 | 大吉 | 咬人貓・帶刺的守護 | [第 236 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L236) | [看圖](docs/qian/qian-06.jpg) |
+| 第七籤 | 丁・火 | 中吉 | 螢火蟲・溪邊的小燈 | [第 245 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L245) | [看圖](docs/qian/qian-07.jpg) |
+| 第八籤 | 丁・火 | 上吉 | 五行紙船・水上星河 | [第 254 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L254) | [看圖](docs/qian/qian-08.jpg) |
+| 第九籤 | 戊・土 | 上吉 | 石虎・淺山的守護者 | [第 263 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L263) | [看圖](docs/qian/qian-09.jpg) |
+| 第十籤 | 戊・土 | 上上 | 莊背山・背山面溪 | [第 272 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L272) | [看圖](docs/qian/qian-10.jpg) |
+| 第十一籤 | 己・土 | 上上 | 椪柑・金黃藏好運 | [第 281 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L281) | [看圖](docs/qian/qian-11.jpg) |
+| 第十二籤 | 己・土 | 上吉 | 果園夜訪客・山羌白鼻心 | [第 290 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L290) | [看圖](docs/qian/qian-12.jpg) |
+| 第十三籤 | 庚・金 | 中吉 | 五月桃・桃木斬煩惱 | [第 299 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L299) | [看圖](docs/qian/qian-13.jpg) |
+| 第十四籤 | 庚・金 | 中吉 | 門神・將軍守廟門 | [第 308 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L308) | [看圖](docs/qian/qian-14.jpg) |
+| 第十五籤 | 辛・金 | 大吉 | 巨峰葡萄・串串似珠玉 | [第 317 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L317) | [看圖](docs/qian/qian-15.jpg) |
+| 第十六籤 | 辛・金 | 大吉 | 桂花樹・金粒暗飄香 | [第 326 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L326) | [看圖](docs/qian/qian-16.jpg) |
+| 第十七籤 | 壬・水 | 中吉 | 大茅埔圳・水繞庄頭 | [第 335 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L335) | [看圖](docs/qian/qian-17.jpg) |
+| 第十八籤 | 壬・水 | 上吉 | 平安水・神明帶路取溪水 | [第 344 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L344) | [看圖](docs/qian/qian-18.jpg) |
+| 第十九籤 | 癸・水 | 大吉 | 桶柑茂谷・晚來更芬芳 | [第 353 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L353) | [看圖](docs/qian/qian-19.jpg) |
+| 第二十籤 | 癸・水 | 中吉 | 軟埤坑山泉・涓滴養庄頭 | [第 362 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L362) | [看圖](docs/qian/qian-20.jpg) |
+
+**每支籤的欄位**
+```js
+{
+  gan: "甲", wx: "木", luck: "上上", icon: "pear",   // 天干、五行、吉凶、小插圖（插圖在 app.js 的 ICONS）
+  title: "高接梨・老樹接新花",
+  poem: ["老樹根深立山頭", "寒冬接穗意難休", "一枝新芽開白雪", "換得甜梨夏日收"],  // 七言四句
+  say: "志永哥解籤的話",
+  advice: { "求事": "...", "學業": "...", "感情": "...", "出外": "..." },
+  note: "小知識",
+  season: { months: [6, 7, 8, 9], text: "產季說明", now: "當月在 months 裡時顯示的句子" },
+}
+```
+- 籤卡圖片在 `docs/qian/`，是目前內容的截圖；改了籤詩之後圖片不會自動更新，請重新截圖或跟負責人說
+- 每個天干固定兩支（奇數籤、偶數籤），新增或刪除時請保持這個規則，本命五行的生剋才會平均
 
 ---
 
