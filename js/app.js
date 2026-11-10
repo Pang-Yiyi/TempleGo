@@ -1016,16 +1016,13 @@
         <dl class="advice">${Object.entries(sg.advice).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
         ${rel ? `<p class="born"><b>本命 ${qian.born}${ganWx(qian.born)}</b>${rel}</p>` : ""}
         <p class="fruit-note"><b>小知識</b>${sg.note}</p>
-        ${sg.caution ? `<p class="caution"><b>⚠️ 碰到咬人貓怎麼辦</b>${sg.caution}</p>` : ""}
         <p class="season${ss.now ? " now" : ""}">${ss.text}</p>
         <p class="note">${Y.disclaimer}</p>
       </div>
       <button class="btn primary" id="qCard">存成籤卡</button>
-      ${T.boat ? `<button class="btn" id="qBoat">🛶 用「${qian.born ? ganWx(qian.born) : sg.wx}」放一艘祈福紙船</button>` : ""}
       <button class="btn" id="qRedo">再抽一支</button>
       <button class="btn ghost" id="qBack">回到地圖</button>`);
     $("qCard").onclick = qianCard;
-    if ($("qBoat")) $("qBoat").onclick = () => openBoat(qian.born ? ganWx(qian.born) : sg.wx);
     $("qRedo").onclick = qRedo;
     $("qBack").onclick = qClose;
   }
@@ -1048,7 +1045,7 @@
     const rel = qian.born ? `本命 ${qian.born}${ganWx(qian.born)}｜${relation(ganWx(qian.born), sg.wx)}` : "";
     const QW = 1080, PAD = 130, QR = 210;
     const all = ["大茅埔山水籤第一二三四五六七八九十籤", sg.gan, sg.wx, sg.luck, sg.title, ...sg.poem,
-      ...Object.entries(sg.advice).flat(), rel, sg.note, sg.caution || "", "碰到咬人貓怎麼辦", Y.disclaimer, QIAN_CTA, QIAN_CTA2,
+      ...Object.entries(sg.advice).flat(), rel, sg.note, Y.disclaimer, QIAN_CTA, QIAN_CTA2,
       "小知識東勢泰興宮手機導覽二十0123456789.｜：，！"].join("");
     try {
       await Promise.all([
@@ -1066,10 +1063,7 @@
     g.font = `500 30px ${SANS}`; const noteLines = wrapText(g, sg.note, QW - PAD * 2 - 56).slice(0, 4);
     const relY = 1412, noteTop = relY + relLines.length * 42 + (relLines.length ? 8 : -26);
     const noteH = 26 + 40 + noteLines.length * 44 + 14;
-    // 注意事項（例如咬人貓）：橘色框，放在小知識下面
-    const cauLines = sg.caution ? wrapText(g, sg.caution, QW - PAD * 2 - 56).slice(0, 6) : [];
-    const cauTop = noteTop + noteH + 20, cauH = cauLines.length ? 26 + 40 + cauLines.length * 44 + 14 : 0;
-    const footTop = (cauH ? cauTop + cauH : noteTop + noteH) + 44;
+    const footTop = noteTop + noteH + 44;
     const QH = footTop + 34 + QR + 70;
     c.width = QW; c.height = QH; g = c.getContext("2d");
     const red = "#7a1712", col = WX_COLOR[sg.wx];
@@ -1113,13 +1107,6 @@
     g.fillStyle = col; g.font = `900 32px ${SERIF}`; g.fillText("小知識", PAD + 12, noteTop + 56);
     g.fillStyle = "#1d1410"; g.font = `500 30px ${SANS}`;
     noteLines.forEach((l, i) => g.fillText(l, PAD + 12, noteTop + 104 + i * 44));
-    if (cauH) {
-      g.fillStyle = "#fff1e0"; rrect(g, PAD - 16, cauTop, QW - PAD * 2 + 32, cauH, 18); g.fill();
-      g.strokeStyle = "#e3a24a"; g.lineWidth = 3; rrect(g, PAD - 16, cauTop, QW - PAD * 2 + 32, cauH, 18); g.stroke();
-      g.fillStyle = "#a3401c"; g.font = `900 32px ${SERIF}`; g.fillText("⚠ 碰到咬人貓怎麼辦", PAD + 12, cauTop + 56);
-      g.fillStyle = "#6b3a10"; g.font = `500 30px ${SANS}`;
-      cauLines.forEach((l, i) => g.fillText(l, PAD + 12, cauTop + 104 + i * 44));
-    }
     // 底部：QR Code（掃了直接開網站）＋說明
     g.strokeStyle = "#c9a77b"; g.setLineDash([10, 8]); g.lineWidth = 2;
     g.beginPath(); g.moveTo(110, footTop); g.lineTo(QW - 110, footTop); g.stroke(); g.setLineDash([]);
@@ -1166,229 +1153,6 @@
   $("qianClose").onclick = qClose;
 
 
-  // ---------- 五行祈福紙船（龍神山水祭線上體驗） ----------
-  const BT = T.boat;
-  // 紙船：中間大三角、兩側小三角、下面船身（viewBox -110 -100 220 150）
-  const boatSvg = (c, cls = "", wax = false) => `<svg class="${cls}" viewBox="-110 -100 220 150" aria-hidden="true">
-    <path d="M-100 0L-52 -42L-24 0Z" fill="${c.color}" stroke="${c.edge}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M24 0L52 -42L100 0Z" fill="${c.color}" stroke="${c.edge}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M-44 0L0 -92L44 0Z" fill="${c.color}" stroke="${c.edge}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M0 -92V0" stroke="${c.edge}" stroke-width="2" opacity=".5"/>
-    <path d="M-104 0H104L72 42H-72Z" fill="${c.color}" stroke="${c.edge}" stroke-width="3" stroke-linejoin="round"/>
-    <path class="wax" d="M-92 14H92L72 42H-72Z" fill="#e8b54a" opacity="${wax ? 0.85 : 0}"/>
-  </svg>`;
-  const bColor = (wx) => BT.colors.find((c) => c.wx === wx) || BT.colors[0];
-  let boat = { step: 0, color: null, wish: "", suggest: null };
-  const bSay = (s) => typeText($("boatLine"), s, $("boatGuide"));
-  const bStage = (html) => { $("boatStage").innerHTML = html; $("boatStage").scrollTop = 0; };
-  const bPose = (p) => swapImg($("boatGuide"), T.guide.poses[p] || T.guide.poses.default);
-  const bClose = () => ($("boatLayer").hidden = true);
-
-  function openBoat(suggestWx) {
-    // 抽過山水籤：建議用本命的五行顏色（沒有本命就用籤的五行）
-    const sg = qian.num ? Y?.signs[qian.num - 1] : null;
-    boat = { step: 0, color: null, wish: "", suggest: suggestWx || (qian.born ? ganWx(qian.born) : sg?.wx) || null };
-    $("boatSpeaker").textContent = T.guide.name;
-    $("qianLayer").hidden = true;
-    $("boatLayer").hidden = false;
-    bPose("wave");
-    boatIntro();
-  }
-  function boatIntro() {
-    const last = boat.step >= BT.intro.length - 1;
-    bSay(BT.intro[boat.step]);
-    bStage(`<div class="boat-hero">${BT.colors.map((c, i) => boatSvg(c, `mini m${i}`)).join("")}</div>
-      <button class="btn primary" id="bNext">${last ? "我要放一艘" : "繼續聽"}</button>`);
-    $("bNext").onclick = () => {
-      if (last) return boatPickColor();
-      boat.step++;
-      bPose("default");
-      boatIntro();
-    };
-  }
-  function boatPickColor() {
-    bPose("point");
-    const sug = boat.suggest ? bColor(boat.suggest) : null;
-    bSay(BT.colorSay + (sug ? `你的五行是「${sug.wx}」，可以選${sug.name}色！` : ""));
-    bStage(`<p class="qian-ask">選一張紙</p>
-      <div class="boat-colors">${BT.colors.map((c) => `
-        <button data-wx="${c.wx}" class="${sug?.wx === c.wx ? "sug" : ""}" style="--c:${c.color};--e:${c.edge}">
-          <span class="paper"></span><b>${c.wx}・${c.name}</b><small>${c.bless}</small>
-          ${sug?.wx === c.wx ? `<i>推薦</i>` : ""}
-        </button>`).join("")}</div>`);
-    $("boatStage").querySelectorAll("[data-wx]").forEach((b) => {
-      b.onclick = () => { boat.color = bColor(b.dataset.wx); burst(b); setTimeout(boatPickWish, 250); };
-    });
-  }
-  function boatPickWish() {
-    bPose("think");
-    bSay(BT.wishSay);
-    bStage(`<p class="qian-ask">你的心願</p>
-      <div class="boat-wishes">${BT.wishes.map((w) => `<button data-w="${w}">${w}</button>`).join("")}</div>
-      <input id="bWish" class="boat-input" maxlength="12" placeholder="或自己寫一句（最多 12 字）" autocomplete="off">
-      <button class="btn primary" id="bFold" disabled>開始摺船</button>`);
-    const input = $("bWish"), go = $("bFold");
-    const pick = (w) => {
-      boat.wish = w.trim();
-      go.disabled = !boat.wish;
-      $("boatStage").querySelectorAll("[data-w]").forEach((x) => x.classList.toggle("on", x.dataset.w === boat.wish));
-    };
-    $("boatStage").querySelectorAll("[data-w]").forEach((b) => (b.onclick = () => { input.value = ""; pick(b.dataset.w); }));
-    input.oninput = () => pick(input.value);
-    go.onclick = boatFold;
-  }
-  function boatFold() {
-    const c = boat.color;
-    bPose("default");
-    bSay(BT.foldSay);
-    bStage(`<div class="fold-stage" style="--c:${c.color};--e:${c.edge}">
-        <div class="fold-paper"></div>
-        ${boatSvg(c, "fold-boat")}
-      </div>
-      <p class="qian-num">${c.wx}・${c.name}色紙船｜${esc(boat.wish)}</p>`);
-    setTimeout(() => {
-      bPose("happy");
-      bSay(BT.waxSay);
-      $("boatStage").insertAdjacentHTML("beforeend", `<button class="btn primary" id="bWax">🐝 塗上蜂蠟</button>`);
-      $("bWax").onclick = () => {
-        const w = $("boatStage").querySelector(".fold-boat .wax");
-        w.style.transition = "opacity .8s ease"; w.style.opacity = ".85";
-        burst($("boatStage").querySelector(".fold-stage"));
-        $("bWax").remove();
-        setTimeout(boatLaunch, 900);
-      };
-    }, reduceMotion ? 50 : 1700);
-  }
-  function boatLaunch() {
-    const c = boat.color;
-    bPose("point");
-    bSay(BT.launchSay);
-    const others = BT.colors.map((o, i) => `<div class="drift-boat" style="--t:${9 + i * 1.7}s;--d:-${i * 2.3}s;--y:${58 + (i % 3) * 9}%;--s:${0.55 - (i % 2) * 0.1}">${boatSvg(o, "", true)}</div>`).join("");
-    bStage(`<div class="canal-scene">
-        <svg class="canal-bg" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1c2647"/><stop offset=".55" stop-color="#6b4a6a"/><stop offset="1" stop-color="#d98a5a"/></linearGradient></defs>
-          <rect width="360" height="240" fill="url(#dusk)"/>
-          <g fill="#fff8d8">${[[30, 20], [90, 36], [150, 14], [230, 28], [300, 18], [330, 44]].map(([x, y]) => `<circle class="twinkle" cx="${x}" cy="${y}" r="1.4"/>`).join("")}</g>
-          <path d="M0 120Q50 70 100 98Q150 52 210 92Q260 66 360 104V160H0Z" fill="#2a3340"/>
-          <text x="196" y="86" font-size="9" fill="#cdd6e6" opacity=".7" font-family="Noto Serif TC, serif">龍神屋背山</text>
-          <rect y="150" width="360" height="90" fill="#16303f"/>
-          <rect y="146" width="360" height="8" fill="#4a3a2c"/>
-          ${[175, 195, 215, 232].map((y, i) => `<path class="flowline" style="animation-delay:-${i}s" d="M-40 ${y}q20-6 40 0t40 0t40 0t40 0t40 0t40 0t40 0t40 0t40 0t40 0t40 0" fill="none" stroke="#7fb6d6" stroke-width="1.6" opacity=".45"/>`).join("")}
-          ${[40, 120, 200, 280, 340].map((x) => `<g><rect x="${x - 1}" y="128" width="2" height="20" fill="#3a2a1e"/><circle class="lamp" cx="${x}" cy="126" r="5" fill="#f6c86a"/></g>`).join("")}
-        </svg>
-        ${others}
-        <div class="my-boat">${boatSvg(c, "", true)}<span class="wish-tag">${esc(boat.wish)}</span></div>
-      </div>`);
-    setTimeout(() => {
-      $("boatStage").querySelector(".my-boat")?.classList.add("go");
-      bPose("happy");
-      bSay(BT.doneSay);
-      $("boatStage").insertAdjacentHTML("beforeend", `
-        <p class="qian-hint">${BT.disclaimer}${T.links?.team ? `<br><a class="boat-link" href="${T.links.team.url}" target="_blank" rel="noopener">${T.links.team.label} ↗</a>` : ""}</p>
-        <button class="btn primary" id="bCard">存成祈福卡</button>
-        <button class="btn" id="bAgain">再放一艘</button>
-        <button class="btn ghost" id="bBack">回到地圖</button>`);
-      $("bCard").onclick = boatCard;
-      $("bAgain").onclick = boatPickColor;
-      $("bBack").onclick = bClose;
-    }, reduceMotion ? 50 : 1400);
-  }
-
-  // 祈福卡：傍晚水圳＋紙船＋心願＋QR Code
-  function drawBoat(g, cx, cy, s, c) {
-    g.save(); g.translate(cx, cy); g.scale(s, s);
-    g.lineJoin = "round"; g.lineWidth = 3; g.strokeStyle = c.edge; g.fillStyle = c.color;
-    const poly = (pts) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.fill(); g.stroke(); };
-    poly([[-100, 0], [-52, -42], [-24, 0]]); poly([[24, 0], [52, -42], [100, 0]]);
-    poly([[-44, 0], [0, -92], [44, 0]]);
-    poly([[-104, 0], [104, 0], [72, 42], [-72, 42]]);
-    g.fillStyle = "rgba(232,181,74,.85)"; g.beginPath();
-    [[-92, 14], [92, 14], [72, 42], [-72, 42]].forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
-    g.closePath(); g.fill();
-    g.restore();
-  }
-  async function renderBoatCard() {
-    const c = boat.color, W = 1080, H = 1560;
-    const all = ["五行祈福紙船東勢大茅埔龍神山水祭掃一下換你放！", c.wx, c.name, c.bless, boat.wish, BT.disclaimer,
-      "台中東勢大茅埔泰興宮手機導覽0123456789.｜・色紙船", QIAN_CTA2].join("");
-    try {
-      await Promise.all([
-        document.fonts.load(`900 80px "Noto Serif TC"`, all),
-        document.fonts.load(`600 40px "Noto Serif TC"`, all),
-        document.fonts.load(`500 30px "Noto Sans TC"`, all),
-      ]);
-    } catch {}
-    const qr = await loadImg("assets/img/qr-site.png");
-    const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
-    const g = cv.getContext("2d");
-    g.fillStyle = "#16303f"; g.fillRect(0, 0, W, H);
-    const sky = g.createLinearGradient(0, 0, 0, 900);
-    sky.addColorStop(0, "#1c2647"); sky.addColorStop(.6, "#6b4a6a"); sky.addColorStop(1, "#d98a5a");
-    g.fillStyle = sky; g.fillRect(0, 0, W, 900);
-    g.fillStyle = "#fff8d8";
-    [[90, 70], [260, 120], [450, 50], [690, 100], [900, 60], [990, 150]].forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 3.5, 0, 7); g.fill(); });
-    g.fillStyle = "#2a3340"; g.beginPath(); g.moveTo(0, 520);
-    g.quadraticCurveTo(150, 330, 300, 430); g.quadraticCurveTo(450, 250, 630, 400);
-    g.quadraticCurveTo(780, 300, 1080, 450); g.lineTo(1080, 700); g.lineTo(0, 700); g.closePath(); g.fill();
-    g.fillStyle = "#16303f"; g.fillRect(0, 690, W, H - 690);
-    g.fillStyle = "#4a3a2c"; g.fillRect(0, 676, W, 22);
-    g.strokeStyle = "rgba(127,182,214,.45)"; g.lineWidth = 4;
-    [760, 820, 880].forEach((y) => { g.beginPath(); for (let x = -40; x < W + 40; x += 80) { g.moveTo(x, y); g.quadraticCurveTo(x + 20, y - 12, x + 40, y); g.quadraticCurveTo(x + 60, y + 12, x + 80, y); } g.stroke(); });
-    [120, 360, 600, 840, 1010].forEach((x) => {
-      g.fillStyle = "#3a2a1e"; g.fillRect(x - 3, 610, 6, 70);
-      const lg = g.createRadialGradient(x, 600, 2, x, 600, 46); lg.addColorStop(0, "rgba(246,200,106,.95)"); lg.addColorStop(1, "rgba(246,200,106,0)");
-      g.fillStyle = lg; g.beginPath(); g.arc(x, 600, 46, 0, 7); g.fill();
-    });
-    BT.colors.forEach((o, i) => { if (o !== c) drawBoat(g, 120 + i * 230, 760 + (i % 2) * 70, 0.45, o); });
-    drawBoat(g, W / 2, 790, 1.5, c);
-    // 標題
-    g.textAlign = "center"; g.fillStyle = "#fff3d6";
-    g.font = `500 32px ${SANS}`; g.fillText("東勢大茅埔・龍神山水祭", W / 2, 190);
-    g.font = `900 96px ${SERIF}`; g.fillText("五行祈福紙船", W / 2, 300);
-    // 下方紙卡
-    g.fillStyle = "#f4e7c8"; rrect(g, 60, 960, W - 120, 540, 26); g.fill();
-    g.strokeStyle = "#e3b54a"; g.lineWidth = 4; rrect(g, 78, 978, W - 156, 504, 18); g.stroke();
-    g.fillStyle = c.color === "#f4f1e8" ? "#8a7a5a" : c.color; rrect(g, W / 2 - 150, 1010, 300, 70, 35); g.fill();
-    g.fillStyle = c.wx === "金" || c.wx === "土" ? "#3a2a1e" : "#fff"; g.font = `900 40px ${SERIF}`;
-    g.fillText(`${c.wx}・${c.name}色紙船`, W / 2, 1060);
-    g.fillStyle = "#7a1712"; g.font = `900 88px ${SERIF}`; g.fillText(boat.wish, W / 2, 1185, W - 200);
-    g.fillStyle = "#6d5c4f"; g.font = `500 32px ${SANS}`; g.fillText(c.bless, W / 2, 1240);
-    g.textAlign = "left";
-    if (qr) { g.fillStyle = "#fff"; rrect(g, W - 290, 1262, 170, 170, 12); g.fill(); g.imageSmoothingEnabled = false; g.drawImage(qr, W - 280, 1272, 150, 150); g.imageSmoothingEnabled = true; }
-    g.fillStyle = "#7a1712"; g.font = `900 36px ${SERIF}`; g.fillText("掃一下，換你放！", 120, 1320);
-    g.fillStyle = "#6d5c4f"; g.font = `500 24px ${SANS}`;
-    g.fillText(QIAN_SITE, 120, 1366, W - 450);
-    g.font = `500 20px ${SANS}`;
-    wrapText(g, BT.disclaimer, W - 450).slice(0, 2).forEach((l, i) => g.fillText(l, 120, 1404 + i * 28));
-    return new Promise((res) => cv.toBlob(res, "image/png"));
-  }
-  let bCardUrl = null;
-  async function boatCard() {
-    $("bCard").disabled = true; $("bCard").textContent = "製作中…";
-    const blob = await renderBoatCard();
-    if (!blob) { toast("祈福卡做不出來，請改用截圖保存"); return; }
-    if (bCardUrl) URL.revokeObjectURL(bCardUrl);
-    bCardUrl = URL.createObjectURL(blob);
-    const name = `五行祈福紙船_${boat.color.wx}.png`;
-    const file = new File([blob], name, { type: "image/png" });
-    const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
-    bSay("祈福卡做好了！存下來，或分享給想祝福的人吧。");
-    bStage(`<img class="qian-card" src="${bCardUrl}" alt="五行祈福紙船祈福卡">
-      <p class="qian-hint">也可以長按圖片直接儲存</p>
-      ${canShare ? `<button class="btn primary" id="bShare">分享</button>` : ""}
-      <a class="btn primary" href="${bCardUrl}" download="${name}">存成圖片</a>
-      <button class="btn" id="bAgain">再放一艘</button>
-      <button class="btn ghost" id="bBack">回到地圖</button>`);
-    if (canShare) $("bShare").onclick = async () => {
-      try { await navigator.share({ files: [file], title: "五行祈福紙船", text: "我在東勢大茅埔放了一艘五行祈福紙船！" }); }
-      catch (e) { if (e.name !== "AbortError") toast("這支手機不支援直接分享，請改用「存成圖片」"); }
-    };
-    $("bAgain").onclick = boatPickColor;
-    $("bBack").onclick = bClose;
-  }
-  if (BT) { $("boatBtn").hidden = false; $("boatBtn").onclick = () => openBoat(); }
-  $("boatClose").onclick = bClose;
 
   // ---------- 集章卡（canvas 畫成 PNG，可分享或存檔） ----------
   const DONE_KEY = "templego-complete";
