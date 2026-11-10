@@ -23,7 +23,7 @@ window.TOUR = {
       },
       // 真人去背：2026-11-08 現場影片截圖（黑色「有求必應」上衣），intro 是開場用的笑臉
       real: {
-        intro: "assets/img/guide-real-happy.webp",
+        intro: "assets/img/guide-real-intro.webp",   // 開場用全身；其他都是統一頭部大小的半身
         default: "assets/img/guide-real-default.webp",
         wave: "assets/img/guide-real-wave.webp",
         point: "assets/img/guide-real-point.webp",
