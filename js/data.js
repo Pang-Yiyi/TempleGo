@@ -73,7 +73,17 @@ window.TOUR = {
     "assets/photos/main-hall-altar.webp": {
       title: "正殿神龕", own: true, edit: "IMG_6340 縮放" },
     "assets/photos/houyuan-pano.webp": {
-      title: "泰興宮最裡面的庭園（半圈環景）", own: true, edit: "IMG_6348 手機全景，縮放" },
+      title: "正殿後方的桂花樹（半圈環景）", own: true, edit: "IMG_6348 手機全景，縮放" },
+    // 以下兩張：大茅埔調查團（Mingwu1977）上傳 Wikimedia Commons，CC BY-SA 4.0
+    "assets/photos/longshen-xiangwei.webp": {
+      title: "化胎上的龍神榕與龍神香位", author: "Mingwu1977（大茅埔調查團）", edit: "縮放", fit: "width",
+      page: "https://commons.wikimedia.org/wiki/File:%E6%B5%AA%E6%BC%AB%E5%8F%B0%E4%B8%89%E7%B7%9A-%E5%8F%B0%E7%81%A3%E5%8F%B0%E4%B8%AD%E6%9D%B1%E5%8B%A2-%E5%A4%A7%E8%8C%85%E5%9F%94-%E6%B3%B0%E8%88%88%E5%AE%AE-17.jpg" },
+    "assets/photos/shanshui-ji.webp": {
+      title: "龍神山水祭（泰興宮）", author: "Mingwu1977（大茅埔調查團）", edit: "縮放，路人臉部模糊",
+      page: "https://commons.wikimedia.org/wiki/File:%E6%B5%AA%E6%BC%AB%E5%8F%B0%E4%B8%89%E7%B7%9A-%E5%8F%B0%E7%81%A3%E5%8F%B0%E4%B8%AD%E6%9D%B1%E5%8B%A2-%E5%A4%A7%E8%8C%85%E5%9F%94-%E9%BE%8D%E7%A5%9E%E5%B1%B1%E6%B0%B4%E7%A5%AD-%E5%B1%B1%E6%B0%B4%E9%81%B6%E5%A2%83-055.jpg" },
+    "assets/photos/qushui.webp": {
+      title: "大茅埔取水習俗（大甲溪）", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
+      page: "https://commons.wikimedia.org/wiki/File:%E6%B5%AA%E6%BC%AB%E5%8F%B0%E4%B8%89%E7%B7%9A-%E5%8F%B0%E7%81%A3%E5%8F%B0%E4%B8%AD%E6%9D%B1%E5%8B%A2-%E5%A4%A7%E8%8C%85%E5%9F%94-%E5%8F%96%E6%B0%B4%E7%BF%92%E4%BF%97-05.jpg" },
     "assets/photos/longshen.webp": {
       title: "龍神與大榕樹", own: true, edit: "IMG_6344 縮放" },
   },
@@ -98,11 +108,37 @@ window.TOUR = {
     temple: { x: 53, y: 47, label: "泰興宮 ›" },
     camps: [
       { name: "東營", x: 37, y: 47 },
-      { name: "南營", x: 67.5, y: 42 },
+      { name: "南營", x: 67.5, y: 42,
+        desc: "南營在泰興宮左旁，慶成五街和舊護城河交會的地方附近，令旗是紅色的。這座將寮沒有對聯，到現場可以找找看！（資料：國家文化記憶庫〈南營將寮與紅令旗〉）" },
       { name: "西營", x: 70, y: 65 },
       { name: "北營", x: 35.5, y: 79 },
     ],
     campDesc: "五營是守護庄頭的神兵營寨。東、南、西、北四營守在庄子四周，中營通常就在主廟裡，由廟裡的神明調度，一起守住整個聚落。",
+  },
+
+  // 五行祈福紙船：龍神山水祭的線上體驗（地圖右上角）
+  // 資料：客新聞〈2025、2026 龍神山水祭〉、中央社〈大茅埔調查團〉：傍晚用不同顏色的紙摺小船放進水圳，船底塗在地蜂農的蜂蠟
+  boat: {
+    intro: [
+      "每年秋天，大茅埔會辦「龍神山水祭」。傍晚的時候，大家會摺一艘小紙船，放進水圳祈福。",
+      "紙船有五種顏色，對應金木水火土。船底還會塗上在地蜂農的蜂蠟，才不會一下子就沉下去。",
+      "你也來放一艘吧！",
+    ],
+    colorSay: "先選一張紙。每種顏色代表一種五行，也代表一種祝福。",
+    colors: [
+      { wx: "木", name: "綠", color: "#4f9a4a", edge: "#2f6a2c", bless: "像樹一樣慢慢長大" },
+      { wx: "火", name: "紅", color: "#d9382c", edge: "#8e1f16", bless: "熱情又有活力" },
+      { wx: "土", name: "黃", color: "#e8bf45", edge: "#9a7418", bless: "穩穩的有靠山" },
+      { wx: "金", name: "白", color: "#f4f1e8", edge: "#9a8f78", bless: "收穫滿滿" },
+      { wx: "水", name: "黑", color: "#2b2f3a", edge: "#9aa3b5", bless: "像水一樣順順流" },
+    ],
+    wishSay: "心裡想一個願望。可以選一個，也可以自己寫一句（只顯示在你的手機上，不會被儲存）。",
+    wishes: ["平安", "健康", "學業進步", "豐收", "家庭和樂", "旅途順利"],
+    foldSay: "來摺船囉！",
+    waxSay: "船摺好了！點一下，幫船底塗上蜂蠟。",
+    launchSay: "放進水圳囉！船會順著水流，一路流向大甲溪。",
+    doneSay: "你的願望已經跟著水流出發了。今年秋天，也歡迎來大茅埔親手放一艘！",
+    disclaimer: "線上體驗。龍神山水祭每年秋天在大茅埔舉辦，日期以泰興宮和大茅埔調查團公告為準。",
   },
 
   // 東勢果籤：地圖上的獨立體驗（在地創作的趣味籤詩，不是泰興宮的正式籤詩）
@@ -184,7 +220,7 @@ window.TOUR = {
         say: "石虎住在淺山的果園和樹林裡。果農不噴除草劑，替牠留一條路，牠也幫忙抓田裡的老鼠。做事穩穩的，也替別人留點空間。",
         advice: { "求事": "穩紮穩打，不搶也不急", "學業": "安靜專心，效率最高", "感情": "尊重對方的空間", "出外": "山路開車放慢，小心動物穿越" },
         noteLabel: "在地小知識",
-        note: "2025 年，大茅埔社區首度在大甲溪流域記錄到石虎頻繁出沒；東勢也有不少農友取得「友善石虎農作」標章。",
+        note: "大茅埔社區 2025 年首度在大甲溪流域記錄到石虎頻繁出沒。山上的「咬人貓」讓流浪狗不敢靠近，是石虎的天然庇護所。",
         season: { text: "石虎：一年四季都在淺山，晚上最活躍" },
       },
       {
@@ -587,8 +623,12 @@ window.TOUR = {
 
       // 順序：先看眼前實景 → 進插畫聽故事 → 回到實景（神龕）
       script: [
+        { scene: "pano", pano: "assets/photos/houyuan-pano.webp", panoView: { haov: 187, vaov: 80 },
+          focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "穿過正殿，正殿後方有一座小庭園，中間這棵是桂花樹。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+        { say: "桂花開的時候，整個庭園都香香的。秋天來的話，記得聞聞看！" },
         { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "穿過正殿，來到後面的中庭。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+          say: "再往前走，就是後面的中庭。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
         { say: "正前方這座就是「弼教堂」，我們走近一點看！" },
         { image: "assets/photos/bijiao-front.webp", focus: 50,
           say: "這就是弼教堂的正面。" },
@@ -632,15 +672,14 @@ window.TOUR = {
       title: "宮內深處・龍神",
       pin: { n: 6, x: 50, y: 16 },
       ready: true,
-      intro: "泰興宮最裡面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
+      intro: "泰興宮最裡面的化胎上種著大榕樹，樹下供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
-      // 順序：先看龍神（找細節、石雕）→ 轉身看關聖帝君背面的庭園（半圈環景，IMG_6348，水平約 187°）
-      pano: "assets/photos/houyuan-pano.webp",
-      panoView: { haov: 187, vaov: 80 },
+      // 順序：龍神（找細節、石雕）→ 龍神香位特寫與化胎 → 取水習俗 → 龍神山水祭
       stamp: "龍神",
 
       // 內容來源：中央社〈從龍神信仰變成最美慶典 大茅埔調查團找回客家根〉、臺中觀光旅遊網〈東勢大茅埔 尋龍探圳〉、
-      //           教育部數位走讀〈大茅埔泰興宮〉
+      //           教育部數位走讀〈大茅埔泰興宮〉、遠見〈大茅埔聚落的化胎龍神榕〉、客新聞〈重現東勢大茅埔古老「取水祭典」〉、維基百科〈慶東泰興宮〉、
+      //           客新聞〈2025、2026 龍神山水祭〉、客家公共傳播基金會〈首屆大茅埔龍神山水祭〉
       // TODO：兩側石雕是什麼動物、左邊貼紅紙的小屋供奉什麼，請志永哥確認後補進台詞
       hotspots: [
         { id: "longshenSign", img: "assets/photos/longshen.webp", x: 47.5, y: 49, title: "「龍神」",
@@ -649,6 +688,10 @@ window.TOUR = {
           desc: "樹幹上圍著紅布，代表這棵樹受到大家敬重。經過的時候，記得不要攀爬、不要折樹枝喔！" },
         { id: "banyan", img: "assets/photos/longshen.webp", x: 33, y: 18, title: "老榕樹",
           desc: "枝葉往四面八方伸展，夏天樹下特別涼快，是庄裡人休息聊天的好地方。" },
+        { id: "huatai", img: "assets/photos/longshen-xiangwei.webp", x: 24, y: 88, title: "化胎",
+          desc: "榕樹底下用土和石頭堆起來的小丘，就是「化胎」。客家人相信它把後山的龍脈引進來，象徵背後有靠山。" },
+        { id: "xiangwei", img: "assets/photos/longshen-xiangwei.webp", x: 46, y: 91, title: "龍神香位",
+          desc: "化胎前面這個紅磚小台，就是祭拜龍神的香位。" },
         { id: "stoneL", img: "assets/photos/longshen.webp", x: 6.5, y: 66, title: "左邊的石雕",
           desc: "脖子上綁著紅布的石雕。牠是什麼動物？到現場仔細看看！" },
         { id: "stoneR", img: "assets/photos/longshen.webp", x: 86, y: 64, title: "右邊的石雕",
@@ -672,12 +715,31 @@ window.TOUR = {
         { type: "explore", pose: "point", targets: ["stoneL", "stoneR"],
           say: "大樹兩邊各有一隻石雕，脖子還綁著紅布，找找看！",
           done: "牠們是什麼動物呢？到現場看看，也可以問問庄裡的人！" },
-        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "point",
-          say: "轉身往回看，這是弼教堂關聖帝君的背面。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
-        { say: "泰興宮後面有一塊用土填高、像半個月亮的地，叫作「化胎」。客家人蓋房子，會把後山的龍脈引到這裡，保佑大家平安。" },
-        { say: "龍神信仰原本慢慢被大家淡忘。後來大茅埔調查團辦起「龍神山水祭」，晚上會在河上放五行祈福紙船，像一條發光的星河。" },
+        { image: "assets/photos/longshen-xiangwei.webp", focus: 75, pose: "point",
+          say: "走近一點看。大茅埔的龍神，就安座在這棵榕樹底下。" },
+        { type: "explore", pose: "point", targets: ["huatai", "xiangwei"],
+          say: "上下滑一滑，找找兩個發光的地方！",
+          done: "客家人蓋房子，會在屋後堆一個「化胎」，把後山的龍脈引進來。大茅埔把龍神安座在泰興宮殿後的化胎上，再種一棵枝葉茂盛的榕樹。" },
+        { image: "assets/photos/qushui.webp", focus: 50, pose: "default",
+          say: "說到山和水，大茅埔還有一個老習俗，叫作「取水」。" },
+        { say: "以前庄裡有瘟疫，或是牲畜、作物出狀況，就會在神明帶領下到大甲溪取「平安水」，帶回廟埕讓大家沐浴、飲用，祈求平安。" },
+        { type: "choice", pose: "think",
+          say: "考考你：「平安水」是從哪裡取來的？",
+          options: ["大甲溪", "廟裡的井", "山上的瀑布"], answer: 0,
+          wrong: "提示：就是泰興宮面向的那條溪喔！",
+          right: "答對！就是大甲溪。這個習俗停了將近六十年，2020 年新冠疫情的時候，庄裡的耆老和居民又把它找了回來。" },
+        { image: "assets/photos/shanshui-ji.webp", focus: 50, pose: "default",
+          say: "龍神信仰原本慢慢被大家淡忘。2020 年起，泰興宮和大茅埔調查團辦起「龍神山水祭」，到 2026 年已經是第 7 屆。" },
+        { say: "祭典在每年秋天，正好是客庄「收冬」的時候，感謝王爺公和龍神帶來豐收。大家跟著王爺公巡庄，經過將寮和伯公廟，繞山也繞水。" },
+        { say: "傍晚最熱鬧：大家用五種顏色的紙摺小船，放進水圳，讓心願順著水流走。" },
+        { type: "choice", pose: "think",
+          say: "考考你：紙船的船底塗了什麼，才不會一下子就沉下去？",
+          options: ["蜂蠟", "油漆", "膠水"], answer: 0,
+          wrong: "提示：是在地蜂農提供的喔！",
+          right: "答對！是在地蜂農的蜂蠟。" },
+        { say: "祭典也照顧石虎：山上有一種植物叫「咬人貓」，有它的地方流浪狗不會靠近，等於是石虎的天然庇護所。所以祭典還推出咬人貓做的粄和飲料，請大家別急著把它除掉。" },
         { pose: "fruit",
-          say: "說到五行，回地圖右上角可以抽一支「東勢果籤」，看看金木水火土想跟你說什麼！" },
+          say: "回地圖右上角，可以放一艘「五行祈福紙船」，也可以抽一支「東勢果籤」，看看金木水火土想跟你說什麼！" },
         { pose: "happy",
           say: "龍神也拜訪過了，蓋個章！回地圖看看你收集了幾個章吧！" },
       ],
