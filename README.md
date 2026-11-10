@@ -176,7 +176,7 @@ assets/
    ```
    - 沒寫 `license` 的網路照片會顯示 CC BY-SA 4.0
    - 直式照片加 `fit: "width"`，會改成上下滑動
-4. **加進離線快取**：把路徑加進 `sw.js` 的 `PRECACHE`，並把 `VERSION` 加 1（例如 `v38` → `v39`）
+4. **加進離線快取**：把路徑加進 `sw.js` 的 `PRECACHE`，並把 `VERSION` 加 1（例如 `v39` → `v40`）
 
 ---
 

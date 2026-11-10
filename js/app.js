@@ -1358,7 +1358,7 @@
     if (qr) { g.fillStyle = "#fff"; rrect(g, W - 290, 1262, 170, 170, 12); g.fill(); g.imageSmoothingEnabled = false; g.drawImage(qr, W - 280, 1272, 150, 150); g.imageSmoothingEnabled = true; }
     g.fillStyle = "#7a1712"; g.font = `900 36px ${SERIF}`; g.fillText("掃一下，換你放！", 120, 1320);
     g.fillStyle = "#6d5c4f"; g.font = `500 24px ${SANS}`;
-    g.fillText(`${fmtDate(new Date())}｜台中東勢大茅埔泰興宮手機導覽`, 120, 1366, W - 450);
+    g.fillText(QIAN_SITE, 120, 1366, W - 450);
     g.font = `500 20px ${SANS}`;
     wrapText(g, BT.disclaimer, W - 450).slice(0, 2).forEach((l, i) => g.fillText(l, 120, 1404 + i * 28));
     return new Promise((res) => cv.toBlob(res, "image/png"));
