@@ -25,6 +25,32 @@
       <path d="M34 36V-44" stroke="#5a3a22" stroke-width="3"/>
     </g>
   </defs>
+  <style>
+    .smoke{animation:smoke 3.6s ease-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+    .smoke.s2{animation-delay:1.2s}.smoke.s3{animation-delay:2.4s}
+    @keyframes smoke{0%{opacity:0;transform:translateY(8px) scale(.7)}30%{opacity:.75}100%{opacity:0;transform:translateY(-26px) scale(1.25)}}
+    .dash{animation:dash 3s linear infinite}
+    @keyframes dash{to{stroke-dashoffset:-28}}
+    .flag{animation:flag 1.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:0 50%}
+    .flag.r{transform-origin:100% 50%}
+    @keyframes flag{0%{transform:skewY(-6deg) scaleX(.94)}100%{transform:skewY(5deg) scaleX(1.04)}}
+    .sway{animation:sway 2.8s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+    @keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+    .lantern{animation:lantern 3.2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}
+    .lantern.b{animation-delay:-1.6s}
+    @keyframes lantern{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+    .glow{animation:glow 2.6s ease-in-out infinite alternate}
+    @keyframes glow{from{opacity:.25}to{opacity:.7}}
+    .bird{animation:bird 28s linear infinite}
+    .bird.b2{animation-duration:34s;animation-delay:-12s}
+    @keyframes bird{from{transform:translate(-120px,0)}to{transform:translate(1450px,-70px)}}
+    .wing{animation:flap .45s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+    @keyframes flap{to{transform:scaleY(.35)}}
+    .drift{animation:drift 9s ease-in-out infinite alternate}
+    .drift.slow{animation-duration:14s}
+    @keyframes drift{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+    @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+  </style>
 
   <rect width="1300" height="500" fill="url(#paper)"/>
 
@@ -54,7 +80,7 @@
   <!-- 香爐 -->
   <path d="M176 270H204L200 290H180Z" fill="#c9a24a" stroke="#7a5a1c" stroke-width="1.5"/>
   <path d="M184 270V236M190 270V232M196 270V236" stroke="#8a2a1c" stroke-width="2"/>
-  <path d="M190 230q-6-10 0-18q6-8 0-16" fill="none" stroke="#9a8f80" stroke-width="1.5" opacity=".7"/>
+  <path class="smoke s2" d="M190 230q-6-10 0-18q6-8 0-16" fill="none" stroke="#9a8f80" stroke-width="1.5" opacity=".7"/>
 
   <!-- 酒六碗 -->
   <g>
@@ -98,7 +124,7 @@
   <g>
     <path d="M718 312L752 312L748 348H722Z" fill="#8a5a32" stroke="#5a3a1e" stroke-width="1.5"/>
     <path d="M719 322H751M720 336H750" stroke="#5a3a1e" stroke-width="1.2"/>
-    <g stroke="#5f9a3a" stroke-width="3" stroke-linecap="round">
+    <g stroke="#5f9a3a" stroke-width="3" stroke-linecap="round" class="sway">
       <path d="M724 312l-4-16M730 312l-1-20M736 312l2-18M742 312l4-16M747 312l7-12"/>
     </g>
     <g stroke="#7fbf4f" stroke-width="2" stroke-linecap="round">
@@ -122,7 +148,7 @@
   <!-- ========== 第三段：四方將寮 ========== -->
   <rect x="860" y="18" width="440" height="464" fill="#dfe8cf"/>
   <text x="1075" y="62" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="22" font-weight="900" fill="#7a1712">四方將寮</text>
-  <g stroke="#9a8f6a" stroke-width="2" stroke-dasharray="6 6" fill="none">
+  <g stroke="#9a8f6a" stroke-width="2" stroke-dasharray="6 6" fill="none" class="dash">
     <path d="M1075 250V190M1075 290V375M1050 270H950M1100 270H1170"/>
   </g>
   <!-- 中央：泰興宮 -->
@@ -133,22 +159,41 @@
   </g>
   <!-- 北營（黑） -->
   <use href="#liao" x="1075" y="150"/>
-  <path d="M1109 106L1139 116L1109 126Z" fill="#222" stroke="#000"/>
+  <path class="flag" d="M1109 106L1139 116L1109 126Z" fill="#222" stroke="#000"/>
   <text x="1075" y="204" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="15" font-weight="900" fill="#3b2a1e">北營</text>
   <!-- 南營（紅） -->
   <use href="#liao" x="1075" y="378"/>
-  <path d="M1109 334L1139 344L1109 354Z" fill="#c8322a" stroke="#7a1712"/>
+  <path class="flag" d="M1109 334L1139 344L1109 354Z" fill="#c8322a" stroke="#7a1712"/>
   <text x="1075" y="432" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="15" font-weight="900" fill="#3b2a1e">南營</text>
   <!-- 西營（白） -->
   <use href="#liao" x="920" y="256"/>
-  <path d="M954 212L984 222L954 232Z" fill="#fbfbf6" stroke="#8a8a80" stroke-width="1.5"/>
+  <path class="flag" d="M954 212L984 222L954 232Z" fill="#fbfbf6" stroke="#8a8a80" stroke-width="1.5"/>
   <text x="920" y="310" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="15" font-weight="900" fill="#3b2a1e">西營</text>
   <!-- 東營（綠） -->
   <use href="#liao" x="1200" y="256"/>
-  <path d="M1234 212L1264 222L1234 232Z" fill="#3f8f4f" stroke="#245a30"/>
+  <path class="flag" d="M1234 212L1264 222L1234 232Z" fill="#3f8f4f" stroke="#245a30"/>
   <text x="1200" y="310" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="15" font-weight="900" fill="#3b2a1e">東營</text>
 
   <text x="1290" y="476" text-anchor="end" font-family="Noto Sans TC, sans-serif" font-size="11" fill="#6d5c4f" opacity=".8">插畫示意</text>
+
+  <!-- ===== 動態細節 ===== -->
+  <!-- 廟內的燈籠 -->
+  <g class="lantern"><path d="M68 18V40" stroke="#5a3a22" stroke-width="2"/><ellipse cx="68" cy="56" rx="15" ry="18" fill="#e0443a" stroke="#7a1712"/><path d="M55 56H81" stroke="#f2c94c" stroke-width="2"/><rect x="64" y="73" width="8" height="8" fill="#e3b54a"/></g>
+  <g class="lantern b"><path d="M382 18V40" stroke="#5a3a22" stroke-width="2"/><ellipse cx="382" cy="56" rx="15" ry="18" fill="#e0443a" stroke="#7a1712"/><path d="M369 56H395" stroke="#f2c94c" stroke-width="2"/><rect x="378" y="73" width="8" height="8" fill="#e3b54a"/></g>
+  <!-- 燭光 -->
+  <g><rect x="160" y="262" width="6" height="22" fill="#e9d9b5"/><ellipse cx="163" cy="258" rx="3" ry="5" fill="#f6b23a" class="glow"/>
+     <rect x="212" y="262" width="6" height="22" fill="#e9d9b5"/><ellipse cx="215" cy="258" rx="3" ry="5" fill="#f6b23a" class="glow"/></g>
+  <path class="smoke s1" d="M184 232q-6-8 0-15q6-7 0-14" fill="none" stroke="#9a8f80" stroke-width="2" stroke-linecap="round" opacity="0"/><path class="smoke s2" d="M184 232q-6-8 0-15q6-7 0-14" fill="none" stroke="#9a8f80" stroke-width="2" stroke-linecap="round" opacity="0"/><path class="smoke s3" d="M196 232q-6-8 0-15q6-7 0-14" fill="none" stroke="#9a8f80" stroke-width="2" stroke-linecap="round" opacity="0"/><path class="smoke s3" d="M196 232q-6-8 0-15q6-7 0-14" fill="none" stroke="#9a8f80" stroke-width="2" stroke-linecap="round" opacity="0"/>
+  <!-- 水桶水面閃光 -->
+  <ellipse cx="800" cy="343" rx="6" ry="1.6" fill="#fff" class="glow"/>
+  <!-- 廟簷下的燈籠 -->
+  <g class="lantern"><path d="M560 136V150" stroke="#5a3a22" stroke-width="2"/><ellipse cx="560" cy="164" rx="12" ry="14" fill="#e0443a" stroke="#7a1712"/></g>
+  <g class="lantern b"><path d="M740 136V150" stroke="#5a3a22" stroke-width="2"/><ellipse cx="740" cy="164" rx="12" ry="14" fill="#e0443a" stroke="#7a1712"/></g>
+  <!-- 四方將寮旁的樹 -->
+  <g><circle cx="960" cy="140" r="16" fill="#8fb36a"/><circle cx="1190" cy="140" r="14" fill="#8fb36a"/><circle cx="960" cy="400" r="15" fill="#8fb36a"/><circle cx="1195" cy="410" r="16" fill="#8fb36a"/></g>
+  <!-- 兵馬巡營：小光點沿著四方繞 -->
+  <circle r="4" fill="#e3b54a"><animateMotion dur="10s" repeatCount="indefinite" path="M1075 175L1205 250L1075 365L925 250Z"/></circle>
+  <circle r="4" fill="#e3b54a" opacity=".7"><animateMotion dur="10s" begin="-5s" repeatCount="indefinite" path="M1075 175L1205 250L1075 365L925 250Z"/></circle>
 
   <!-- 卷軸邊框 -->
   <rect x="0" y="0" width="1300" height="14" fill="#7a1712"/>

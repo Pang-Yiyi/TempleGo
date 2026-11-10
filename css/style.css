@@ -343,10 +343,14 @@ h1 {
   transform-origin: bottom center;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,.5));
 }
-.guide.talk { animation: talk .5s ease-in-out 3; }
-.guide.hop  { animation: hop .5s ease-out 2; }
-@keyframes talk { 50% { transform: translateY(-4px) rotate(-1deg); } }
-@keyframes hop  { 40% { transform: translateY(-14px); } }
+/* 志永哥：待機呼吸（scale）與說話擺動、跳起來（transform）分開，可以同時進行 */
+.guide { animation: breathe 4.2s ease-in-out infinite; transition: opacity .16s ease, translate .22s ease; }
+.guide.talking { animation: breathe 4.2s ease-in-out infinite, talk .82s ease-in-out infinite; }
+.guide.hop { animation: breathe 4.2s ease-in-out infinite, hop .52s cubic-bezier(.3,1.6,.5,1) 2; }
+.guide.swap { opacity: 0; translate: 0 6px; transition-duration: .12s; }
+@keyframes breathe { 50% { scale: 1 1.012; } }
+@keyframes talk { 30% { transform: translateY(-3px) rotate(-.7deg); } 70% { transform: translateY(-1px) rotate(.5deg); } }
+@keyframes hop  { 40% { transform: translateY(-16px) rotate(-1.5deg); } 70% { transform: translateY(2px); } }
 
 .bubble {
   position: absolute; right: 12px; top: 14px; left: 40%;
@@ -562,3 +566,103 @@ h1 {
 .card-actions { display: flex; gap: 10px; width: min(100%, 300px); }
 .card-actions .btn { flex: 1; padding-inline: 12px; }
 .card-box > .btn { width: min(100%, 300px); }
+
+
+/* ================= 動畫優化 ================= */
+/* 換畫面：新畫面淡入並微微上移 */
+.screen.active { animation: screenIn .38s cubic-bezier(.2,.8,.2,1); }
+@keyframes screenIn { from { opacity: 0; transform: translateY(14px); } }
+
+/* 對話框：每句話輕輕彈出；打字時尾端有游標 */
+.bubble.pop { animation: bubblePop .32s cubic-bezier(.2,1.4,.4,1); transform-origin: 0 60%; }
+@keyframes bubblePop { from { transform: scale(.94); opacity: .4; } }
+.typing::after {
+  content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px;
+  vertical-align: -0.12em; background: var(--gold); animation: blink .7s steps(1) infinite;
+}
+
+/* 換照片：舊畫面淡出、新照片從稍微放大慢慢推回原位 */
+.scene-ghost {
+  position: absolute; left: 0; right: 0; top: 0; bottom: max(36dvh, 230px); z-index: 0;
+  overflow: hidden; pointer-events: none; opacity: 1; transition: opacity .55s ease;
+}
+.scene-ghost.vertical .scene-inner { width: 100%; height: auto; }
+.scene-ghost.out { opacity: 0; }
+.scene-inner.enter { animation: kenIn 1.1s cubic-bezier(.2,.7,.2,1); }
+@keyframes kenIn { from { transform: scale(1.06); filter: brightness(.75) blur(2px); } }
+.pano:not([hidden]) { animation: fadeIn .6s ease; }
+
+/* 找到熱點：金色光圈＋光點綻開 */
+.burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.burst::before {
+  content: ""; position: absolute; left: -26px; top: -26px; width: 52px; height: 52px; border-radius: 50%;
+  border: 3px solid var(--gold); animation: burstRing .7s ease-out forwards;
+}
+.burst::after {
+  content: ""; position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%;
+  background: #fff3c4;
+  box-shadow: 0 -26px #f6d77a, 18px -18px #fff3c4, 26px 0 #f6d77a, 18px 18px #fff3c4,
+              0 26px #f6d77a, -18px 18px #fff3c4, -26px 0 #f6d77a, -18px -18px #fff3c4;
+  animation: burstDots .75s ease-out forwards;
+}
+@keyframes burstRing { from { transform: scale(.4); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+@keyframes burstDots { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.9); opacity: 0; } }
+.hotspot.seen, .hotspot.right { animation: hsPop .35s cubic-bezier(.2,1.6,.4,1); }
+@keyframes hsPop { 50% { scale: 1.25; } }
+
+/* 蓋章：印章落下、印泥噴濺、畫面輕震 */
+.stamp { position: relative; }
+.stamp.stamped { animation: stampIn .5s cubic-bezier(.3,1.5,.5,1) both; }
+.stamp.stamped::before {
+  content: ""; position: absolute; inset: -34px; z-index: -1; border-radius: 50%;
+  background:
+    radial-gradient(circle at 18% 30%, rgba(217,56,44,.55) 0 7px, transparent 8px),
+    radial-gradient(circle at 84% 22%, rgba(217,56,44,.5) 0 5px, transparent 6px),
+    radial-gradient(circle at 90% 70%, rgba(217,56,44,.45) 0 8px, transparent 9px),
+    radial-gradient(circle at 12% 78%, rgba(217,56,44,.4) 0 4px, transparent 5px),
+    radial-gradient(circle at 50% 96%, rgba(217,56,44,.4) 0 5px, transparent 6px);
+  opacity: 0; animation: splat .5s ease-out .34s forwards;
+}
+@keyframes splat { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
+#stop.thump { animation: thump .32s ease-out; }
+@keyframes thump { 25% { transform: translate(2px, 3px); } 50% { transform: translate(-2px, -1px); } 75% { transform: translate(1px, 1px); } }
+.stamp-layer .btn, .stamp-layer p { animation: up2 .4s ease-out .5s both; }
+@keyframes up2 { from { opacity: 0; transform: translateY(12px); } }
+.confetti {
+  position: absolute; top: -12px; width: 8px; height: 14px; border-radius: 2px; pointer-events: none;
+  animation: confetti 2.4s cubic-bezier(.3,.6,.5,1) both;
+}
+@keyframes confetti {
+  from { transform: translate(0, 0) rotate(0); opacity: 1; }
+  to { transform: translate(var(--x), 105dvh) rotate(var(--r)); opacity: .8; }
+}
+
+/* 地圖：圖釘依序落下、建議路線慢慢畫出來 */
+.pin { animation: pinDrop .55s cubic-bezier(.2,1.5,.4,1) var(--d, 0s) both; }
+@keyframes pinDrop { from { transform: translate(-50%, -160%); opacity: 0; } }
+.route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.route line {
+  stroke: #e3b54a; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 7;
+  vector-effect: non-scaling-stroke; opacity: 0; animation: routeIn .5s ease-out var(--d) forwards;
+}
+.route line.walked { stroke: #d9382c; stroke-dasharray: none; }
+@keyframes routeIn { to { opacity: .9; } }
+
+/* 圖釘說明卡：照片縮圖＋這一站會做什麼 */
+.pin-thumb {
+  height: 128px; margin: -4px -4px 12px; border-radius: 14px;
+  background: #3a2f27 center / cover no-repeat;
+  box-shadow: inset 0 -40px 40px -20px rgba(0,0,0,.45);
+  animation: kenIn 1.2s cubic-bezier(.2,.7,.2,1);
+}
+.pin-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
+.pin-meta span {
+  font-size: 12.5px; padding: 3px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); color: var(--cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide, .screen.active, .bubble.pop, .scene-inner.enter, .pin, .route line, .pin-thumb,
+  .stamp.stamped, #stop.thump, .stamp-layer .btn, .stamp-layer p { animation: none !important; }
+  .route line { opacity: .9; }
+}

@@ -634,7 +634,7 @@ window.TOUR = {
       ready: true,
       intro: "泰興宮最裡面的大榕樹下，供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
-      // 半圈環景：團隊手機全景（IMG_6348，弼教堂關聖帝君背面的庭園），水平約 187°
+      // 順序：先看龍神（找細節、石雕）→ 轉身看關聖帝君背面的庭園（半圈環景，IMG_6348，水平約 187°）
       pano: "assets/photos/houyuan-pano.webp",
       panoView: { haov: 187, vaov: 80 },
       stamp: "龍神",
@@ -656,10 +656,8 @@ window.TOUR = {
       ],
 
       script: [
-        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "穿過弼教堂，來到泰興宮的最裡面。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
-        { image: "assets/photos/longshen.webp", focus: 48,
-          say: "再往泰興宮的最裡面走，就是這棵大榕樹。" },
+        { image: "assets/photos/longshen.webp", focus: 48, pose: "wave",
+          say: "穿過弼教堂，走到泰興宮的最裡面，就是這棵大榕樹。" },
         { say: "樹下這座小亭子，供奉的是大茅埔的「龍神」。" },
         { type: "explore", pose: "point", targets: ["longshenSign", "banyanCloth", "banyan"],
           say: "左右滑一滑，找找三個發光的地方！",
@@ -671,10 +669,12 @@ window.TOUR = {
           right: "答對！客家人把山叫作「龍」。大茅埔庄子後面有一座像蟠龍的大山，所以龍神其實就是山神。" },
         { type: "lookup",
           say: "抬頭看看廟後面的山，像不像一條趴著的龍？" },
-        { say: "泰興宮後面有一塊用土填高、像半個月亮的地，叫作「化胎」。客家人蓋房子，會把後山的龍脈引到這裡，保佑大家平安。" },
         { type: "explore", pose: "point", targets: ["stoneL", "stoneR"],
           say: "大樹兩邊各有一隻石雕，脖子還綁著紅布，找找看！",
           done: "牠們是什麼動物呢？到現場看看，也可以問問庄裡的人！" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "point",
+          say: "轉身往回看，這是弼教堂關聖帝君的背面。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+        { say: "泰興宮後面有一塊用土填高、像半個月亮的地，叫作「化胎」。客家人蓋房子，會把後山的龍脈引到這裡，保佑大家平安。" },
         { say: "龍神信仰原本慢慢被大家淡忘。後來大茅埔調查團辦起「龍神山水祭」，晚上會在河上放五行祈福紙船，像一條發光的星河。" },
         { pose: "fruit",
           say: "說到五行，回地圖右上角可以抽一支「東勢果籤」，看看金木水火土想跟你說什麼！" },

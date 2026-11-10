@@ -25,6 +25,54 @@
   const line = () => stop().script[step];
   const fill = (s) => s.replaceAll("{name}", T.guide.name).replaceAll("{lunarHint}", lunarHint);
 
+  // ---------- 動畫工具 ----------
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  // 換志永哥的動作：先預載，淡出 → 換圖 → 淡入，不會瞬間跳圖
+  function swapImg(el, src) {
+    if (!el || !src || el.getAttribute("src") === src) return;
+    const token = (el._swap = (el._swap || 0) + 1);
+    const pre = new Image(); pre.src = src;
+    el.classList.add("swap");
+    const go = () => {
+      if (token !== el._swap) return;
+      el.src = src;
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove("swap")));
+    };
+    setTimeout(() => (pre.complete ? go() : (pre.onload = pre.onerror = go)), reduceMotion ? 0 : 140);
+  }
+  // 打字機：逐字出現，遇到標點停頓一下；說話時志永哥跟著輕輕擺動
+  function typeText(el, text, guide, onDone) {
+    clearTimeout(el._type);
+    el.textContent = "";
+    el.classList.add("typing");
+    guide?.classList.add("talking");
+    const chars = [...text];
+    let i = 0;
+    const end = () => {
+      clearTimeout(el._type); el._type = null; el._finish = null;
+      el.textContent = text; el.classList.remove("typing");
+      guide?.classList.remove("talking");
+      onDone?.();
+    };
+    el._finish = end;
+    if (reduceMotion) return end();
+    const tick = () => {
+      el.textContent = chars.slice(0, ++i).join("");
+      if (i >= chars.length) return end();
+      const c = chars[i - 1];
+      el._type = setTimeout(tick, "。！？：".includes(c) ? 260 : "，、；".includes(c) ? 140 : 32);
+    };
+    tick();
+  }
+  // 小光點綻開（找到熱點、答對）
+  function burst(el) {
+    if (!el || reduceMotion) return;
+    const b = document.createElement("span");
+    b.className = "burst";
+    el.appendChild(b);
+    setTimeout(() => b.remove(), 900);
+  }
+
   // ---------- 農曆犒將日提示（瀏覽器不支援農曆時改用通用說法） ----------
   function lunarHint() {
     const fallback = "每月農曆初二、十六下午三點到五點來，就有機會看到犒將喔！";
@@ -64,7 +112,7 @@
   $("startBtn").onclick = showOverview;
   $("mapHomeBtn").onclick = showOverview;
   $("ovHomeBtn").onclick = () => show("intro");
-  $("homeBtn").onclick = () => { clearInterval(typing); typing = null; destroyPano(); showMap(); };
+  $("homeBtn").onclick = () => { finishTyping(); destroyPano(); showMap(); };
   $("replayBtn").onclick = () => startStop(stopIndex);
   $("toMapBtn").onclick = showMap;
 
@@ -119,6 +167,7 @@
   function showOverview() {
     show("overview");
     $("campSheet").hidden = true;
+    typeText($("ovLine"), fill(OV.say), $("ovGuideImg"));
     if (ovCentered) return;
     const center = () => {
       const a = $("ovArea"), w = $("ovWrap").offsetWidth;
@@ -147,13 +196,26 @@
     const got = ready.filter((s) => done.has(s.id)).length;
     $("mapStamps").textContent = got === ready.length ? "🏅 完成卡" : `印章 ${got} / ${ready.length} ›`;
     $("mapStamps").classList.toggle("complete", got === ready.length);
-    $("mapLine").textContent = fill(got === ready.length && T.map.doneSay ? T.map.doneSay : T.map.say);
-    $("mapWrap").querySelectorAll(".pin").forEach((p) => p.remove());
+    typeText($("mapLine"), fill(got === ready.length && T.map.doneSay ? T.map.doneSay : T.map.say), $("mapGuideImg"));
+    $("mapWrap").querySelectorAll(".pin, .route").forEach((p) => p.remove());
+    // 建議路線：依站號連起來，兩端都走過的段落變紅色
+    const pins = T.stops.filter((s) => s.pin).sort((a, b) => a.pin.n - b.pin.n);
+    const route = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    route.setAttribute("class", "route");
+    route.setAttribute("viewBox", "0 0 100 100");
+    route.setAttribute("preserveAspectRatio", "none");
+    route.setAttribute("aria-hidden", "true");
+    route.innerHTML = pins.slice(1).map((s, k) => {
+      const a = pins[k].pin, b = s.pin, w = done.has(pins[k].id) && done.has(s.id);
+      return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" class="${w ? "walked" : ""}" style="--d:${(0.2 + k * 0.12).toFixed(2)}s"/>`;
+    }).join("");
+    $("mapWrap").appendChild(route);
     T.stops.forEach((s, i) => {
       if (!s.pin) return;
       const b = document.createElement("button");
       const state = done.has(s.id) ? "done" : s.ready ? "ready" : "soon";
       b.className = `pin ${state}`;
+      b.style.setProperty("--d", `${(s.pin.n - 1) * 0.08}s`);
       b.style.left = s.pin.x + "%";
       b.style.top = s.pin.y + "%";
       b.innerHTML = `<span class="dot">${state === "done" ? "✓" : s.pin.n}</span><span class="tag">${s.title}</span>`;
@@ -168,6 +230,20 @@
     $("pinNo").textContent = s.pin.n;
     $("pinTitle").textContent = s.title;
     $("pinIntro").textContent = s.intro || "";
+    // 縮圖用這一站一開始看到的畫面（環景或實景照片）
+    const thumb = (s.script[0]?.scene === "pano" && s.pano) || s.script.find((l) => l.image && T.photos?.[l.image])?.image
+      || (T.photos?.[s.image] ? s.image : null) || s.pano || s.image;
+    $("pinThumb").style.backgroundImage = thumb ? `url("${thumb}")` : "";
+    $("pinThumb").hidden = !thumb;
+    const n = (t) => s.script.filter((l) => l.type === t).length;
+    const chips = [
+      n("explore") && `🔍 找細節 ${n("explore")} 次`,
+      (n("choice") + n("quiz")) && `❓ 問答 ${n("choice") + n("quiz")} 題`,
+      n("lookup") && `👀 抬頭看 ${n("lookup")} 次`,
+      (s.pano || s.script.some((l) => l.scene === "pano")) && "🔄 可轉動環景",
+      `⏱ 約 ${Math.max(2, Math.round(s.script.length * 0.3))} 分鐘`,
+    ].filter(Boolean);
+    $("pinMeta").innerHTML = chips.map((c) => `<span>${c}</span>`).join("");
     const done = loadStamps().includes(s.id);
     $("pinGo").disabled = !s.ready;
     $("pinGo").textContent = !s.ready ? "製作中，敬請期待" : done ? "再看一次" : "進入導覽";
@@ -211,13 +287,37 @@
     $("sceneHint").textContent = vertical ? "↑ 上下滑動看看 ↓" : "← 左右滑動看看 →";
     showCredit(meta);
     const inner = $("sceneInner");
-    const done = () => { scene.scrollLeft = 0; scene.scrollTop = 0; inner.classList.remove("fading"); onReady?.(); };
+    const done = () => {
+      scene.scrollLeft = 0; scene.scrollTop = 0; inner.classList.remove("fading");
+      if (!reduceMotion) { inner.classList.remove("enter"); void inner.offsetWidth; inner.classList.add("enter"); }
+      onReady?.();
+    };
     if (img.getAttribute("src") === src && img.complete) return done();
-    inner.classList.add("fading");
+    ghostScene();
     img.onload = done;
     img.onerror = done;
     img.alt = meta?.title || stop().title;
     img.src = src;
+  }
+
+  // 把目前畫面複製一份蓋在上面再淡出，做成交叉淡化
+  function ghostScene() {
+    const inner = $("sceneInner");
+    if (reduceMotion || inner.hidden || !$("sceneImg").getAttribute("src")) return;
+    document.querySelectorAll(".scene-ghost").forEach((g) => g.remove());
+    const g = document.createElement("div");
+    g.className = "scene-ghost";
+    g.classList.toggle("vertical", scene.classList.contains("vertical"));
+    const clone = inner.cloneNode(true);
+    clone.removeAttribute("id");
+    clone.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
+    clone.querySelectorAll(".hotspot").forEach((e) => e.remove());
+    clone.classList.remove("enter", "fading");
+    g.appendChild(clone);
+    scene.parentNode.insertBefore(g, scene.nextSibling);
+    g.scrollLeft = scene.scrollLeft; g.scrollTop = scene.scrollTop;
+    requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add("out")));
+    setTimeout(() => g.remove(), 800);
   }
 
   function showCredit(meta) {
@@ -284,29 +384,21 @@
   // ---------- 對話打字效果 ----------
   function say(text) {
     lineFull = text;
-    const p = $("line");
-    p.textContent = "";
     $("bubble").classList.toggle("waiting", mode !== "talk");
-    $("guideImg").classList.remove("talk", "hop");
-    void $("guideImg").offsetWidth;
-    $("guideImg").classList.add("talk");
-    let i = 0;
-    clearInterval(typing);
-    typing = setInterval(() => {
-      p.textContent = text.slice(0, ++i);
-      if (i >= text.length) finishTyping();
-    }, 35);
+    $("bubble").classList.remove("pop"); void $("bubble").offsetWidth; $("bubble").classList.add("pop");
+    typing = true;
+    typeText($("line"), text, $("guideImg"), () => { typing = null; });
   }
   function finishTyping() {
-    clearInterval(typing); typing = null;
-    $("line").textContent = lineFull;
+    $("line")._finish?.();
+    typing = null;
   }
 
   function setPose(pose) {
-    $("guideImg").src = T.guide.poses[pose] || T.guide.poses.default;
+    swapImg($("guideImg"), T.guide.poses[pose] || T.guide.poses.default);
   }
   function cheer() {
-    $("guideImg").classList.remove("talk", "hop");
+    $("guideImg").classList.remove("hop");
     void $("guideImg").offsetWidth;
     $("guideImg").classList.add("hop");
   }
@@ -413,6 +505,7 @@
     // 照片與環景滿版（標題列浮在上面）；插畫長卷的標題在圖上，標題列改回一般位置
     $("stop").classList.toggle("immersive", pano || !!T.photos?.[currentImage]);
     if (pano) { scene.classList.remove("vertical"); showCredit(T.photos?.[stop().pano]); }
+    if (pano && !$("sceneInner").hidden) ghostScene();
     $("sceneInner").hidden = pano;
     $("pano").hidden = !pano;
     $("sceneHint").textContent = pano ? "拖曳畫面，或轉動手機看四周" : "← 左右滑動看看 →";
@@ -514,6 +607,7 @@
     if (mode === "quiz") {
       if (h.id === l.answer) {
         el.classList.add("right");
+        burst(el);
         mode = "talk";
         cheer();
         say(fill(l.right));
@@ -527,6 +621,7 @@
     } else if (mode === "explore") {
       seen.add(h.id);
       el.classList.add("seen");
+      burst(el);
       openSheet(h);
       updateCounter();
     }
@@ -550,6 +645,7 @@
         if (mode !== "choice") return;
         if (i === l.answer) {
           b.classList.add("right");
+          burst(b);
           mode = "talk";
           cheer();
           say(fill(l.right));
@@ -633,6 +729,29 @@
     $("toMapBtn").className = complete ? "btn ghost" : "btn primary";
     $("toMapBtn").textContent = complete ? "回到地圖" : "回到地圖，選下一站";
     $("stampLayer").hidden = false;
+    const st = $("stamp");
+    st.classList.remove("stamped"); void st.offsetWidth; st.classList.add("stamped");
+    if (!reduceMotion) {
+      setTimeout(() => {
+        $("stop").classList.remove("thump"); void $("stop").offsetWidth; $("stop").classList.add("thump");
+        try { navigator.vibrate?.(35); } catch {}
+      }, 380);
+    }
+    $("stampLayer").querySelectorAll(".confetti").forEach((c) => c.remove());
+    if (complete && !reduceMotion) {
+      const colors = ["#e3b54a", "#d9382c", "#f6e7c1", "#6fae3e", "#4f97c4"];
+      for (let k = 0; k < 40; k++) {
+        const c = document.createElement("i");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "%";
+        c.style.background = colors[k % colors.length];
+        c.style.setProperty("--x", (Math.random() * 120 - 60).toFixed(0) + "px");
+        c.style.setProperty("--r", (Math.random() * 720 - 360).toFixed(0) + "deg");
+        c.style.animationDelay = (0.4 + Math.random() * 0.9).toFixed(2) + "s";
+        c.style.animationDuration = (1.8 + Math.random() * 1.4).toFixed(2) + "s";
+        $("stampLayer").appendChild(c);
+      }
+    }
   }
 
   // ---------- 東勢果籤（在地創作的趣味籤詩） ----------
@@ -738,9 +857,9 @@
   </svg>`;
 
   let qian = { num: 0, last: 0, fails: 0, introStep: 0, born: null };
-  const qSay = (s) => ($("qianLine").textContent = s);
+  const qSay = (s) => typeText($("qianLine"), s, $("qianGuide"));
   const qStage = (html) => { $("qianStage").innerHTML = html; $("qianStage").scrollTop = 0; };
-  const qPose = (p) => ($("qianGuide").src = T.guide.poses[p] || T.guide.poses.default);
+  const qPose = (p) => swapImg($("qianGuide"), T.guide.poses[p] || T.guide.poses.default);
   const qClose = () => ($("qianLayer").hidden = true);
   const qRedo = () => { qian.fails = 0; qianShake(); };
 
