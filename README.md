@@ -177,7 +177,7 @@ assets/
 | 第七籤 | 丁・火 | 中吉 | 螢火蟲・溪邊的小燈 | [第 214 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L214) | [看圖](docs/qian/qian-07.jpg) |
 | 第八籤 | 丁・火 | 上吉 | 五行紙船・水上星河 | [第 223 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L223) | [看圖](docs/qian/qian-08.jpg) |
 | 第九籤 | 戊・土 | 上吉 | 石虎・淺山的守護者 | [第 232 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L232) | [看圖](docs/qian/qian-09.jpg) |
-| 第十籤 | 戊・土 | 上上 | 莊背山・背山面溪 | [第 241 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L241) | [看圖](docs/qian/qian-10.jpg) |
+| 第十籤 | 戊・土 | 上上 | 屋背山・背山面溪 | [第 241 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L241) | [看圖](docs/qian/qian-10.jpg) |
 | 第十一籤 | 己・土 | 上上 | 椪柑・金黃藏好運 | [第 250 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L250) | [看圖](docs/qian/qian-11.jpg) |
 | 第十二籤 | 己・土 | 上吉 | 果園夜訪客・山羌白鼻心 | [第 259 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L259) | [看圖](docs/qian/qian-12.jpg) |
 | 第十三籤 | 庚・金 | 中吉 | 五月桃・桃木斬煩惱 | [第 268 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L268) | [看圖](docs/qian/qian-13.jpg) |

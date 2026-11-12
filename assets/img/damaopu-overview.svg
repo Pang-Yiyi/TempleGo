@@ -85,7 +85,7 @@
     <path d="M1300 92c-20 0-30-26-8-34 18-6 30 10 22 22M1314 80c30-26 70-20 80 6 14-12 40-6 40 14 0 14-14 22-28 18H1290"/>
   </g>
 
-  <!-- 莊背山：遠山 -->
+  <!-- 屋背山：遠山 -->
   <g filter="url(#blot)">
     <use href="#peak2" x="1300" y="210" width="380" height="240"/>
     <use href="#peak2" x="1080" y="180" width="320" height="200"/>
@@ -100,7 +100,7 @@
     <use href="#peak2" x="20" y="580" width="300" height="180"/>
     <use href="#peak2" x="1280" y="340" width="300" height="140"/>
   </g>
-  <text x="560" y="250" font-family="Noto Serif TC, serif" font-size="30" font-weight="900" fill="#f6ecd2" stroke="#2b2118" stroke-width="1" letter-spacing="10" writing-mode="tb">莊背山</text>
+  <text x="560" y="250" font-family="Noto Serif TC, serif" font-size="30" font-weight="900" fill="#f6ecd2" stroke="#2b2118" stroke-width="1" letter-spacing="10" writing-mode="tb">屋背山</text>
 
   <!-- 樹與刺竹 -->
   <g>

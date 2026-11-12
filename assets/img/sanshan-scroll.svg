@@ -110,7 +110,7 @@
 
   <!-- ========== 第三段：大茅埔國王宮 ========== -->
   <text x="1010" y="60" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="22" font-weight="900" fill="#7a1712">大茅埔・國王宮</text>
-  <!-- 莊背山 -->
+  <!-- 屋背山 -->
   <path d="M810 300Q880 190 960 240Q1040 160 1120 230Q1170 200 1200 220V400H810Z" fill="url(#mtn)" opacity=".85"/>
   <!-- 茅草地 -->
   <rect x="810" y="360" width="390" height="122" fill="#d8c48e"/>

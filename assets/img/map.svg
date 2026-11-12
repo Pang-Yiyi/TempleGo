@@ -21,14 +21,14 @@
   <!-- 地面 -->
   <rect width="360" height="520" fill="#d9e4c6"/>
 
-  <!-- 莊背山（龍背林） -->
+  <!-- 屋背山 -->
   <path d="M0 0H360V78Q320 52 282 70Q240 34 196 64Q150 30 108 62Q66 38 30 66Q14 60 0 70Z" fill="#7f9f68"/>
   <path d="M0 0H360V46Q316 26 270 44Q226 14 180 40Q132 12 88 38Q44 18 0 40Z" fill="#62845a"/>
   <g fill="#557a4c">
     <circle cx="40" cy="58" r="9"/><circle cx="76" cy="52" r="7"/><circle cx="300" cy="60" r="9"/>
     <circle cx="330" cy="66" r="7"/><circle cx="250" cy="56" r="6"/>
   </g>
-  <text x="180" y="26" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="13" font-weight="600" fill="#eef3e4" letter-spacing="3">莊背山・龍背林</text>
+  <text x="180" y="26" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="13" font-weight="600" fill="#eef3e4" letter-spacing="3">屋背山</text>
 
   <!-- 兩側樹木 -->
   <g fill="#86a872">

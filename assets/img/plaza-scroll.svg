@@ -38,10 +38,10 @@
 
   <rect width="1300" height="500" fill="url(#field)"/>
 
-  <!-- 莊背山 -->
+  <!-- 屋背山 -->
   <path d="M0 18H150Q120 80 140 150Q110 230 135 300Q112 380 140 482H0Z" fill="#62845a"/>
   <path d="M0 18H95Q75 120 92 250Q70 360 90 482H0Z" fill="#4f7249"/>
-  <text x="48" y="250" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="20" font-weight="900" fill="#eef3e4" writing-mode="tb" letter-spacing="6">莊背山</text>
+  <text x="48" y="250" text-anchor="middle" font-family="Noto Serif TC, serif" font-size="20" font-weight="900" fill="#eef3e4" writing-mode="tb" letter-spacing="6">屋背山</text>
 
   <!-- 大甲溪 -->
   <path d="M1190 18Q1220 140 1200 250Q1180 370 1210 482H1300V18Z" fill="#8fb8cf"/>
