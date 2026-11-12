@@ -765,8 +765,8 @@
   const GAN = "甲乙丙丁戊己庚辛壬癸";
   const zhNum = (n) => { const d = "一二三四五六七八九"; return n <= 10 ? (d + "十")[n - 1] : (n < 20 ? "十" : d[Math.floor(n / 10) - 1] + "十") + (n % 10 ? d[n % 10 - 1] : ""); };
   const tubeSvg = () => `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
-    ${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
-      `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}
+    <g class="tube-sticks">${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
+      `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}</g>
     <path d="M18 70 h124 l-8 150 a8 8 0 0 1 -8 8 h-92 a8 8 0 0 1 -8 -8 z" fill="#7a1712"/>
     <path d="M18 70 h124 l-1.2 18 h-121.6 z" fill="#a3241b"/>
     <rect x="22" y="196" width="116" height="10" fill="#5a100c"/>
@@ -922,7 +922,47 @@
   const qSay = (s) => typeText($("qianLine"), s, $("qianGuide"));
   const qStage = (html) => { $("qianStage").innerHTML = html; $("qianStage").scrollTop = 0; };
   const qPose = (p) => swapImg($("qianGuide"), T.guide.poses[p] || T.guide.poses.default);
-  const qClose = () => ($("qianLayer").hidden = true);
+  const qClose = () => { motionStop(); $("qianLayer").hidden = true; };
+
+  // ── 手機動作：搖手機抽籤、往上甩擲筊 ──
+  // iPhone 要在點擊裡先取得「動作與方向」權限；電腦、拒絕權限或偵測不到動作時，改回用點的
+  const SHAKE = { thresh: 8, gap: 160, need: 5 };   // 搖幾下才出籤：每下的力道（扣掉重力後 m/s²）、兩下最短間隔（ms）、次數
+  const FLICK = { thresh: 13, gap: 0, need: 1 };     // 往上甩一下就擲筊
+  const motion = { ok: null, handler: null, timer: 0 };
+  const DME = () => (matchMedia("(pointer: coarse)").matches ? window.DeviceMotionEvent : undefined);   // 電腦沒有觸控螢幕：直接用點的
+  const motionNeedsAsk = () => typeof DME()?.requestPermission === "function" && motion.ok === null;
+  async function motionPermit() {
+    if (motion.ok !== null) return motion.ok;
+    if (!DME()) return (motion.ok = false);
+    if (typeof DME().requestPermission === "function") {
+      try { motion.ok = (await DME().requestPermission()) === "granted"; } catch { motion.ok = false; }
+    } else motion.ok = true;
+    return motion.ok;
+  }
+  function motionStop() {
+    if (motion.handler) window.removeEventListener("devicemotion", motion.handler);
+    motion.handler = null;
+    clearTimeout(motion.timer);
+  }
+  function motionListen({ thresh, gap, need }, { onHit, onDone, onNone }) {
+    motionStop();
+    let last = 0, hits = 0, got = false, over = false;
+    motion.handler = (e) => {
+      const a = e.accelerationIncludingGravity;
+      if (!a || a.x == null) return;
+      got = true;
+      const dev = Math.abs(Math.hypot(a.x, a.y, a.z || 0) - 9.81);
+      const t = performance.now();
+      if (dev > thresh && !over && t - last > gap) {
+        over = true; last = t; hits++;
+        onHit?.(hits);
+        if (hits >= need) { motionStop(); onDone(); }
+      } else if (dev < thresh * .6) over = false;
+    };
+    window.addEventListener("devicemotion", motion.handler);
+    motion.timer = setTimeout(() => { if (!got) { motionStop(); onNone(); } }, 1500);
+  }
+  const buzz = (ms) => { try { navigator.vibrate?.(ms); } catch {} };
   const qRedo = () => { qian.fails = 0; qianShake(); };
 
   function openQian() {
@@ -961,25 +1001,68 @@
     qPose("default");
     const me = qian.born ? `你的本命是「${qian.born}${ganWx(qian.born)}」。` : "";
     qSay(me + Y.shakeSay);
-    qStage(`${tubeSvg()}<button class="btn primary" id="qShake">搖籤筒</button>`);
-    $("qShake").onclick = () => {
-      $("qShake").disabled = true;
-      $("qianStage").querySelector(".tube").classList.add("shaking");
-      setTimeout(() => {
-        // 不要連續抽到同一支
-        do { qian.num = 1 + Math.floor(Math.random() * Y.signs.length); } while (qian.num === qian.last && Y.signs.length > 1);
-        qian.last = qian.num;
-        const sg = Y.signs[qian.num - 1];
-        qSay(Y.jiaoSay);
-        qPose("think");
-        qStage(`<div class="stick">第${zhNum(qian.num)}籤 ${sg.gan}</div>
-          <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>
-          <button class="btn primary" id="qJiao">擲筊</button>`);
-        $("qJiao").onclick = qianJiao;
-      }, 1250);
+    motionStop();
+    const tap = motion.ok === false || !DME();
+    const ask = !tap && motionNeedsAsk();
+    qStage(`${tubeSvg()}
+      ${tap ? "" : `<p class="motion-hint" id="qHint">${ask ? "按下開始，就能用手機搖籤筒" : "握緊手機，上下搖一搖！"}</p>
+        <div class="shake-meter" aria-hidden="true">${"<i></i>".repeat(SHAKE.need)}</div>`}
+      ${ask ? `<button class="btn primary" id="qMotion">開始搖籤</button><p class="qian-hint" id="qAskNote">iPhone 會先問你要不要允許「動作與方向」</p>` : ""}
+      <button class="btn ${tap ? "primary" : "ghost"}" id="qShake">${tap ? "搖籤筒" : "搖不動？點這裡抽"}</button>`);
+    $("qShake").onclick = () => qianDraw(1250);
+    const listen = () => {
+      if (!$("qShake") || $("qShake").disabled) return;   // 已經離開這個畫面
+      const tube = $("qianStage").querySelector(".tube");
+      const dots = $("qianStage").querySelectorAll(".shake-meter i");
+      motionListen(SHAKE, {
+        onHit: (n) => {
+          buzz(30);
+          tube.classList.remove("jolt"); void tube.getBoundingClientRect(); tube.classList.add("jolt");
+          tube.style.setProperty("--lift", n * 5);
+          dots[n - 1]?.classList.add("on");
+        },
+        onDone: () => { buzz([40, 60, 80]); qianDraw(450); },
+        onNone: () => { motion.ok = false; qianShake(); },
+      });
     };
+    if (ask) {
+      $("qMotion").onclick = async () => {
+        if (await motionPermit()) { $("qMotion").remove(); $("qAskNote").remove(); $("qHint").textContent = "握緊手機，上下搖一搖！"; listen(); }
+        else { toast("沒有開啟動作感測，改用點的抽籤"); qianShake(); }
+      };
+    } else if (!tap) {
+      motionPermit().then((ok) => (ok ? listen() : qianShake()));
+    }
+  }
+  // 出籤：籤筒晃一下，跳出一支籤，接著擲筊
+  function qianDraw(delay) {
+    motionStop();
+    $("qShake").disabled = true;
+    $("qianStage").querySelector(".tube").classList.add("shaking");
+    setTimeout(() => {
+      // 不要連續抽到同一支
+      do { qian.num = 1 + Math.floor(Math.random() * Y.signs.length); } while (qian.num === qian.last && Y.signs.length > 1);
+      qian.last = qian.num;
+      const sg = Y.signs[qian.num - 1];
+      qSay(Y.jiaoSay);
+      qPose("think");
+      const tap = motion.ok !== true;
+      qStage(`<div class="stick">第${zhNum(qian.num)}籤 ${sg.gan}</div>
+        <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>
+        ${tap ? "" : `<p class="motion-hint">握緊手機，往上輕輕一甩，就能擲筊！<small>手機別真的丟出去喔！</small></p>`}
+        <button class="btn ${tap ? "primary" : "ghost"}" id="qJiao">${tap ? "擲筊" : "點這裡擲筊"}</button>`);
+      $("qJiao").onclick = qianJiao;
+      if (!tap) {
+        // 先等一下再開始偵測，免得剛搖完籤的餘震直接把筊擲出去
+        motion.timer = setTimeout(() => motionListen(FLICK, {
+          onDone: () => { buzz(60); qianJiao(); },
+          onNone: () => {},
+        }), 900);
+      }
+    }, delay);
   }
   function qianJiao() {
+    motionStop();
     // 擲兩次沒擲到聖筊，第三次一定是聖筊，免得遊客卡太久
     const r = qian.fails >= 2 ? "sheng" : ["sheng", "sheng", "xiao", "yin"][Math.floor(Math.random() * 4)];
     const faces = r === "sheng" ? (Math.random() < .5 ? ["flat", "round"] : ["round", "flat"])
