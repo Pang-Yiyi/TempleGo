@@ -343,6 +343,8 @@ h1 {
   transform-origin: bottom center;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,.5));
 }
+/* 講解的照片手在右邊，往左移一點，免得手被對話框擋住 */
+.guide[src*="guide-real-explain"] { left: -14%; }
 /* 志永哥：待機呼吸（scale）與說話擺動、跳起來（transform）分開，可以同時進行 */
 .guide { animation: breathe 4.2s ease-in-out infinite; transition: opacity .16s ease, translate .22s ease; }
 .guide.talking { animation: breathe 4.2s ease-in-out infinite, talk .82s ease-in-out infinite; }

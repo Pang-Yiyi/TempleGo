@@ -196,6 +196,7 @@
     const got = ready.filter((s) => done.has(s.id)).length;
     $("mapStamps").textContent = got === ready.length ? "🏅 完成卡" : `印章 ${got} / ${ready.length} ›`;
     $("mapStamps").classList.toggle("complete", got === ready.length);
+    swapImg($("mapGuideImg"), T.guide.poses[got === ready.length ? "yeah" : "default"] || T.guide.poses.default);
     typeText($("mapLine"), fill(got === ready.length && T.map.doneSay ? T.map.doneSay : T.map.say), $("mapGuideImg"));
     $("mapWrap").querySelectorAll(".pin, .route").forEach((p) => p.remove());
     // 建議路線：依站號連起來，兩端都走過的段落變紅色
@@ -735,6 +736,7 @@
     $("toMapBtn").className = complete ? "btn ghost" : "btn primary";
     $("toMapBtn").textContent = complete ? "回到地圖" : "回到地圖，選下一站";
     $("stampLayer").hidden = false;
+    setPose("yeah");
     const st = $("stamp");
     st.classList.remove("stamped"); void st.offsetWidth; st.classList.add("stamped");
     if (!reduceMotion) {
@@ -1315,7 +1317,7 @@
         document.fonts.load(`500 30px "Noto Sans TC"`, allText),
       ]);
     } catch {}
-    const guide = await loadImg(T.guide.poses[complete ? "happy" : "default"] || T.guide.poses.default);
+    const guide = await loadImg(T.guide.poses[complete ? "yeah" : "default"] || T.guide.poses.default);
     if (token !== card.token) return;
 
     const c = document.createElement("canvas"); c.width = CW; c.height = CH;

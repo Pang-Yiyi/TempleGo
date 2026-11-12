@@ -134,7 +134,7 @@ assets/
 
 | 欄位 | 用途 |
 |---|---|
-| `pose` | 志永哥的動作：`default`、`wave`、`point`、`think`、`happy`、`fruit` |
+| `pose` | 志永哥的動作：`default`、`wave`、`point`、`think`、`happy`、`fruit`、`explain`（雙手比劃講解，用在講歷史、說故事）、`yeah`（比 YA，蓋章、集滿印章、完成卡會自動用） |
 | `image` | 換成另一張照片或插畫 |
 | `scene: "pano"` | 切到環景；可再加 `pano`、`panoView` 指定另一張環景 |
 | `focus` | 照片：捲到寬度的幾 %（例如 `50`）；環景：`{ yaw, pitch }` |
