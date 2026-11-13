@@ -28,6 +28,7 @@
         <h1 id="templeName"></h1>
         <p id="templeSub" class="sub"></p>
         <img class="intro-guide" id="introGuide" alt="在地導覽員">
+        <button class="name-tag" id="introTag" type="button" hidden>認識我 ›</button>
         <button id="startBtn" class="btn primary">開始導覽</button>
         <ul class="etiquette">
           <li>聲音預設關閉，開啟請戴耳機</li>
@@ -50,6 +51,7 @@
       <header class="topbar">
         <button class="icon-btn" id="ovHomeBtn" aria-label="回首頁">‹</button>
         <h2>大茅埔總覽圖</h2>
+        <button class="guide-chip" type="button" hidden><img alt=""></button>
       </header>
       <div class="ov-area" id="ovArea">
         <div class="ov-wrap" id="ovWrap">
@@ -76,6 +78,7 @@
       <header class="topbar">
         <button class="icon-btn" id="mapHomeBtn" aria-label="回大茅埔總覽圖">‹</button>
         <h2>泰興宮鳥瞰圖</h2>
+        <button class="guide-chip" type="button" hidden><img alt=""></button>
         <button class="stamp-chip" id="mapStamps" aria-label="查看集章卡"></button>
       </header>
       <div class="map-area">
@@ -108,6 +111,7 @@
       <header class="topbar">
         <button class="icon-btn" id="homeBtn" aria-label="回地圖">‹</button>
         <h2 id="stopTitle"></h2>
+        <button class="guide-chip" type="button" hidden><img alt=""></button>
         <span class="progress" id="progress"></span>
       </header>
 
@@ -197,6 +201,9 @@
         <h3 id="profileName"></h3>
         <p class="profile-role" id="profileRole"></p>
         <ul class="profile-tags" id="profileTags"></ul>
+        <blockquote class="profile-motto" id="profileMotto" hidden></blockquote>
+        <dl class="profile-facts" id="profileFacts"></dl>
+        <p class="profile-bio-h">書上這樣介紹他</p>
         <p class="profile-bio" id="profileBio"></p>
         <p class="profile-src" id="profileSrc"></p>
         <button class="btn" id="profileClose">收起小卡</button>

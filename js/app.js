@@ -222,21 +222,49 @@
     $("profileName").textContent = T.guide.name;
     $("profileRole").textContent = P.role || "";
     $("profileTags").innerHTML = (P.tags || []).map((t) => `<li>${esc(t)}</li>`).join("");
+    $("profileMotto").textContent = P.motto || "";
+    $("profileMotto").hidden = !P.motto;
+    $("profileFacts").innerHTML = (P.facts || []).map((f) => `<div><dt>${esc(f.k)}</dt><dd>${esc(f.v)}</dd></div>`).join("");
     $("profileBio").textContent = P.bio || "";
     $("profileSrc").textContent = P.source || "";
     $("profileBtn").textContent = `認識${T.guide.name}`;
     let back = null;   // 關掉後把焦點還給原本的按鈕
-    const openProfile = (e) => {
-      e?.stopPropagation();
+    let after = null;  // 第一次開始導覽：收起小卡後接著進總覽圖
+    const openProfile = (e, then) => {
+      e?.stopPropagation?.();
       back = document.activeElement;
+      after = typeof then === "function" ? then : null;
+      $("profileClose").textContent = after ? "出發吧 →" : "收起小卡";
       $("profileLayer").hidden = false;
       $("profileClose").focus({ preventScroll: true });
     };
     const closeProfile = () => {
       $("profileLayer").hidden = true;
-      back?.focus?.({ preventScroll: true });
+      const go = after; after = null;
+      if (go) go(); else back?.focus?.({ preventScroll: true });
     };
     $("profileBtn").onclick = openProfile;
+    // 開場：點照片或名牌都能打開
+    $("introTag").hidden = false;
+    $("introTag").onclick = openProfile;
+    $("introGuide").classList.add("has-card");
+    $("introGuide").onclick = openProfile;
+    // 每頁標題列的頭像
+    document.querySelectorAll(".guide-chip").forEach((b) => {
+      b.hidden = false;
+      b.setAttribute("aria-label", `認識${T.guide.name}`);
+      b.querySelector("img").src = T.guide.poses[P.pose] || T.guide.poses.default;
+      b.onclick = openProfile;
+    });
+    // 第一次按「開始導覽」先看小卡當自我介紹，之後就直接進總覽圖
+    const SEEN_KEY = "templego.profileSeen";
+    $("startBtn").onclick = () => {
+      let seen = false;
+      try { seen = localStorage.getItem(SEEN_KEY) === "1"; } catch {}
+      if (seen) return showOverview();
+      try { localStorage.setItem(SEEN_KEY, "1"); } catch {}
+      openProfile(null, showOverview);
+    };
     $("profileClose").onclick = closeProfile;
     $("profileLayer").onclick = (e) => { e.stopPropagation(); if (e.target === e.currentTarget) closeProfile(); };
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("profileLayer").hidden) closeProfile(); });
