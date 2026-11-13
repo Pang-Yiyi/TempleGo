@@ -96,19 +96,25 @@ h1 {
   filter: drop-shadow(0 8px 16px rgba(0,0,0,.4));
 }
 .intro-guide.has-card { cursor: pointer; }
-.name-tag {
-  position: relative; z-index: 1; margin: -64px 0 22px; translate: 72px 0; rotate: -5deg;
-  font: 700 15px var(--sans); color: var(--ink); cursor: pointer;
-  background: #fffdf8; border: 0; border-radius: 6px; padding: 7px 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.35);
-  animation: tagBob 2.4s ease-in-out infinite;
+/* 開場「嗨，我是志永哥」：跟山水籤入口同一種毛玻璃膠囊 */
+.intro-tag {
+  position: relative; z-index: 1; margin: -58px 0 14px;
+  display: flex; align-items: center; gap: 10px; text-align: left;
+  color: #fff; cursor: pointer;
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 999px;
+  padding: 5px 16px 5px 5px; min-height: 48px; box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
 }
-.name-tag::before {
-  content: ""; position: absolute; top: -8px; left: 50%; width: 40px; height: 14px; translate: -50% 0; rotate: 3deg;
-  background: repeating-linear-gradient(90deg, rgba(170,214,190,.9) 0 6px, rgba(196,228,208,.9) 6px 12px);
+.intro-tag img {
+  width: 38px; height: 38px; border-radius: 50%; object-fit: cover; object-position: 50% 8%;
+  border: 2px solid var(--gold-soft); background: #e9f0dc;
+  animation: tagPulse 2.2s ease-out infinite;
 }
-@keyframes tagBob { 50% { transform: translateY(-4px); } }
-@media (prefers-reduced-motion: reduce) { .name-tag { animation: none; } }
+.intro-tag span { display: flex; flex-direction: column; line-height: 1.3; }
+.intro-tag strong { font: 700 15px var(--sans); }
+.intro-tag small { font-size: 12px; color: var(--gold-soft); }
+@keyframes tagPulse { 0% { box-shadow: 0 0 0 0 rgba(227,181,74,.7); } 70%, 100% { box-shadow: 0 0 0 10px rgba(227,181,74,0); } }
+@media (prefers-reduced-motion: reduce) { .intro-tag img { animation: none; } }
 .guide-chip {
   flex: none; width: 36px; height: 36px; padding: 0; cursor: pointer; overflow: hidden;
   border-radius: 50%; border: 2px solid var(--gold-soft); background: #e9f0dc;

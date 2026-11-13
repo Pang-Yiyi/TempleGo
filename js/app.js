@@ -227,7 +227,6 @@
     $("profileFacts").innerHTML = (P.facts || []).map((f) => `<div><dt>${esc(f.k)}</dt><dd>${esc(f.v)}</dd></div>`).join("");
     $("profileBio").textContent = P.bio || "";
     $("profileSrc").textContent = P.source || "";
-    $("profileBtn").textContent = `認識${T.guide.name}`;
     let back = null;   // 關掉後把焦點還給原本的按鈕
     let after = null;  // 第一次開始導覽：收起小卡後接著進總覽圖
     const openProfile = (e, then) => {
@@ -243,9 +242,10 @@
       const go = after; after = null;
       if (go) go(); else back?.focus?.({ preventScroll: true });
     };
-    $("profileBtn").onclick = openProfile;
     // 開場：點照片或名牌都能打開
     $("introTag").hidden = false;
+    $("introTag").querySelector("img").src = T.guide.poses[P.pose] || T.guide.poses.default;
+    $("introTag").querySelector("strong").textContent = `嗨，我是${T.guide.name}`;
     $("introTag").onclick = openProfile;
     $("introGuide").classList.add("has-card");
     $("introGuide").onclick = openProfile;
@@ -276,8 +276,6 @@
       el.onclick = openProfile;
       el.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openProfile(e); } };
     });
-  } else {
-    $("profileBtn").hidden = true;
   }
 
   // ---------- 大茅埔總覽圖 ----------
