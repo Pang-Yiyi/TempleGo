@@ -33,7 +33,10 @@
           <li>聲音預設關閉，開啟請戴耳機</li>
           <li>請勿擋在神明正前方、殿內不用閃光燈</li>
         </ul>
-        <button class="link-btn" id="creditsBtn">照片與資料來源</button>
+        <div class="intro-links">
+          <button class="link-btn" id="profileBtn">認識志永哥</button>
+          <button class="link-btn" id="creditsBtn">照片與資料來源</button>
+        </div>
       </div>
       <div class="sheet credits-sheet" id="creditsSheet" hidden>
         <h3>照片與資料來源</h3>
@@ -56,7 +59,7 @@
       <div class="map-guide">
         <img class="guide" id="ovGuideImg" alt="">
         <div class="bubble">
-          <span class="speaker" id="ovSpeaker"></span>
+          <span class="speaker" id="ovSpeaker"></span><button class="voice-btn" type="button" aria-pressed="false" aria-label="聽志永哥說" hidden>🔇</button>
           <p id="ovLine"></p>
         </div>
       </div>
@@ -84,7 +87,7 @@
       <div class="map-guide">
         <img class="guide" id="mapGuideImg" alt="">
         <div class="bubble">
-          <span class="speaker" id="mapSpeaker"></span>
+          <span class="speaker" id="mapSpeaker"></span><button class="voice-btn" type="button" aria-pressed="false" aria-label="聽志永哥說" hidden>🔇</button>
           <p id="mapLine"></p>
         </div>
       </div>
@@ -124,7 +127,7 @@
       <div class="guide-panel" id="guidePanel">
         <img class="guide" id="guideImg" alt="">
         <div class="bubble" id="bubble">
-          <span class="speaker" id="speaker"></span>
+          <span class="speaker" id="speaker"></span><button class="voice-btn" type="button" aria-pressed="false" aria-label="聽志永哥說" hidden>🔇</button>
           <p id="line"></p>
           <span class="next" id="nextMark">▼</span>
         </div>
@@ -164,7 +167,7 @@
       <div class="qian-guide">
         <img class="guide" id="qianGuide" alt="">
         <div class="bubble">
-          <span class="speaker" id="qianSpeaker"></span>
+          <span class="speaker" id="qianSpeaker"></span><button class="voice-btn" type="button" aria-pressed="false" aria-label="聽志永哥說" hidden>🔇</button>
           <p id="qianLine"></p>
         </div>
       </div>
@@ -183,6 +186,20 @@
           <button class="btn primary" id="cardSave">存成圖片</button>
         </div>
         <button class="btn ghost" id="cardClose">關閉</button>
+      </div>
+    </div>
+
+    <!-- 志永哥人物小卡 -->
+    <div class="profile-layer" id="profileLayer" hidden>
+      <div class="profile-card" role="dialog" aria-modal="true" aria-labelledby="profileName">
+        <span class="profile-tape" aria-hidden="true"></span>
+        <div class="profile-photo"><img id="profileImg" alt=""></div>
+        <h3 id="profileName"></h3>
+        <p class="profile-role" id="profileRole"></p>
+        <ul class="profile-tags" id="profileTags"></ul>
+        <p class="profile-bio" id="profileBio"></p>
+        <p class="profile-src" id="profileSrc"></p>
+        <button class="btn" id="profileClose">收起小卡</button>
       </div>
     </div>
 

@@ -169,26 +169,26 @@ assets/
 
 | 籤 | 天干五行 | 吉凶 | 主題 | 位置（data.js） | 籤卡 |
 |---|---|---|---|---|---|
-| 第一籤 | 甲・木 | 上上 | 高接梨・老樹接新花 | [第 160 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L160) | [看圖](docs/qian/qian-01.jpg) |
-| 第二籤 | 甲・木 | 大吉 | 龍神榕・化胎護庄頭 | [第 169 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L169) | [看圖](docs/qian/qian-02.jpg) |
-| 第三籤 | 乙・木 | 上吉 | 伯公樹・種子傳新苗 | [第 178 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L178) | [看圖](docs/qian/qian-03.jpg) |
-| 第四籤 | 乙・木 | 中吉 | 梨花・一朵一朵親手授 | [第 187 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L187) | [看圖](docs/qian/qian-04.jpg) |
-| 第五籤 | 丙・火 | 大吉 | 甜柿・秋陽曬得紅 | [第 196 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L196) | [看圖](docs/qian/qian-05.jpg) |
-| 第六籤 | 丙・火 | 大吉 | 咬人貓・帶刺的守護 | [第 205 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L205) | [看圖](docs/qian/qian-06.jpg) |
-| 第七籤 | 丁・火 | 中吉 | 螢火蟲・溪邊的小燈 | [第 214 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L214) | [看圖](docs/qian/qian-07.jpg) |
-| 第八籤 | 丁・火 | 上吉 | 五行紙船・水上星河 | [第 223 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L223) | [看圖](docs/qian/qian-08.jpg) |
-| 第九籤 | 戊・土 | 上吉 | 石虎・淺山的守護者 | [第 232 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L232) | [看圖](docs/qian/qian-09.jpg) |
-| 第十籤 | 戊・土 | 上上 | 屋背山・背山面溪 | [第 241 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L241) | [看圖](docs/qian/qian-10.jpg) |
-| 第十一籤 | 己・土 | 上上 | 椪柑・金黃藏好運 | [第 250 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L250) | [看圖](docs/qian/qian-11.jpg) |
-| 第十二籤 | 己・土 | 上吉 | 果園夜訪客・山羌白鼻心 | [第 259 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L259) | [看圖](docs/qian/qian-12.jpg) |
-| 第十三籤 | 庚・金 | 中吉 | 五月桃・桃木斬煩惱 | [第 268 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L268) | [看圖](docs/qian/qian-13.jpg) |
-| 第十四籤 | 庚・金 | 中吉 | 門神・將軍守廟門 | [第 277 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L277) | [看圖](docs/qian/qian-14.jpg) |
-| 第十五籤 | 辛・金 | 大吉 | 巨峰葡萄・串串似珠玉 | [第 286 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L286) | [看圖](docs/qian/qian-15.jpg) |
-| 第十六籤 | 辛・金 | 大吉 | 桂花樹・金粒暗飄香 | [第 295 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L295) | [看圖](docs/qian/qian-16.jpg) |
-| 第十七籤 | 壬・水 | 中吉 | 大茅埔圳・水繞庄頭 | [第 304 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L304) | [看圖](docs/qian/qian-17.jpg) |
-| 第十八籤 | 壬・水 | 上吉 | 平安水・神明帶路取溪水 | [第 313 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L313) | [看圖](docs/qian/qian-18.jpg) |
-| 第十九籤 | 癸・水 | 大吉 | 桶柑茂谷・晚來更芬芳 | [第 322 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L322) | [看圖](docs/qian/qian-19.jpg) |
-| 第二十籤 | 癸・水 | 中吉 | 軟埤坑山泉・涓滴養庄頭 | [第 331 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L331) | [看圖](docs/qian/qian-20.jpg) |
+| 第一籤 | 甲・木 | 上上 | 高接梨・老樹接新花 | [第 171 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L171) | [看圖](docs/qian/qian-01.jpg) |
+| 第二籤 | 甲・木 | 大吉 | 龍神榕・化胎護庄頭 | [第 180 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L180) | [看圖](docs/qian/qian-02.jpg) |
+| 第三籤 | 乙・木 | 上吉 | 伯公樹・種子傳新苗 | [第 189 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L189) | [看圖](docs/qian/qian-03.jpg) |
+| 第四籤 | 乙・木 | 中吉 | 梨花・花開更要細心顧 | [第 198 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L198) | [看圖](docs/qian/qian-04.jpg) |
+| 第五籤 | 丙・火 | 大吉 | 甜柿・秋陽曬得紅 | [第 207 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L207) | [看圖](docs/qian/qian-05.jpg) |
+| 第六籤 | 丙・火 | 大吉 | 咬人貓・帶刺的守護 | [第 216 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L216) | [看圖](docs/qian/qian-06.jpg) |
+| 第七籤 | 丁・火 | 中吉 | 螢火蟲・溪邊的小燈 | [第 225 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L225) | [看圖](docs/qian/qian-07.jpg) |
+| 第八籤 | 丁・火 | 上吉 | 五行紙船・水上星河 | [第 234 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L234) | [看圖](docs/qian/qian-08.jpg) |
+| 第九籤 | 戊・土 | 上吉 | 石虎・淺山的守護者 | [第 243 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L243) | [看圖](docs/qian/qian-09.jpg) |
+| 第十籤 | 戊・土 | 上上 | 屋背山・背山面溪 | [第 252 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L252) | [看圖](docs/qian/qian-10.jpg) |
+| 第十一籤 | 己・土 | 上上 | 椪柑・金黃藏好運 | [第 261 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L261) | [看圖](docs/qian/qian-11.jpg) |
+| 第十二籤 | 己・土 | 上吉 | 水利伯公・坐鎮牛鼻子 | [第 271 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L271) | [看圖](docs/qian/qian-12.jpg) |
+| 第十三籤 | 庚・金 | 中吉 | 五月桃・桃木斬煩惱 | [第 280 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L280) | [看圖](docs/qian/qian-13.jpg) |
+| 第十四籤 | 庚・金 | 中吉 | 門神・將軍守廟門 | [第 289 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L289) | [看圖](docs/qian/qian-14.jpg) |
+| 第十五籤 | 辛・金 | 大吉 | 青竹絲・聽神明的話 | [第 299 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L299) | [看圖](docs/qian/qian-15.jpg) |
+| 第十六籤 | 辛・金 | 大吉 | 桂花樹・金粒暗飄香 | [第 308 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L308) | [看圖](docs/qian/qian-16.jpg) |
+| 第十七籤 | 壬・水 | 中吉 | 大茅埔圳・水繞庄頭 | [第 317 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L317) | [看圖](docs/qian/qian-17.jpg) |
+| 第十八籤 | 壬・水 | 上吉 | 平安水・神明帶路取溪水 | [第 326 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L326) | [看圖](docs/qian/qian-18.jpg) |
+| 第十九籤 | 癸・水 | 大吉 | 桶柑茂谷・晚來更芬芳 | [第 335 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L335) | [看圖](docs/qian/qian-19.jpg) |
+| 第二十籤 | 癸・水 | 中吉 | 軟埤坑山泉・涓滴養庄頭 | [第 344 行](https://github.com/Pang-Yiyi/TempleGo/blob/main/js/data.js#L344) | [看圖](docs/qian/qian-20.jpg) |
 
 **每支籤的欄位**
 ```js

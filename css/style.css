@@ -245,6 +245,48 @@ h1 {
   margin-top: 10px; background: none; border: 0; cursor: pointer;
   color: var(--cream); font: 13px var(--sans); text-decoration: underline;
 }
+.intro-links { display: flex; gap: 18px; justify-content: center; }
+
+/* ---------- 志永哥人物小卡（仿《農村慢時光》的拍立得＋紙膠帶） ---------- */
+.speaker.has-card { cursor: pointer; border-bottom: 1px dashed rgba(227,181,74,.55); padding-bottom: 1px; }
+.speaker.has-card::after { content: " ›"; opacity: .75; }
+.profile-layer {
+  position: absolute; inset: 0; z-index: 9; overflow-y: auto;
+  display: flex; padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+  background: rgba(15,14,12,.82);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn .25s ease;
+}
+.profile-card {
+  position: relative; margin: auto; width: min(100%, 340px);
+  background: #fffdf8; color: var(--ink);
+  border-radius: 4px; padding: 14px 14px 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.5);
+  transform: rotate(-1.2deg);
+  animation: cardIn .38s cubic-bezier(.2,1.3,.4,1);
+}
+@keyframes cardIn { from { opacity: 0; transform: translateY(24px) rotate(-5deg) scale(.94); } }
+.profile-tape {
+  position: absolute; top: -12px; left: 50%; width: 92px; height: 26px; translate: -50% 0; rotate: 4deg;
+  background: repeating-linear-gradient(90deg, rgba(170,214,190,.85) 0 8px, rgba(196,228,208,.85) 8px 16px);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.profile-photo {
+  aspect-ratio: 1; overflow: hidden; border-radius: 2px;
+  background:
+    radial-gradient(circle at 25% 75%, rgba(140,190,120,.55), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(246,227,176,.9), transparent 50%),
+    linear-gradient(160deg, #e9f0dc, #cfe2c0);
+}
+.profile-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.profile-card h3 { margin: 12px 0 0; text-align: center; font: 900 26px var(--serif); letter-spacing: .12em; color: var(--ink); }
+.profile-role { margin: 2px 0 0; text-align: center; font-size: 13px; color: var(--muted); letter-spacing: .06em; }
+.profile-tags { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 10px 0 0; padding: 0; }
+.profile-tags li { font-size: 12px; padding: 2px 10px; border-radius: 999px; background: #eef4e4; color: #3f5a2f; border: 1px solid #cfe0bd; }
+.profile-bio { margin: 12px 4px 0; font-size: 15px; line-height: 1.8; text-align: justify; }
+.profile-src { margin: 10px 4px 14px; font-size: 11px; line-height: 1.5; color: var(--muted); }
+.profile-card .btn { width: 100%; background: var(--night); color: var(--cream); }
+
 .credits-sheet { z-index: 8; max-height: 80dvh; overflow-y: auto; text-align: left; }
 .credits-sheet ul { margin: 8px 0 14px; padding-left: 1.2em; font-size: 14px; line-height: 1.6; }
 .credits-sheet li { margin-bottom: 6px; }
@@ -366,6 +408,10 @@ h1 {
   color: var(--gold);
 }
 .bubble p { margin: 4px 0 0; font-size: 17px; line-height: 1.7; }
+/* 語音開關（志永哥名字旁邊） */
+.voice-btn { margin-left: 8px; padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2);
+  background: transparent; color: var(--gold); font-size: 13px; line-height: 1.5; cursor: pointer; vertical-align: 1px; }
+.voice-btn[aria-pressed="true"] { background: rgba(227,181,74,.18); border-color: var(--gold); }
 .next {
   position: absolute; right: 14px; bottom: 5px;
   color: var(--gold); font-size: 12px; animation: blink 1s infinite;

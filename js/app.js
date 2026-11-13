@@ -25,6 +25,81 @@
   const line = () => stop().script[step];
   const fill = (s) => s.replaceAll("{name}", T.guide.name).replaceAll("{lunarHint}", lunarHint);
 
+  // ---------- 志永哥語音 ----------
+  // 語音檔：assets/voice/<句子 SHA-1 前 12 碼>.mp3，清單在 assets/voice/index.json（tools/voice/ 產生）
+  // 一句台詞會拆成句子依序播放；台詞改了雜湊就對不上，那句就不出聲（不會唸錯）
+  // 志永哥的聲音是 AI 合成，經本人同意使用；開關預設關閉，免得在廟裡突然出聲
+  const VOICE_KEY = "templego-voice";
+  const voice = { on: false, have: null, audio: new Audio(), token: 0, urls: new Map() };
+  try { voice.on = localStorage.getItem(VOICE_KEY) === "1"; } catch {}
+  voice.audio.preload = "auto";
+  function splitSentences(text) {
+    const out = []; let cur = ""; const chars = [...text];
+    for (let i = 0; i < chars.length; i++) {
+      cur += chars[i];
+      if ("。！？".includes(chars[i])) {
+        while (i + 1 < chars.length && "」』）)".includes(chars[i + 1])) cur += chars[++i];
+        if (cur.trim()) out.push(cur.trim());
+        cur = "";
+      }
+    }
+    if (cur.trim()) out.push(cur.trim());
+    return out;
+  }
+  async function sentenceHash(s) {
+    const buf = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 12);
+  }
+  async function voiceUrl(h) {   // 先抓成 blob 再播：避開 <audio> 分段下載（206）沒辦法放進離線快取
+    if (!voice.urls.has(h)) {
+      voice.urls.set(h, fetch(`assets/voice/${h}.mp3`).then((r) => (r.ok ? r.blob() : null))
+        .then((b) => (b ? URL.createObjectURL(b) : null)).catch(() => null));
+    }
+    return voice.urls.get(h);
+  }
+  function voiceStop() { voice.token++; try { voice.audio.pause(); } catch {} }
+  async function speak(text) {
+    voiceStop();
+    const tk = voice.token;
+    if (!voice.on || !voice.have?.size || !text || !window.crypto?.subtle) return;
+    let hs;
+    try { hs = (await Promise.all(splitSentences(text).map(sentenceHash))).filter((h) => voice.have.has(h)); } catch { return; }
+    hs.forEach(voiceUrl);   // 先全部開始下載
+    for (const h of hs) {
+      const url = await voiceUrl(h);
+      if (tk !== voice.token) return;
+      if (!url) continue;
+      voice.audio.src = url;
+      try { await voice.audio.play(); } catch { return; }
+      await new Promise((res) => { voice.audio.onended = voice.audio.onpause = res; });
+      if (tk !== voice.token) return;
+    }
+  }
+  function setVoice(on, quiet) {
+    voice.on = on;
+    try { localStorage.setItem(VOICE_KEY, on ? "1" : "0"); } catch {}
+    document.querySelectorAll(".voice-btn").forEach((b) => {
+      b.setAttribute("aria-pressed", String(on));
+      b.textContent = on ? "🔊" : "🔇";
+      b.setAttribute("aria-label", on ? "關掉志永哥的聲音" : "聽志永哥說");
+    });
+    if (!on) return voiceStop();
+    if (quiet) return;
+    toast("志永哥的聲音是 AI 合成，經本人同意使用");
+    // 打開時，唸目前畫面上這一句
+    const p = [...document.querySelectorAll(".bubble p")].find((el) => el.offsetParent && el.textContent);
+    if (p) speak(p.dataset.full || p.textContent);
+  }
+  fetch("assets/voice/index.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])
+    .then((a) => {
+      voice.have = new Set(a);
+      document.querySelectorAll(".voice-btn").forEach((b) => {
+        b.hidden = !voice.have.size;
+        b.onclick = (e) => { e.stopPropagation(); setVoice(!voice.on); };
+      });
+      if (voice.have.size) setVoice(voice.on, true);   // 上次打開過就維持打開（手機要點過畫面才會出聲）
+    });
+
   // ---------- 動畫工具 ----------
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   // 換志永哥的動作：先預載，淡出 → 換圖 → 淡入，不會瞬間跳圖
@@ -43,6 +118,8 @@
   // 打字機：逐字出現，遇到標點停頓一下；說話時志永哥跟著輕輕擺動
   function typeText(el, text, guide, onDone) {
     clearTimeout(el._type);
+    el.dataset.full = text;
+    speak(text);
     el.textContent = "";
     el.classList.add("typing");
     guide?.classList.add("talking");
@@ -129,10 +206,51 @@
       <ul>${photos}</ul>
       ${own ? `<p class="note">${own}：本團隊 2026 年 11 月實地拍攝，路人臉部與車牌已模糊處理。</p>` : ""}
       <p class="note">插畫、鳥瞰圖、正殿環景為本團隊繪製的示意圖，非實際比例。</p>
-      <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>`;
+      <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>
+      <p class="note">導覽員介紹：逢甲大學人文社會學院《農村慢時光：東勢大茅埔的農業故事》（2025）。</p>`;
   }
   $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
   $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
+
+  // ---------- 志永哥人物小卡 ----------
+  // 開場「認識志永哥」或點任何對話框裡的名字都能打開；對話框本身點了會跳下一句，所以要擋住冒泡
+  const P = T.guide.profile;
+  if (P) {
+    const pImg = $("profileImg");
+    pImg.src = T.guide.poses[P.pose] || T.guide.poses.default;
+    pImg.alt = T.guide.name;
+    $("profileName").textContent = T.guide.name;
+    $("profileRole").textContent = P.role || "";
+    $("profileTags").innerHTML = (P.tags || []).map((t) => `<li>${esc(t)}</li>`).join("");
+    $("profileBio").textContent = P.bio || "";
+    $("profileSrc").textContent = P.source || "";
+    $("profileBtn").textContent = `認識${T.guide.name}`;
+    let back = null;   // 關掉後把焦點還給原本的按鈕
+    const openProfile = (e) => {
+      e?.stopPropagation();
+      back = document.activeElement;
+      $("profileLayer").hidden = false;
+      $("profileClose").focus({ preventScroll: true });
+    };
+    const closeProfile = () => {
+      $("profileLayer").hidden = true;
+      back?.focus?.({ preventScroll: true });
+    };
+    $("profileBtn").onclick = openProfile;
+    $("profileClose").onclick = closeProfile;
+    $("profileLayer").onclick = (e) => { e.stopPropagation(); if (e.target === e.currentTarget) closeProfile(); };
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("profileLayer").hidden) closeProfile(); });
+    document.querySelectorAll(".speaker").forEach((el) => {
+      el.classList.add("has-card");
+      el.setAttribute("role", "button");
+      el.tabIndex = 0;
+      el.setAttribute("aria-label", `看${T.guide.name}的人物小卡`);
+      el.onclick = openProfile;
+      el.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openProfile(e); } };
+    });
+  } else {
+    $("profileBtn").hidden = true;
+  }
 
   // ---------- 大茅埔總覽圖 ----------
   const OV = T.overview;
@@ -891,6 +1009,34 @@
       <ellipse cx="46" cy="60" rx="34" ry="30" fill="#ef8a1a" stroke="#c96f0c" stroke-width="2"/>
       <path d="M80 50 C86 60, 90 66, 84 72 C78 74, 74 68, 80 50 Z" fill="#9fd3f0" stroke="#4f97c4" stroke-width="1.5"/>
       <ellipse cx="34" cy="54" rx="7" ry="10" fill="#fff" opacity=".3"/>`,
+    // 水利伯公：屋背山是一頭趴著的牛，穿龍隧道開在「牛鼻子」，圳水從隧道流出；左下是伯公廟和老人坐過的大石頭
+    bogong: `<path d="M0 100 V64 H100 V100 Z" fill="#d8c79a"/>
+      <path d="M0 66 C8 46, 22 32, 40 32 C52 32, 60 26, 70 27 C80 28, 90 40, 96 56 L100 66 Z" fill="#4f7a49"/>
+      <path d="M68 33 C66 27, 66 22, 69 18 C71 23, 73 28, 77 32 Z" fill="#e8dcc0" stroke="#a89878" stroke-width="1"/>
+      <ellipse cx="83" cy="40" rx="2" ry="2.4" fill="#233a22"/>
+      <path d="M0 66 C14 54, 30 48, 46 50 C60 52, 70 44, 82 50 C90 54, 94 60, 100 66 Z" fill="#6f9a4a"/>
+      <path d="M72 67 V60 a9 9 0 0 1 18 0 V67 Z" fill="#2a2420" stroke="#8a8f86" stroke-width="3"/>
+      <path d="M73 66 H89 C91 78, 97 86, 100 90 V100 H82 C80 86, 76 78, 73 66 Z" fill="#7fb6d6"/>
+      <path d="M80 76 q3 -2 6 0 M86 88 q3 -2 6 0" stroke="#e6f2f8" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="60" cy="84" rx="11" ry="7" fill="#9aa096" stroke="#6f746a" stroke-width="1.5"/>
+      <ellipse cx="57" cy="81" rx="4" ry="1.8" fill="#fff" opacity=".35"/>
+      <rect x="14" y="66" width="30" height="22" fill="#c4553b" stroke="#7a2a1c" stroke-width="1.5"/>
+      <path d="M14 72 H44 M14 78 H44 M14 84 H44" stroke="#9e3a28" stroke-width="1" opacity=".7"/>
+      <rect x="24" y="72" width="10" height="16" fill="#3a2a22"/>
+      <path d="M8 66 Q29 60 50 66 L46 58 Q29 52 12 58 Z" fill="#b5452f" stroke="#7a2a1c" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M10 56 Q29 48 48 56" stroke="#8e2a1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="19" cy="71" r="2.8" fill="#e8402c"/><circle cx="39" cy="71" r="2.8" fill="#e8402c"/>`,
+    // 青竹絲：水圳隧道口，一條綠色的青竹絲（白色側線、紅眼、紅褐色尾巴）橫在水面上
+    snake: `<path d="M6 98 V46 A44 44 0 0 1 94 46 V98 Z" fill="#8a8f86"/>
+      <path d="M14 98 V48 A36 36 0 0 1 86 48 V98 Z" fill="#232823"/>
+      <path d="M14 84 H86 V98 H14 Z" fill="#3f6f7f"/>
+      <path d="M20 90 q5 -3 10 0 t10 0 M54 92 q5 -3 10 0 t10 0" stroke="#9fd3f0" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>
+      <path d="M14 82 C16 80, 18 78, 22 76" stroke="#a8542c" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M22 76 C32 62, 44 84, 54 68 C62 56, 70 64, 74 52" stroke="#5fb83a" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M22 78 C32 66, 44 88, 54 72 C62 60, 70 68, 75 56" stroke="#e6f29a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M71 55 C68 47, 74 39, 83 39 C89 39, 94 43, 93 47 C92 51, 84 56, 71 55 Z" fill="#5fb83a" stroke="#3f8a24" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="84" cy="45" r="2.4" fill="#e8402c"/><circle cx="84.6" cy="44.4" r=".8" fill="#fff"/>
+      <path d="M93 47 l5 -4 M93 47 l5 1" stroke="#d94a3a" stroke-width="1.5" stroke-linecap="round"/>`,
   };
   const iconSvg = (k, cls = "") => `<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true">${ICONS[k] || ""}</svg>`;
   const WX_COLOR = { "木": "#4f7a2c", "火": "#c2401c", "土": "#a8742a", "金": "#9a7b1c", "水": "#2f73a6" };
@@ -924,7 +1070,7 @@
   const qSay = (s) => typeText($("qianLine"), s, $("qianGuide"));
   const qStage = (html) => { $("qianStage").innerHTML = html; $("qianStage").scrollTop = 0; };
   const qPose = (p) => swapImg($("qianGuide"), T.guide.poses[p] || T.guide.poses.default);
-  const qClose = () => { motionStop(); $("qianLayer").hidden = true; };
+  const qClose = () => { motionStop(); voiceStop(); $("qianLayer").hidden = true; };
 
   // ── 手機動作：搖手機抽籤、往上甩擲筊 ──
   // iPhone 要在點擊裡先取得「動作與方向」權限；電腦、拒絕權限或偵測不到動作時，改回用點的
