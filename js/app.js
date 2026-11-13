@@ -249,13 +249,6 @@
     $("introTag").onclick = openProfile;
     $("introGuide").classList.add("has-card");
     $("introGuide").onclick = openProfile;
-    // 每頁標題列的頭像
-    document.querySelectorAll(".guide-chip").forEach((b) => {
-      b.hidden = false;
-      b.setAttribute("aria-label", `認識${T.guide.name}`);
-      b.querySelector("img").src = T.guide.poses[P.pose] || T.guide.poses.default;
-      b.onclick = openProfile;
-    });
     // 第一次按「開始導覽」先看小卡當自我介紹，之後就直接進總覽圖
     const SEEN_KEY = "templego.profileSeen";
     $("startBtn").onclick = () => {
