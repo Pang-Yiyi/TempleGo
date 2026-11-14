@@ -57,14 +57,31 @@
     }
     return voice.urls.get(h);
   }
+  // 這段話有沒有配音：每一句都有語音檔才算（結果記起來，不用每次重算雜湊）
+  const voicedCache = new Map();
+  function isVoiced(text) {
+    if (!voice.have?.size || !text || !window.crypto?.subtle) return Promise.resolve(false);
+    if (!voicedCache.has(text)) {
+      voicedCache.set(text, Promise.all(splitSentences(text).map(sentenceHash))
+        .then((hs) => hs.every((h) => voice.have.has(h))).catch(() => false));
+    }
+    return voicedCache.get(text);
+  }
+  // 對話框裡的喇叭：這段話有配音才出現
+  function updateVoiceBtn(el, text) {
+    const b = el?.closest(".bubble")?.querySelector(".voice-btn");
+    if (!b) return;
+    b.hidden = true;
+    isVoiced(text).then((ok) => { if (el.dataset.full === text) b.hidden = !ok; });
+  }
   function voiceStop() { voice.token++; try { voice.audio.pause(); } catch {} }
   async function speak(text) {
     voiceStop();
     const tk = voice.token;
     if (!voice.on || !voice.have?.size || !text || !window.crypto?.subtle) return;
-    let hs;
-    try { hs = await Promise.all(splitSentences(text).map(sentenceHash)); } catch { return; }
-    if (!hs.every((h) => voice.have.has(h))) return;   // 只有整段都有配音才播（只配了部分段落，其他段落維持只看文字）
+    if (!(await isVoiced(text))) return;   // 只有整段都有配音才播（只配了部分段落，其他段落維持只看文字）
+    if (tk !== voice.token) return;
+    const hs = await Promise.all(splitSentences(text).map(sentenceHash));
     hs.forEach(voiceUrl);   // 先全部開始下載
     for (const h of hs) {
       const url = await voiceUrl(h);
@@ -95,8 +112,9 @@
     .then((a) => {
       voice.have = new Set(a);
       document.querySelectorAll(".voice-btn").forEach((b) => {
-        b.hidden = !voice.have.size;
         b.onclick = (e) => { e.stopPropagation(); setVoice(!voice.on); };
+        const p = b.closest(".bubble")?.querySelector("p");
+        if (p?.dataset.full) updateVoiceBtn(p, p.dataset.full);   // 清單載入前就已經在講的那句
       });
       if (voice.have.size) setVoice(voice.on, true);   // 上次打開過就維持打開（手機要點過畫面才會出聲）
     });
@@ -120,6 +138,7 @@
   function typeText(el, text, guide, onDone) {
     clearTimeout(el._type);
     el.dataset.full = text;
+    updateVoiceBtn(el, text);
     speak(text);
     el.textContent = "";
     el.classList.add("typing");
