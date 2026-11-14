@@ -35,28 +35,12 @@ const add = (where, text) => { if (text && !text.includes("{")) lines.push({ whe
 add("總覽圖", T.overview?.say);
 add("地圖", T.map.say);
 add("地圖（全部走完）", T.map.doneSay);
+// 只配音「通關引導」：每站第一句（進站、教怎麼看）和最後一句（蓋章、下一步）；其他講解只顯示文字
 for (const s of T.stops) {
-  (s.script || []).forEach((l, i) => {
-    const w = `${s.title}・第 ${i + 1} 句`;
-    add(w, l.say);
-    add(w + "（找到全部）", l.done);
-    add(w + "（答對）", l.right);
-    add(w + "（答錯）", l.wrong);
-  });
+  const sc = (s.script || []).filter((l) => l.say && !l.say.includes("{"));
+  if (sc.length) add(`${s.title}・進站`, sc[0].say);
+  if (sc.length > 1) add(`${s.title}・蓋章`, sc[sc.length - 1].say);
 }
-const Y = T.guoqian;
-Y.intro.forEach((t, i) => add(`山水籤・開場 ${i + 1}`, t));
-add("山水籤・出生年", Y.bornSay);
-add("山水籤・搖籤", Y.shakeSay);
-add("山水籤・擲筊", Y.jiaoSay);
-Y.signs.forEach((g, i) => add(`山水籤・第 ${i + 1} 籤`, g.say));
-// app.js 裡寫死的句子
-add("找熱點（預設）", "厲害喔，細節都被你找到了！");
-add("山水籤・籤卡", "籤卡做好了！可以存下來，或分享給朋友，看看東勢的水果跟你說了什麼。");
-// 本命天干（app.js：你的本命是「X木」。）
-const GAN = "甲乙丙丁戊己庚辛壬癸", WX = "木木火火土土金金水水";
-[...GAN].forEach((g, i) => add("山水籤・本命", `你的本命是「${g}${WX[i]}」。`));
-
 // 拆句、去重複
 const seen = new Map();
 for (const l of lines) {

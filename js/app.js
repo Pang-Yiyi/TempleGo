@@ -63,7 +63,8 @@
     const tk = voice.token;
     if (!voice.on || !voice.have?.size || !text || !window.crypto?.subtle) return;
     let hs;
-    try { hs = (await Promise.all(splitSentences(text).map(sentenceHash))).filter((h) => voice.have.has(h)); } catch { return; }
+    try { hs = await Promise.all(splitSentences(text).map(sentenceHash)); } catch { return; }
+    if (!hs.every((h) => voice.have.has(h))) return;   // 只有整段都有配音才播（只配了部分段落，其他段落維持只看文字）
     hs.forEach(voiceUrl);   // 先全部開始下載
     for (const h of hs) {
       const url = await voiceUrl(h);
