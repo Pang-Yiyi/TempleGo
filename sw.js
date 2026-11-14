@@ -1,6 +1,6 @@
 // TempleGo 離線快取
 // ⚠️ 新增或改名圖片時：把路徑加進 PRECACHE，並把 VERSION 加 1，遊客手機才會更新快取
-const VERSION = "v50";
+const VERSION = "v51";
 const CACHE = `templego-${VERSION}`;
 const FONT_CACHE = "templego-fonts";
 
@@ -60,7 +60,7 @@ const PRECACHE = [
 ];
 
 // 程式與文字：先抓網路最新版，4 秒抓不到就用快取（廟裡收訊差也不會卡住）
-const NETWORK_FIRST = /\.(html|js|css|webmanifest)$|\/$/;
+const NETWORK_FIRST = /\.(html|js|css|webmanifest|json)$|\/$/;   // json：語音清單 index.json 改了要馬上生效
 
 self.addEventListener("install", (e) => {
   // cache: "reload"：略過瀏覽器自己的暫存，確保存進來的是伺服器上的最新版

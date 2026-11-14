@@ -11,7 +11,6 @@ assets/img/door-gods.webp
 # 語音工具：Python 環境與中間檔（很大，只留在本機）
 tools/voice/.venv/
 tools/voice/work/
-# AI 合成的志永哥語音：等本人書面同意用 AI 合成聲音後，再把這行拿掉、commit 上去
-assets/voice/
+# 志永哥的聲音樣本（真人錄音）只留在本機
 tools/voice/ref/
 __pycache__/
