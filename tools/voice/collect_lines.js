@@ -35,12 +35,8 @@ const add = (where, text) => { if (text && !text.includes("{")) lines.push({ whe
 add("總覽圖", T.overview?.say);
 add("地圖", T.map.say);
 add("地圖（全部走完）", T.map.doneSay);
-// 只配音「通關引導」：每站第一句（進站、教怎麼看）和最後一句（蓋章、下一步）；其他講解只顯示文字
-for (const s of T.stops) {
-  const sc = (s.script || []).filter((l) => l.say && !l.say.includes("{"));
-  if (sc.length) add(`${s.title}・進站`, sc[0].say);
-  if (sc.length > 1) add(`${s.title}・蓋章`, sc[sc.length - 1].say);
-}
+// 只配音總覽圖、鳥瞰圖和全部走完；進到各站以後只看文字
+
 // 拆句、去重複
 const seen = new Map();
 for (const l of lines) {
