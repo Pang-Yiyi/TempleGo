@@ -920,19 +920,47 @@
     }
   }
 
-  // ---------- 大茅埔山水籤（在地創作的趣味籤詩） ----------
+  // ---------- 求籤：大茅埔山水籤（在地創作）／藥籤新解（泰興宮古早藥籤） ----------
   const Y = T.guoqian;
+  const L = T.laoqian;
+  let K = Y;   // 目前抽的是哪一筒
   const GAN = "甲乙丙丁戊己庚辛壬癸";
   const zhNum = (n) => { const d = "一二三四五六七八九"; return n <= 10 ? (d + "十")[n - 1] : (n < 20 ? "十" : d[Math.floor(n / 10) - 1] + "十") + (n % 10 ? d[n % 10 - 1] : ""); };
-  const tubeSvg = () => `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
-    <g class="tube-sticks">${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
-      `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? "#e2bd72" : "#cfa257"}"/>`).join("")}</g>
+  const tubeSticks = (a, b) => `<g class="tube-sticks">${[30, 44, 58, 72, 86, 100, 114, 128].map((x, i) =>
+      `<rect x="${x - 4}" y="${8 + (i % 3) * 9}" width="8" height="120" rx="3" fill="${i % 2 ? a : b}"/>`).join("")}</g>`;
+  const tubeText = (t, color) => `
+    <text x="80" y="136" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="${color}">${t[0]}</text>
+    <text x="80" y="168" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="${color}">${t[1]}</text>`;
+  // 山水籤：紅漆籤筒；藥籤：舊木籤筒、泛黃籤條、紅印「古」
+  const tubeSvg = (k = K) => k === L
+    ? `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
+    ${tubeSticks("#cdb07a", "#b5935a")}
+    <path d="M22 70 h116 l-4 150 a8 8 0 0 1 -8 8 h-92 a8 8 0 0 1 -8 -8 z" fill="#5a3a22"/>
+    <path d="M22 70 h116 l-.6 16 h-114.8 z" fill="#7a5232"/>
+    <path d="M40 92 v128 M120 92 v128" stroke="#4a2e1a" stroke-width="2" opacity=".6"/>
+    <rect x="25" y="116" width="110" height="6" fill="#3e2716"/>
+    <rect x="27" y="200" width="106" height="8" fill="#3e2716"/>
+    <rect x="50" y="98" width="60" height="88" rx="2" fill="#eadcb2" transform="rotate(-2 80 142)"/>
+    <path d="M52 100 l56 -2" stroke="#cdb886" stroke-width="2"/>
+    ${tubeText(k.tube, "#3a2a1e")}
+    <rect x="88" y="172" width="18" height="18" rx="2" fill="#a3241b" transform="rotate(6 97 181)"/>
+    <text x="97" y="186" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="13" fill="#f4e7c8" transform="rotate(6 97 181)">古</text>
+  </svg>`
+    : `<svg class="tube" viewBox="0 0 160 230" aria-hidden="true">
+    ${tubeSticks("#e2bd72", "#cfa257")}
     <path d="M18 70 h124 l-8 150 a8 8 0 0 1 -8 8 h-92 a8 8 0 0 1 -8 -8 z" fill="#7a1712"/>
     <path d="M18 70 h124 l-1.2 18 h-121.6 z" fill="#a3241b"/>
     <rect x="22" y="196" width="116" height="10" fill="#5a100c"/>
     <rect x="52" y="104" width="56" height="78" rx="4" fill="#f4e7c8"/>
-    <text x="80" y="136" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">${Y.tube[0]}</text>
-    <text x="80" y="168" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="26" fill="#7a1712">${Y.tube[1]}</text>
+    ${tubeText(k.tube, "#7a1712")}
+  </svg>`;
+  // 香爐（選籤筒畫面，放在兩個籤筒中間）
+  const burnerSvg = `<svg class="burner" viewBox="0 0 80 90" aria-hidden="true">
+    ${[30, 40, 50].map((x, i) => `<path d="M${x} ${48 - i % 2 * 6} V12" stroke="#a5523a" stroke-width="2.4"/><circle cx="${x}" cy="${12 - i % 2 * 0}" r="2.6" fill="#ff8a3c"/>`).join("")}
+    <path d="M8 46 h64 c0 18 -12 30 -32 30 s-32 -12 -32 -30 z" fill="#b8892e"/>
+    <path d="M6 42 h68 v6 h-68 z" fill="#e3b54a"/>
+    <path d="M20 74 l-6 12 M60 74 l6 12 M40 76 v12" stroke="#8a6420" stroke-width="5" stroke-linecap="round"/>
+    <text x="40" y="66" text-anchor="middle" font-family="Noto Serif TC, serif" font-weight="900" font-size="14" fill="#7a1712">福</text>
   </svg>`;
   // 籤紙上的小插圖（viewBox 0 0 100 100）
   const LEAF = `<path d="M52 18 C62 6, 80 8, 84 14 C74 22, 60 24, 52 18 Z" fill="#5f8f3a"/>`;
@@ -1106,7 +1134,7 @@
       : `<path d="M28 30 C40 14, 70 10, 86 18" stroke="#fff" stroke-opacity=".4" stroke-width="6" fill="none" stroke-linecap="round"/>`}
   </svg>`;
 
-  let qian = { num: 0, last: 0, fails: 0, introStep: 0, born: null };
+  let qian = { num: 0, last: {}, fails: 0, introStep: 0, born: null };
   const qSay = (s) => typeText($("qianLine"), s, $("qianGuide"));
   const qStage = (html) => { $("qianStage").innerHTML = html; $("qianStage").scrollTop = 0; };
   const qPose = (p) => swapImg($("qianGuide"), T.guide.poses[p] || T.guide.poses.default);
@@ -1154,20 +1182,58 @@
   const qRedo = () => { qian.fails = 0; qianShake(); };
 
   function openQian() {
-    qian = { num: 0, last: qian.last, fails: 0, introStep: 0, born: qian.born };
-    qPose("wave");
     $("qianSpeaker").textContent = T.guide.name;
     $("qianLayer").hidden = false;
+    qianPick();
+  }
+  // 先選籤筒：山水籤或藥籤新解（沒有藥籤資料就直接進山水籤）
+  function qianPick() {
+    qian = { num: 0, last: qian.last, fails: 0, introStep: 0, born: qian.born };
+    motionStop();
+    qPose("wave");
+    if (!L) return qianStart(Y);
+    $("qianTitle").textContent = "求籤";
+    qSay("想抽哪一筒？左邊是用大茅埔山水寫的新籤，右邊是泰興宮的古早藥籤。");
+    // 供桌上兩個籤筒，中間香爐冒煙；點籤筒會先搖一搖再進去
+    qStage(`<div class="pick">
+        <p class="pick-head"><span>請選一筒</span><small>點籤筒，開始求籤</small></p>
+        <div class="pick-set">
+          <div class="pick-glow" aria-hidden="true"></div>
+          <div class="altar" aria-hidden="true"><span>泰興宮</span></div>
+          <div class="pick-row">
+            <button class="pick-tube" data-k="guo">${tubeSvg(Y)}
+              <span class="pick-tag">山水籤</span></button>
+            <div class="pick-burner" aria-hidden="true"><i></i><i></i><i></i>${burnerSvg}</div>
+            <button class="pick-tube lao" data-k="lao">${tubeSvg(L)}
+              <span class="pick-tag">藥籤新解</span></button>
+          </div>
+        </div>
+      </div>`);
+    const picks = $("qianStage").querySelectorAll("[data-k]");
+    picks.forEach((b) => {
+      b.onclick = () => {
+        picks.forEach((x) => { x.disabled = true; x.classList.toggle("off", x !== b); });
+        b.classList.add("chosen");
+        b.querySelector(".tube").classList.add("shaking");
+        buzz(30);
+        setTimeout(() => qianStart(b.dataset.k === "lao" ? L : Y), matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 750);
+      };
+    });
+  }
+  function qianStart(kind) {
+    K = kind;
+    qian.introStep = 0; qian.fails = 0;
+    $("qianTitle").textContent = K === L ? "藥籤新解" : "大茅埔山水籤";
     qianIntro();
   }
   function qianIntro() {
-    const last = qian.introStep >= Y.intro.length - 1;
-    qSay(Y.intro[qian.introStep]);
+    const last = qian.introStep >= K.intro.length - 1;
+    qSay(K.intro[qian.introStep]);
     qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "繼續聽"}</button>`);
     $("qNext").onclick = () => {
-      if (last) return qian.born === null ? qianBorn() : qianShake();
+      if (last) return K === Y && qian.born === null ? qianBorn() : qianShake();
       qian.introStep++;
-      qPose(qian.introStep === 1 ? "fruit" : "default");
+      qPose(qian.introStep === 1 ? (K === L ? "explain" : "fruit") : "default");
       qianIntro();
     };
   }
@@ -1187,8 +1253,8 @@
   }
   function qianShake() {
     qPose("default");
-    const me = qian.born ? `你的本命是「${qian.born}${ganWx(qian.born)}」。` : "";
-    qSay(me + Y.shakeSay);
+    const me = K === Y && qian.born ? `你的本命是「${qian.born}${ganWx(qian.born)}」。` : "";
+    qSay(me + K.shakeSay);
     motionStop();
     const tap = motion.ok === false || !DME();
     const ask = !tap && motionNeedsAsk();
@@ -1229,14 +1295,18 @@
     $("qianStage").querySelector(".tube").classList.add("shaking");
     setTimeout(() => {
       // 不要連續抽到同一支
-      do { qian.num = 1 + Math.floor(Math.random() * Y.signs.length); } while (qian.num === qian.last && Y.signs.length > 1);
-      qian.last = qian.num;
-      const sg = Y.signs[qian.num - 1];
-      qSay(Y.jiaoSay);
+      const kk = K === L ? "lao" : "guo";
+      do { qian.num = 1 + Math.floor(Math.random() * K.signs.length); } while (qian.num === qian.last[kk] && K.signs.length > 1);
+      qian.last[kk] = qian.num;
+      const sg = K.signs[qian.num - 1];
+      qSay(K.jiaoSay);
       qPose("think");
       const tap = motion.ok !== true;
-      qStage(`<div class="stick">第${zhNum(qian.num)}籤 ${sg.gan}</div>
-        <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>
+      qStage(`${K === L
+          ? `<div class="stick">${sg.short}${zhNum(sg.no)}</div>
+        <p class="qian-num">抽到：${sg.ke}第${zhNum(sg.no)}首</p>`
+          : `<div class="stick">第${zhNum(qian.num)}籤 ${sg.gan}</div>
+        <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>`}
         ${tap ? "" : `<p class="motion-hint">握緊手機，往上輕輕一甩，就能擲筊！<small>手機別真的丟出去喔！</small></p>`}
         <button class="btn ${tap ? "primary" : "ghost"}" id="qJiao">${tap ? "擲筊" : "點這裡擲筊"}</button>`);
       $("qJiao").onclick = qianJiao;
@@ -1272,6 +1342,7 @@
     }, 900);
   }
   function qianResult() {
+    if (K === L) return laoResult();
     const sg = Y.signs[qian.num - 1];
     const ss = seasonLine(sg.season);
     const rel = qian.born ? relation(ganWx(qian.born), sg.wx) : "";
@@ -1292,9 +1363,40 @@
       </div>
       <button class="btn primary" id="qCard">存成籤卡</button>
       <button class="btn" id="qRedo">再抽一支</button>
+      ${L ? `<button class="btn" id="qSwitch">換一筒籤</button>` : ""}
       <button class="btn ghost" id="qBack">回到地圖</button>`);
     $("qCard").onclick = qianCard;
     $("qRedo").onclick = qRedo;
+    if (L) $("qSwitch").onclick = qianPick;
+    $("qBack").onclick = qClose;
+  }
+  // 藥籤新解的籤紙：原詩直排＋白話＋解說＋心藥方＋小知識（不附藥方）
+  function laoResult() {
+    const sg = L.signs[qian.num - 1];
+    qPose("happy");
+    qSay(L.resultSay);
+    qStage(`<div class="qian-paper lao">
+        <p class="kind">泰興宮藥籤・${sg.ke}</p>
+        <h3>第${zhNum(sg.no)}首</h3>
+        <p class="lao-title">${sg.title}</p>
+        <div class="poem${sg.poem[0].length <= 4 ? " short" : ""}">${sg.poem.map((l) => `<span>${l}</span>`).join("")}</div>
+        <div class="lao-sec"><b>白話翻譯</b><p>${sg.plain}</p></div>
+        <div class="lao-sec say"><b>解說</b><p>${sg.say}</p></div>
+        <div class="lao-rx"><span class="lao-seal">心藥<br>一帖</span>
+          <b>心藥方</b>
+          <ol>${sg.rx.map((r) => `<li>${r}</li>`).join("")}</ol>
+          <p>用法：${sg.use}</p>
+        </div>
+        <p class="fruit-note"><b>小知識</b>${sg.note}</p>
+        <p class="note">${L.disclaimer}</p>
+      </div>
+      <button class="btn primary" id="qCard">存成籤卡</button>
+      <button class="btn" id="qRedo">再抽一支</button>
+      <button class="btn" id="qSwitch">換一筒籤</button>
+      <button class="btn ghost" id="qBack">回到地圖</button>`);
+    $("qCard").onclick = qianCard;
+    $("qRedo").onclick = qRedo;
+    $("qSwitch").onclick = qianPick;
     $("qBack").onclick = qClose;
   }
 
@@ -1394,27 +1496,141 @@
 
     return new Promise((res) => c.toBlob(res, "image/png"));
   }
+  // 藥籤新解籤卡：先把內容畫在夠高的透明畫布上量出高度，再鋪上紅框底色
+  async function renderLaoCard() {
+    const sg = L.signs[qian.num - 1];
+    const QW = 1080, PAD = 130, QR = 210, TW = QW - PAD * 2;
+    const head = `泰 興 宮 藥 籤 ・ ${sg.ke}`, num = `第${zhNum(sg.no)}首`, use = `用法：${sg.use}`;
+    const all = [head, num, sg.title, ...sg.poem, sg.plain, sg.say, ...sg.rx, use, sg.note, L.disclaimer,
+      QIAN_CTA, QIAN_SITE, "白話翻譯解說心藥方一帖小知識藥籤新解0123456789."].join("");
+    try {
+      await Promise.all([
+        document.fonts.load(`900 80px "Noto Serif TC"`, all),
+        document.fonts.load(`600 40px "Noto Serif TC"`, all),
+        document.fonts.load(`500 30px "Noto Sans TC"`, all),
+      ]);
+    } catch {}
+    const qr = await loadImg("assets/img/qr-site.png");
+    const red = "#7a1712", ink = "#1d1410", muted = "#6d5c4f", green = "#4f6b3a";
+    const a = document.createElement("canvas"); a.width = QW; a.height = 4000;
+    const g = a.getContext("2d");
+    const lines = (font, text, w) => { g.font = font; return wrapText(g, text, w); };
+
+    g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.fillStyle = muted; g.font = `500 32px ${SANS}`; g.fillText(head, QW / 2, 140);
+    g.fillStyle = red; g.font = `900 96px ${SERIF}`; g.fillText(num, QW / 2, 250);
+    g.fillStyle = ink; g.font = `900 48px ${SERIF}`; g.fillText(sg.title, QW / 2, 326);
+
+    // 原詩：直排，由右到左，外框＋格線
+    const n = Math.max(...sg.poem.map((l) => l.length)), cols = sg.poem.length;
+    const cw = 100, ch = 64, bw = cols * cw + 40, bh = n * ch + 44, bx = (QW - bw) / 2, by = 372;
+    g.strokeStyle = red; g.lineWidth = 4; rrect(g, bx, by, bw, bh, 8); g.stroke();
+    g.strokeStyle = "rgba(142,31,22,.25)"; g.lineWidth = 2;
+    for (let i = 1; i < cols; i++) { const x = bx + 20 + i * cw; g.beginPath(); g.moveTo(x, by + 16); g.lineTo(x, by + bh - 16); g.stroke(); }
+    g.fillStyle = ink; g.font = `900 54px ${SERIF}`; g.textBaseline = "top";
+    sg.poem.forEach((line, i) => {
+      const x = bx + bw - 20 - cw * (i + .5);
+      [...line].forEach((c, j) => g.fillText(c, x, by + 26 + j * ch));
+    });
+    g.textBaseline = "alphabetic"; g.textAlign = "left";
+    let y = by + bh + 80;
+
+    // 白話翻譯
+    g.fillStyle = red; g.font = `900 36px ${SERIF}`; g.fillText("白話翻譯", PAD, y);
+    const plain = lines(`500 32px ${SANS}`, sg.plain, TW);
+    g.fillStyle = ink; plain.forEach((l, i) => g.fillText(l, PAD, y + 56 + i * 48));
+    y += 56 + (plain.length - 1) * 48 + 50;
+
+    // 解說
+    const say = lines(`500 32px ${SANS}`, sg.say, TW - 40);
+    let h = 64 + 52 + (say.length - 1) * 46 + 32;
+    g.fillStyle = "#ead9b6"; rrect(g, PAD - 20, y, TW + 40, h, 20); g.fill();
+    g.fillStyle = red; g.font = `900 34px ${SERIF}`; g.fillText("解說", PAD + 4, y + 58);
+    g.fillStyle = ink; g.font = `500 32px ${SANS}`; say.forEach((l, i) => g.fillText(l, PAD + 4, y + 110 + i * 46));
+    y += h + 36;
+
+    // 心藥方（仿古早藥單）
+    const rx = sg.rx.map((r) => lines(`500 32px ${SANS}`, r, TW - 80));
+    const uses = lines(`500 26px ${SANS}`, use, TW - 40);
+    const rxH = rx.reduce((t, r) => t + r.length * 46 + 8, 0);
+    h = 72 + 56 + rxH + 30 + uses.length * 38 - 6;
+    g.fillStyle = "#fffdf6"; rrect(g, PAD - 20, y, TW + 40, h, 10); g.fill();
+    g.strokeStyle = green; g.lineWidth = 3; rrect(g, PAD - 20, y, TW + 40, h, 10); g.stroke();
+    g.fillStyle = green; g.font = `900 40px ${SERIF}`; g.fillText("心 藥 方", PAD + 4, y + 66);
+    // 印章
+    g.save(); g.translate(QW - PAD - 40, y + 62); g.rotate(.14);
+    g.strokeStyle = red; g.lineWidth = 4; rrect(g, -50, -50, 100, 100, 10); g.stroke();
+    g.fillStyle = red; g.font = `900 30px ${SERIF}`; g.textAlign = "center";
+    g.fillText("心藥", 0, -6); g.fillText("一帖", 0, 32); g.restore(); g.textAlign = "left";
+    let ry = y + 72 + 56;
+    rx.forEach((r, k) => {
+      g.fillStyle = green; g.font = `900 32px ${SERIF}`; g.fillText(`${k + 1}.`, PAD + 4, ry);
+      g.fillStyle = ink; g.font = `500 32px ${SANS}`;
+      r.forEach((l, i) => g.fillText(l, PAD + 56, ry + i * 46));
+      ry += r.length * 46 + 8;
+    });
+    g.strokeStyle = "#c9a77b"; g.setLineDash([8, 6]); g.lineWidth = 2;
+    g.beginPath(); g.moveTo(PAD + 4, ry - 14); g.lineTo(QW - PAD - 4, ry - 14); g.stroke(); g.setLineDash([]);
+    g.fillStyle = muted; g.font = `500 26px ${SANS}`; uses.forEach((l, i) => g.fillText(l, PAD + 4, ry + 28 + i * 38));
+    y += h + 36;
+
+    // 小知識
+    const note = lines(`500 30px ${SANS}`, sg.note, TW - 24);
+    h = 26 + 40 + note.length * 44 + 14;
+    g.fillStyle = "rgba(255,255,255,.6)"; rrect(g, PAD - 16, y, TW + 32, h, 18); g.fill();
+    g.fillStyle = red; g.font = `900 32px ${SERIF}`; g.fillText("小知識", PAD + 12, y + 56);
+    g.fillStyle = ink; g.font = `500 30px ${SANS}`; note.forEach((l, i) => g.fillText(l, PAD + 12, y + 104 + i * 44));
+    y += h + 44;
+
+    // 底部：QR Code＋說明
+    g.strokeStyle = "#c9a77b"; g.setLineDash([10, 8]); g.lineWidth = 2;
+    g.beginPath(); g.moveTo(110, y); g.lineTo(QW - 110, y); g.stroke(); g.setLineDash([]);
+    const qx = QW - PAD - QR + 10, qy = y + 34, tw = qx - PAD - 40;
+    if (qr) {
+      g.fillStyle = "#fff"; rrect(g, qx - 10, qy - 10, QR + 20, QR + 20, 14); g.fill();
+      g.imageSmoothingEnabled = false; g.drawImage(qr, qx, qy, QR, QR); g.imageSmoothingEnabled = true;
+    }
+    g.fillStyle = red; g.font = `900 40px ${SERIF}`; g.fillText(QIAN_CTA, PAD, qy + 52, tw);
+    g.fillStyle = ink; g.font = `700 30px ${SANS}`; g.fillText(QIAN_SITE, PAD, qy + 108, tw);
+    const disc = lines(`500 22px ${SANS}`, L.disclaimer, tw).slice(0, 5);
+    g.fillStyle = muted; g.font = `500 22px ${SANS}`; disc.forEach((l, i) => g.fillText(l, PAD, qy + 150 + i * 30));
+    const QH = Math.max(qy + QR, qy + 150 + (disc.length - 1) * 30) + 90;
+
+    // 鋪底色、紅框，再把內容貼上去
+    const c = document.createElement("canvas"); c.width = QW; c.height = QH;
+    const b = c.getContext("2d");
+    b.fillStyle = red; b.fillRect(0, 0, QW, QH);
+    b.fillStyle = "#f4e7c8"; rrect(b, 36, 36, QW - 72, QH - 72, 24); b.fill();
+    b.strokeStyle = "#e3b54a"; b.lineWidth = 4; rrect(b, 56, 56, QW - 112, QH - 112, 14); b.stroke();
+    b.drawImage(a, 0, 0);
+    return new Promise((res) => c.toBlob(res, "image/png"));
+  }
   const QIAN_CTA = "掃一下，換你抽！", QIAN_CTA2 = "跟著志永哥逛泰興宮，抽一支大茅埔山水籤", QIAN_SITE = "東勢泰興宮手機導覽";
   let qCardUrl = null;
   async function qianCard() {
     $("qCard").disabled = true; $("qCard").textContent = "製作中…";
-    const blob = await renderQianCard();
+    const lao = K === L, sg = K.signs[qian.num - 1];
+    const blob = await (lao ? renderLaoCard() : renderQianCard());
     if (!blob) { toast("籤卡做不出來，請改用截圖保存"); $("qCard").disabled = false; $("qCard").textContent = "存成籤卡"; return; }
     if (qCardUrl) URL.revokeObjectURL(qCardUrl);
     qCardUrl = URL.createObjectURL(blob);
-    const name = `大茅埔山水籤第${zhNum(qian.num)}籤.png`;
+    const name = lao ? `泰興宮藥籤新解・${sg.short}第${zhNum(sg.no)}首.png` : `大茅埔山水籤第${zhNum(qian.num)}籤.png`;
     const file = new File([blob], name, { type: "image/png" });
     const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
     qPose("happy");
-    qSay("籤卡做好了！可以存下來，或分享給朋友，看看東勢的水果跟你說了什麼。");
-    qStage(`<img class="qian-card" src="${qCardUrl}" alt="大茅埔山水籤籤卡">
+    qSay(lao ? "籤卡做好了！存下來，心藥方記得照著做，也可以分享給朋友。"
+      : "籤卡做好了！可以存下來，或分享給朋友，看看東勢的水果跟你說了什麼。");
+    qStage(`<img class="qian-card" src="${qCardUrl}" alt="${lao ? "藥籤新解籤卡" : "大茅埔山水籤籤卡"}">
       <p class="qian-hint">也可以長按圖片直接儲存</p>
       ${canShare ? `<button class="btn primary" id="qShare">分享</button>` : ""}
       <a class="btn primary" href="${qCardUrl}" download="${name}">存成圖片</a>
       <button class="btn" id="qRedo">再抽一支</button>
       <button class="btn ghost" id="qBack">回到地圖</button>`);
     if (canShare) $("qShare").onclick = async () => {
-      try { await navigator.share({ files: [file], title: "大茅埔山水籤", text: "我在台中東勢大茅埔泰興宮抽到一支山水籤！" }); }
+      try {
+        await navigator.share({ files: [file], title: lao ? "藥籤新解" : "大茅埔山水籤",
+          text: lao ? "我在台中東勢大茅埔泰興宮抽到一支古早藥籤，換到一帖心藥！" : "我在台中東勢大茅埔泰興宮抽到一支山水籤！" });
+      }
       catch (e) { if (e.name !== "AbortError") toast("這支手機不支援直接分享，請改用「存成圖片」"); }
     };
     $("qRedo").onclick = qRedo;
