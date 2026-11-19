@@ -319,6 +319,24 @@ h1 {
 .profile-src { margin: 10px 4px 14px; font-size: 11px; line-height: 1.5; color: var(--muted); }
 .profile-card .btn { width: 100%; background: var(--night); color: var(--cream); }
 
+/* ---------- 致謝卡（沿用人物小卡的紙卡＋紙膠帶） ---------- */
+.thanks-card { padding: 22px 20px 18px; background: #fffaf0; transform: rotate(.8deg); }
+.thanks-card .profile-tape { background: repeating-linear-gradient(90deg, rgba(227,181,74,.8) 0 8px, rgba(246,227,176,.85) 8px 16px); rotate: -3deg; }
+.thanks-eyebrow { margin: 0; text-align: center; font-size: 12px; letter-spacing: .5em; color: #a3241b; }
+.thanks-eyebrow::before, .thanks-eyebrow::after { content: "—"; margin: 0 .6em; letter-spacing: 0; opacity: .5; }
+.thanks-card h3 { margin: 6px 0 0; text-align: center; font: 900 24px var(--serif); letter-spacing: .1em; color: var(--ink); }
+.thanks-lead { margin: 12px 0 0; font-size: 14.5px; line-height: 1.8; text-align: justify; color: #4a4036; }
+.thanks-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.thanks-list li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; padding: 8px 10px; border-radius: 6px; background: #f6eedc; }
+.thanks-list b { font: 900 13px/1 var(--serif); color: #fff; background: #7a1712; padding: 5px 6px; border-radius: 3px; letter-spacing: .08em; margin-top: 2px; white-space: nowrap; }
+.thanks-list span { font-size: 13.5px; line-height: 1.65; color: #4a4036; }
+.thanks-closing { margin: 14px 0 0; font: 600 15px/1.85 var(--serif); color: var(--ink); text-align: justify; }
+.thanks-sign { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 12px 0 16px; font-size: 13px; color: var(--muted); }
+.thanks-seal {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border: 2px solid #a3241b; border-radius: 4px;
+  font: 900 12px/1.05 var(--serif); color: #a3241b; text-align: center; rotate: -8deg; opacity: .85;
+}
+
 .credits-sheet { z-index: 8; max-height: 80dvh; overflow-y: auto; text-align: left; }
 .credits-sheet ul { margin: 8px 0 14px; padding-left: 1.2em; font-size: 14px; line-height: 1.6; }
 .credits-sheet li { margin-bottom: 6px; }

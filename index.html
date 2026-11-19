@@ -37,6 +37,7 @@
           <li>請勿擋在神明正前方、殿內不用閃光燈</li>
         </ul>
         <div class="intro-links">
+          <button class="link-btn" id="thanksBtn">致謝</button>
           <button class="link-btn" id="creditsBtn">照片與資料來源</button>
         </div>
       </div>
@@ -66,6 +67,13 @@
         </div>
       </div>
 
+      <div class="sheet sfx-ask" id="voiceAsk" hidden>
+        <h3>要聽志永哥說話嗎？</h3>
+        <p>志永哥會在總覽圖、地圖和走完全程時跟你說話。聲音是 AI 依志永哥本人的錄音合成，經本人同意使用。<br>在殿內請把音量調小，或戴上耳機。</p>
+        <button class="btn primary" id="voiceYes">聽志永哥說</button>
+        <button class="btn ghost-dark" id="voiceNo">先不用</button>
+        <p class="sfx-ask-note">之後也可以點對話框裡的 🔇 切換</p>
+      </div>
       <div class="sheet" id="campSheet" hidden>
         <h3 id="campTitle"></h3>
         <p id="campDesc"></p>
@@ -213,6 +221,20 @@
         <p class="profile-bio" id="profileBio"></p>
         <p class="profile-src" id="profileSrc"></p>
         <button class="btn" id="profileClose">收起小卡</button>
+      </div>
+    </div>
+
+    <!-- 致謝卡：謝謝大茅埔調查團 -->
+    <div class="profile-layer thanks-layer" id="thanksLayer" hidden>
+      <div class="profile-card thanks-card" role="dialog" aria-modal="true" aria-labelledby="thanksTitle">
+        <span class="profile-tape" aria-hidden="true"></span>
+        <p class="thanks-eyebrow" id="thanksEyebrow"></p>
+        <h3 id="thanksTitle"></h3>
+        <p class="thanks-lead" id="thanksLead"></p>
+        <ul class="thanks-list" id="thanksList"></ul>
+        <p class="thanks-closing" id="thanksClosing"></p>
+        <p class="thanks-sign"><span id="thanksSign"></span><span class="thanks-seal" aria-hidden="true">感<br>謝</span></p>
+        <button class="btn" id="thanksClose">收下這份心意</button>
       </div>
     </div>
 

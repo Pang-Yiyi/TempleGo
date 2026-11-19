@@ -30,8 +30,8 @@
   // 一句台詞會拆成句子依序播放；台詞改了雜湊就對不上，那句就不出聲（不會唸錯）
   // 志永哥的聲音是 AI 合成，經本人同意使用；開關預設關閉，免得在廟裡突然出聲
   const VOICE_KEY = "templego-voice";
-  const voice = { on: false, have: null, audio: new Audio(), token: 0, urls: new Map() };
-  try { voice.on = localStorage.getItem(VOICE_KEY) === "1"; } catch {}
+  const voice = { on: false, asked: false, have: null, audio: new Audio(), token: 0, urls: new Map() };
+  try { const v = localStorage.getItem(VOICE_KEY); voice.on = v === "1"; voice.asked = v !== null; } catch { voice.asked = true; }
   voice.audio.preload = "auto";
   function splitSentences(text) {
     const out = []; let cur = ""; const chars = [...text];
@@ -95,7 +95,7 @@
   }
   function setVoice(on, quiet) {
     voice.on = on;
-    try { localStorage.setItem(VOICE_KEY, on ? "1" : "0"); } catch {}
+    if (!quiet) { voice.asked = true; $("voiceAsk").hidden = true; try { localStorage.setItem(VOICE_KEY, on ? "1" : "0"); } catch {} }   // quiet：只是開頁時套用上次的設定，不算回答過
     document.querySelectorAll(".voice-btn").forEach((b) => {
       b.setAttribute("aria-pressed", String(on));
       b.textContent = on ? "🔊" : "🔇";
@@ -117,7 +117,22 @@
         if (p?.dataset.full) updateVoiceBtn(p, p.dataset.full);   // 清單載入前就已經在講的那句
       });
       if (voice.have.size) setVoice(voice.on, true);   // 上次打開過就維持打開（手機要點過畫面才會出聲）
+      askVoice();   // 清單比總覽圖晚到時，補問一次
     });
+  // 第一次到總覽圖（志永哥第一次開口的地方）問一次要不要聽聲音；選過就記住，之後用對話框裡的喇叭切換
+  function askVoice() {
+    if (voice.asked || !voice.have?.size || !$("overview").classList.contains("active")) return;
+    $("voiceAsk").hidden = false;
+  }
+  function answerVoice(on) {
+    voice.asked = true;
+    try { localStorage.setItem(VOICE_KEY, on ? "1" : "0"); } catch {}
+    $("voiceAsk").hidden = true;
+    setVoice(on, true);   // 小卡上已經寫了 AI 合成的說明，不用再跳提示
+    if (on) speak($("ovLine").dataset.full || $("ovLine").textContent);   // 馬上唸這一句（這次點擊也讓手機允許出聲）
+  }
+  $("voiceYes").onclick = () => answerVoice(true);
+  $("voiceNo").onclick = () => answerVoice(false);
 
   // ---------- 動畫工具 ----------
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -232,6 +247,32 @@
       <p class="note">求籤音效（CC0，經剪輯）：搖籤筒與出籤取自 al.barbosa〈<a href="https://freesound.org/s/149070/" target="_blank" rel="noopener">Ama Temple Ceremony with Omikuji</a>〉（澳門媽閣廟）；擲筊取自 Rvgerxini〈<a href="https://freesound.org/s/462109/" target="_blank" rel="noopener">Dropping pencil</a>〉；翻紙取自 Beussa〈<a href="https://freesound.org/s/749880/" target="_blank" rel="noopener">Page turned</a>〉。磬聲為程式合成。</p>`;
   }
   $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
+
+  // ---------- 致謝卡：謝謝大茅埔調查團 ----------
+  // 第一次走完六站、回到地圖時自動跳一次；開場的「致謝」隨時可以打開
+  const TK = T.thanks;
+  const THANKS_KEY = "templego.thanksSeen";
+  let thanksBack = null;
+  function openThanks() {
+    if (!TK) return;
+    thanksBack = document.activeElement;
+    $("thanksEyebrow").textContent = TK.eyebrow;
+    $("thanksTitle").textContent = TK.title;
+    $("thanksLead").textContent = TK.lead;
+    $("thanksList").innerHTML = TK.items.map(([k, v]) => `<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join("");
+    $("thanksClosing").textContent = TK.closing;
+    $("thanksSign").textContent = TK.sign;
+    $("thanksLayer").hidden = false;
+    $("thanksLayer").scrollTop = 0;
+    try { localStorage.setItem(THANKS_KEY, "1"); } catch {}
+    $("thanksClose").focus({ preventScroll: true });
+  }
+  function closeThanks() { $("thanksLayer").hidden = true; thanksBack?.focus?.({ preventScroll: true }); }
+  const thanksSeen = () => { try { return localStorage.getItem(THANKS_KEY) === "1"; } catch { return true; } };
+  if (TK) $("thanksBtn").onclick = openThanks; else $("thanksBtn").hidden = true;
+  $("thanksClose").onclick = closeThanks;
+  $("thanksLayer").onclick = (e) => { if (e.target === e.currentTarget) closeThanks(); };
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("thanksLayer").hidden) closeThanks(); });
   $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
 
   // ---------- 志永哥人物小卡 ----------
@@ -327,6 +368,7 @@
     show("overview");
     $("campSheet").hidden = true;
     typeText($("ovLine"), fill(OV.say), $("ovGuideImg"));
+    askVoice();
     if (ovCentered) return;
     const center = () => {
       const a = $("ovArea"), w = $("ovWrap").offsetWidth;
@@ -357,6 +399,7 @@
     $("mapStamps").classList.toggle("complete", got === ready.length);
     swapImg($("mapGuideImg"), T.guide.poses[got === ready.length ? "yeah" : "default"] || T.guide.poses.default);
     typeText($("mapLine"), fill(got === ready.length && T.map.doneSay ? T.map.doneSay : T.map.say), $("mapGuideImg"));
+    if (got === ready.length && TK && !thanksSeen()) setTimeout(openThanks, 700);   // 第一次走完：先讓志永哥開口，再跳致謝卡
     $("mapWrap").querySelectorAll(".pin, .route").forEach((p) => p.remove());
     // 建議路線：依站號連起來，兩端都走過的段落變紅色
     const pins = T.stops.filter((s) => s.pin).sort((a, b) => a.pin.n - b.pin.n);
