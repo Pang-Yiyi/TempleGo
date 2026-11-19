@@ -332,6 +332,7 @@ h1 {
 .thanks-list span { font-size: 13.5px; line-height: 1.65; color: #4a4036; }
 .thanks-closing { margin: 14px 0 0; font: 600 15px/1.85 var(--serif); color: var(--ink); text-align: justify; }
 .thanks-sign { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 12px 0 16px; font-size: 13px; color: var(--muted); }
+.thanks-sign span:first-child { white-space: pre-line; text-align: right; line-height: 1.6; }
 .thanks-seal {
   display: inline-grid; place-items: center; width: 34px; height: 34px; border: 2px solid #a3241b; border-radius: 4px;
   font: 900 12px/1.05 var(--serif); color: #a3241b; text-align: center; rotate: -8deg; opacity: .85;
