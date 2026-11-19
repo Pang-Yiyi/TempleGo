@@ -1319,7 +1319,7 @@
       motionListen(SHAKE, {
         onHit: (n, dev) => {
           buzz(30);
-          SFX.rattle(Math.min(1, (dev - SHAKE.thresh) / 15));
+          SFX.rattle(Math.min(1, (dev - SHAKE.thresh) / 15));   // 跟籤筒抖一下同時
           tube.classList.remove("jolt"); void tube.getBoundingClientRect(); tube.classList.add("jolt");
           tube.style.setProperty("--lift", n * 5);
           dots[n - 1]?.classList.add("on");
@@ -1359,7 +1359,7 @@
         <p class="qian-num">抽到：第${zhNum(qian.num)}籤・${sg.gan}${sg.wx}</p>`}
         ${tap ? "" : `<p class="motion-hint">握緊手機，往上輕輕一甩，就能擲筊！<small>手機別真的丟出去喔！</small></p>`}
         <button class="btn ${tap ? "primary" : "ghost"}" id="qJiao">${tap ? "擲筊" : "點這裡擲筊"}</button>`);
-      SFX.drop(reduceMotion ? 0 : .12);
+      SFX.drop(reduceMotion ? 0 : .18);   // CSS stickDrop 在 .18 秒落到桌上
       $("qJiao").onclick = qianJiao;
       if (!tap) {
         // 先等一下再開始偵測，免得剛搖完籤的餘震直接把筊擲出去
@@ -1378,7 +1378,7 @@
                 : r === "xiao" ? ["flat", "flat"] : ["round", "round"];
     qStage(`<div class="jiao-pair">${jiaoSvg(faces[0], "toss a")}${jiaoSvg(faces[1], "toss b")}</div>
       <p class="jiao-result" id="qRes"></p><div id="qAct"></div>`);
-    SFX.land(reduceMotion ? 0 : .76);
+    SFX.land(reduceMotion ? 0 : .7);   // CSS tossA 在 .7 秒落地
     setTimeout(() => {
       const j = Y.jiao[r];
       r === "sheng" ? SFX.bell() : SFX.soft();
@@ -1392,7 +1392,7 @@
         $("qAct").innerHTML = `<button class="btn primary" id="qAgain">重抽一支</button>`;
         $("qAgain").onclick = qianShake;
       }
-    }, 900);
+    }, reduceMotion ? 300 : 1550);   // 等筊彈完、晃完才揭曉
   }
   function qianResult() {
     SFX.paper();

@@ -4,8 +4,9 @@
 // SfxKit(ctx, out, noise, buf) 回傳一組函式，每個都吃「從幾秒開始」t（AudioContext 時間）；buf 是載入好的錄音
 window.SfxKit = (c, out, noise, buf = {}) => {
   const rnd = (a, b) => a + Math.random() * (b - a);
-  // shake.mp3 裡每一下搖（一來一回兩聲）的起點，秒
-  const SHAKES = [0, .316, .657, .948, 1.265, 1.596, 1.936];
+  // shake.mp3 裡比較響的單聲「喀」的起點（秒）；每擺一下籤筒就播其中一聲，跟畫面對齊
+  const HITS = [.103, .422, .758, .948, 1.073, 1.375, 1.7, 2.031];
+  const grain = (t, vol) => sample("shake", t, { from: HITS[Math.floor(Math.random() * HITS.length)], dur: .13, vol });
 
   // 播一段錄音；沒載入就回傳 false
   function sample(name, t, { from = 0, dur = 0, vol = 1 } = {}) {
@@ -70,7 +71,7 @@ window.SfxKit = (c, out, noise, buf = {}) => {
     // 搖一下籤筒：籤筒換方向時一群竹籤撞在一起（前面最密），加上撞到筒壁的低一點的聲音
     // power 0~1：搖得越用力，碰撞越多、越大聲
     rattle(t, power = .5) {
-      if (sample("shake", t, { from: SHAKES[Math.floor(Math.random() * SHAKES.length)], dur: .3, vol: .55 + power * .45 })) return;
+      if (grain(t, .55 + power * .45)) return;
       const n = Math.round(8 + power * 14);
       for (let i = 0; i < n; i++) {
         const dt = .13 * Math.pow(Math.random(), 1.8);
@@ -80,14 +81,15 @@ window.SfxKit = (c, out, noise, buf = {}) => {
         hit(t + rnd(0, .05), [[rnd(380, 460), 6, 1], [rnd(1000, 1200), 9, .45]], rnd(.5, .9) * (.6 + power * .4));
       }
     },
-    // 點的抽籤：連續搖一段時間
+    // 點的抽籤：籤筒左右擺（CSS tubeShake 每 .14 秒擺到底一次，共 8 次），每擺到底響一聲
     rattleRun(t, secs) {
-      if (sample("shake", t, { dur: Math.min(secs, buf.shake?.duration || 0) })) return;
-      for (let k = 0; k * .14 < secs; k++) this.rattle(t + k * .14, .5);
+      for (let k = 1; k <= 8 && k * .14 <= secs + .001; k++) {
+        if (!grain(t + k * .14 + .01, rnd(.7, 1))) this.rattle(t + k * .14 + .01, .5);
+      }
     },
     // 一支籤掉到桌上：「喀啦啦」彈三四下
     drop(t) {
-      if (sample("drop", t, { vol: .9 })) return;
+      if (sample("drop", t - .019, { vol: .9 })) return;   // 錄音第一聲在 0.019 秒；第二聲（彈一下）在 0.254 秒
       const f = rnd(1600, 1800);
       [[0, 1], [.065, .45], [.11, .25], [.145, .12]].forEach(([d, v], i) => {
         hit(t + d, stick(f * rnd(.97, 1.03)), v * 1.6, { click: i ? 0 : .6 });
@@ -102,7 +104,8 @@ window.SfxKit = (c, out, noise, buf = {}) => {
     },
     // 一對筊：兩片差一點點落地
     pair(t) {
-      if (sample("jiao", t - .02)) return;   // 錄音第一聲在 0.02 秒
+      // 錄音：第一片 0 秒落地、第二片 0.11 秒，第一片 0.50 秒彈一下、0.60 和 0.83 秒在地上晃（CSS tossA／tossB 照這個排）
+      if (sample("jiao", t)) return;
       this.land(t, rnd(660, 720)); this.land(t + .08, rnd(760, 820)); },
     // 聖筊：磬聲「噹～」（不成諧音的泛音，餘音長）
     bell(t) {
