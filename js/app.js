@@ -228,7 +228,8 @@
       <p class="note">插畫、鳥瞰圖、正殿環景為本團隊繪製的示意圖，非實際比例。</p>
       <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>
       <p class="note">導覽員介紹：逢甲大學人文社會學院《農村慢時光：東勢大茅埔的農業故事》（2025）。</p>
-      <p class="note">志永哥的語音是用本人現場錄音當樣本，以 AI（F5-TTS）合成，不是本人逐句錄製。</p>`;
+      <p class="note">志永哥的語音是用本人現場錄音當樣本，以 AI（F5-TTS）合成，不是本人逐句錄製。</p>
+      <p class="note">求籤音效（CC0，經剪輯）：搖籤筒取自 al.barbosa〈<a href="https://freesound.org/s/149070/" target="_blank" rel="noopener">Ama Temple Ceremony with Omikuji</a>〉（澳門媽閣廟）；出籤取自 Rvgerxini〈<a href="https://freesound.org/s/462109/" target="_blank" rel="noopener">Dropping pencil</a>〉；擲筊取自 kingsrow〈<a href="https://freesound.org/s/194692/" target="_blank" rel="noopener">PieceofWood05</a>〉〈<a href="https://freesound.org/s/194695/" target="_blank" rel="noopener">PieceofWood06</a>〉。磬聲與翻紙聲為程式合成。</p>`;
   }
   $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
   $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
@@ -1195,7 +1196,10 @@
       const noise = c.createBuffer(1, len, len), d = noise.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       const out = c.createGain(); out.gain.value = .7; out.connect(c.destination);
-      sfx.kit = window.SfxKit(c, out, noise);
+      const bufs = {};
+      ["shake", "drop", "jiao"].forEach((n) => fetch(`assets/sfx/${n}.mp3`).then((r) => r.arrayBuffer())
+        .then((a) => new Promise((ok, no) => c.decodeAudioData(a, ok, no))).then((b) => { bufs[n] = b; }).catch(() => {}));
+      sfx.kit = window.SfxKit(c, out, noise, bufs);
     }
     if (sfx.ctx.state === "suspended") sfx.ctx.resume().catch(() => {});
     return sfx.ctx;
@@ -1204,7 +1208,7 @@
   const sfxPlay = (name, at = 0, ...args) => { const c = sfxCtx(); if (c) sfx.kit[name](c.currentTime + at, ...args); };
   const SFX = {
     rattle: (power) => sfxPlay("rattle", 0, power),   // 搖一下；power 0~1 是力道
-    rattleFor(ms) { for (let k = 0; k * 140 < ms; k++) sfxPlay("rattle", k * .14, .5); },   // 點的抽籤：籤筒晃多久就響多久
+    rattleFor: (ms) => sfxPlay("rattleRun", 0, ms / 1000),   // 點的抽籤：籤筒晃多久就響多久
     drop: (at) => sfxPlay("drop", at),
     land: (at) => sfxPlay("pair", at),
     bell: () => sfxPlay("bell"),
