@@ -259,8 +259,12 @@
     $("thanksEyebrow").textContent = TK.eyebrow;
     $("thanksTitle").textContent = TK.title;
     $("thanksLead").textContent = TK.lead;
-    $("thanksList").innerHTML = TK.items.map(([k, v]) => `<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join("");
+    $("thanksPeople").hidden = !TK.people?.length;
+    $("thanksPeopleLabel").textContent = TK.peopleLabel || "";
+    $("thanksPeopleList").innerHTML = (TK.people || []).map((n) => `<li>${esc(n)}</li>`).join("");
     $("thanksClosing").textContent = TK.closing;
+    $("thanksSource").hidden = !TK.source;
+    $("thanksSource").textContent = TK.source || "";
     $("thanksSign").textContent = TK.sign;
     $("thanksLayer").hidden = false;
     $("thanksLayer").scrollTop = 0;
@@ -417,7 +421,7 @@
       if (!s.pin) return;
       const b = document.createElement("button");
       const state = done.has(s.id) ? "done" : s.ready ? "ready" : "soon";
-      b.className = `pin ${state}`;
+      b.className = `pin ${state}` + (s.pin.tag === "right" ? " tag-right" : "");
       b.style.setProperty("--d", `${(s.pin.n - 1) * 0.08}s`);
       b.style.left = s.pin.x + "%";
       b.style.top = s.pin.y + "%";
@@ -434,7 +438,7 @@
     $("pinTitle").textContent = s.title;
     $("pinIntro").textContent = s.intro || "";
     // 縮圖用這一站一開始看到的畫面（環景或實景照片）
-    const thumb = (s.script[0]?.scene === "pano" && (s.script[0].pano || s.pano)) || s.script.find((l) => l.image && T.photos?.[l.image])?.image
+    const thumb = s.thumb || (s.script[0]?.scene === "pano" && (s.script[0].pano || s.pano)) || s.script.find((l) => l.image && T.photos?.[l.image])?.image
       || (T.photos?.[s.image] ? s.image : null) || s.pano || s.image;
     $("pinThumb").style.backgroundImage = thumb ? `url("${thumb}")` : "";
     $("pinThumb").hidden = !thumb;
@@ -1327,7 +1331,7 @@
   function qianIntro() {
     const last = qian.introStep >= K.intro.length - 1;
     qSay(K.intro[qian.introStep]);
-    qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "然後呢？"}</button>`);
+    qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "了解更多"}</button>`);
     $("qNext").onclick = () => {
       if (last) return K === Y && qian.born === null ? qianBorn() : qianShake();
       qian.introStep++;
@@ -1339,7 +1343,7 @@
     qPose("point");
     qSay(Y.bornSay);
     const digits = [4, 5, 6, 7, 8, 9, 0, 1, 2, 3];
-    qStage(`<p class="qian-ask">出生年的最後一個數字</p>
+    qStage(`<p class="qian-ask">西元出生年的最後一個數字</p>
       <div class="born-grid">${digits.map((d) =>
         `<button data-d="${d}"><b>${d}</b><small>${bornGan(d)}${ganWx(bornGan(d))}</small></button>`).join("")}</div>
       <p class="qian-hint">${Y.bornNote}</p>

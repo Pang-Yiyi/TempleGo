@@ -101,12 +101,6 @@ window.TOUR = {
     "assets/photos/shanshui-ji.webp": {
       title: "龍神山水祭（泰興宮）", author: "Mingwu1977（大茅埔調查團）", edit: "縮放，路人臉部模糊",
       page: "https://commons.wikimedia.org/wiki/File:%E6%B5%AA%E6%BC%AB%E5%8F%B0%E4%B8%89%E7%B7%9A-%E5%8F%B0%E7%81%A3%E5%8F%B0%E4%B8%AD%E6%9D%B1%E5%8B%A2-%E5%A4%A7%E8%8C%85%E5%9F%94-%E9%BE%8D%E7%A5%9E%E5%B1%B1%E6%B0%B4%E7%A5%AD-%E5%B1%B1%E6%B0%B4%E9%81%B6%E5%A2%83-055.jpg" },
-    "assets/photos/shihu.webp": {
-      title: "石虎幼貓（照護中）", author: "ourskyuamlea", license: "CC0", edit: "縮放",
-      page: "https://commons.wikimedia.org/wiki/File:Prionailurus_bengalensis_in_Taiwan_03.jpg" },
-    "assets/photos/yaorenmao.webp": {
-      title: "咬人貓（蕁麻）的葉子", author: "Qwert1234", edit: "縮放",
-      page: "https://commons.wikimedia.org/wiki/File:Urtica_thunbergiana_3.JPG" },
     "assets/photos/qushui.webp": {
       title: "大茅埔取水習俗（大甲溪）", author: "Mingwu1977（大茅埔調查團）", edit: "縮放",
       page: "https://commons.wikimedia.org/wiki/File:%E6%B5%AA%E6%BC%AB%E5%8F%B0%E4%B8%89%E7%B7%9A-%E5%8F%B0%E7%81%A3%E5%8F%B0%E4%B8%AD%E6%9D%B1%E5%8B%A2-%E5%A4%A7%E8%8C%85%E5%9F%94-%E5%8F%96%E6%B0%B4%E7%BF%92%E4%BF%97-05.jpg" },
@@ -143,19 +137,16 @@ window.TOUR = {
   },
 
   // 致謝卡：第一次走完六站回到地圖時跳出一次；開場「致謝」隨時可看
-  // 只寫導覽裡已經有出處的事（見各站 note 與 credits），不列成員名字（要列名請先問過本人）
+  // 人物名單照《農村慢時光：東勢大茅埔的農業故事》（逢甲大學人文社會學院，2025）：
+  //   核心人物介紹頁 11–12（志永哥、祖寧、David哥、哲銘哥）、版權頁「關鍵報導人」（邱大哥、志永哥、哲銘哥、祖寧）
   thanks: {
     eyebrow: "致謝",
     title: "謝謝大茅埔調查團",
-    lead: "這趟導覽裡的故事、照片和路線，都來自大茅埔調查團這些年在庄頭一步一腳印的調查。",
-    items: [
-      ["走庄頭", "志永哥帶著我們走過泰興宮和大茅埔，把每個細節慢慢講給我們聽。"],
-      ["鑽水圳", "鑽進大茅埔圳裡，把水圳的路線和老故事一段一段記下來。"],
-      ["顧山林", "在淺山架起生態攝影機，記錄石虎還在這片山裡生活的蹤跡。"],
-      ["辦祭典", "2020 年起和泰興宮一起辦「龍神山水祭」，把快被淡忘的龍神信仰找回來。"],
-      ["留影像", "拍下庄頭的祭典和風景，用開放授權分享給每一個人。"],
-    ],
-    closing: "調查團沒辦法一直陪在每位來訪的人身邊。希望這份導覽，能把志永哥說故事時的那份熱情，留給每一個來到泰興宮的人。",
+    lead: "這趟導覽裡的故事、照片和路線，都是大茅埔調查團一點一滴教給我們的。",
+    peopleLabel: "特別感謝",
+    people: ["志永哥", "哲銘哥", "祖寧", "David 哥", "邱大哥"],
+    closing: "謝謝你們願意花時間，帶我們走庄頭、聽老故事，看見大茅埔的山和水。你們沒辦法一直陪在每位來訪的人身邊，希望這份導覽，能把你們說故事時的那份熱情，留給每一個來到泰興宮的人。",
+    source: "名單參考：逢甲大學人文社會學院《農村慢時光：東勢大茅埔的農業故事》（2025）",
     sign: "逢甲大學 115 鄉村永續與數位轉譯課程\n第五小組　敬上",   // \n 是換行
   },
 
@@ -169,8 +160,8 @@ window.TOUR = {
       "我把這些山和水的故事寫成十支「山水籤」，配上甲乙丙丁、金木水火土。",
       "來抽一支，看看大茅埔的山水想跟你說什麼！",
     ],
-    bornSay: "先告訴我你是哪一年出生的：選出生年的最後一個數字，我幫你看本命天干。不想說也可以跳過！",
-    bornNote: "以農曆年為準，1、2 月過年前出生的人，請選前一年的數字",
+    bornSay: "先告訴我你是哪一年出生的：選西元出生年的最後一個數字，我幫你看本命天干。不想說也可以跳過！",
+    bornNote: "用西元年，例如 1998 年就選 8（不是民國年）。以農曆年為準，1、2 月過年前出生的人，請選前一年的數字",
     shakeSay: "心裡想著最近想問的事，握緊手機搖一搖籤筒，直到有一支籤跳出來。",
     jiaoSay: "抽到籤以後，還要擲筊問問看：是不是這一支？擲到「聖筊」才算數喔！",
     jiao: {
@@ -244,7 +235,7 @@ window.TOUR = {
         poem: ["山邊野草帶細針", "碰著火辣痛入心", "莫怪渾身都是刺", "護得石虎在山林"],
         say: "咬人貓渾身是刺，碰到會火辣辣地痛，卻也因此讓流浪狗不敢靠近，成了石虎的庇護所。有點脾氣沒關係，用對地方就是守護。",
         advice: { "求事": "堅持原則，也是保護大家", "學業": "要有自己的主見", "感情": "刀子嘴豆腐心，記得說出關心", "出外": "山路邊的植物別亂摸" },
-        note: "咬人貓是一種蕁麻，莖和葉長滿細刺。有它的地方流浪狗不會靠近，是石虎的天然庇護所；龍神山水祭還把它做成粄和飲料。",
+        note: "咬人貓是一種蕁麻，莖和葉長滿細刺。有它的地方流浪狗不會靠近，是石虎的天然庇護所；龍神山水祭還把它做成粄和飲料。萬一碰到：不要抓、不要揉，先用清水沖洗，再用膠帶輕輕黏掉細刺。",
         season: { text: "咬人貓：一年四季長在山邊" },
       },
       {
@@ -496,73 +487,13 @@ window.TOUR = {
         { type: "lookup",
           say: "轉身背對山門往前看，那條直直的大街就是中軸線。等一下在庄裡散步時，留意看看路邊的水圳喔！" },
         { pose: "happy",
-          say: "認識大茅埔了，來蓋個章！接下來進廟裡看看吧。" },
-      ],
-    },
-    {
-      id: "door-gods",
-      title: "三川門・門神",
-      // 已確認：Commons「202104 WMTW x HPCF workshop 188」拍到同一組門神與對聯，位於山門（三川門）
-      pin: { n: 2, x: 50, y: 62 },
-      ready: true,
-      intro: "大門上的兩位將軍日夜守著廟門。你認得哪一位是誰嗎？",
-      // 照片：Commons workshop 190（Isocyclo），沒有人入鏡；原本的 young1.jpg 版本被人物擋住，已停用
-      image: "assets/photos/door-gods-photo.webp",
-      stamp: "門神",
-
-      hotspots: [
-        { id: "weichi", x: 22, y: 47, title: "尉遲恭",
-          desc: "黑臉、圓眼，表情最兇的這位是尉遲恭，唐朝開國名將。臉畫得這麼威猛，就是要把邪祟嚇跑。" },
-        { id: "qin", x: 83, y: 45, title: "秦叔寶",
-          desc: "白臉、留長鬍子，神情比較沉穩，他是秦叔寶，民間也叫他「秦瓊」，同樣是唐朝名將。" },
-        { id: "helmet", x: 22, y: 27, title: "華麗的頭盔", explore: true,
-          desc: "把頭盔放大看：頂上有一隻展翅的鳥形裝飾，旁邊還有捲雲花紋。畫師連這麼小的地方都沒放過。" },
-        { id: "whip", x: 9.5, y: 62, title: "一節一節的兵器", explore: true,
-          desc: "尉遲恭手邊這根金色兵器，一節一節像竹子，就是他的招牌武器「竹節鋼鞭」。" },
-        { id: "flags", x: 35, y: 28, title: "背後的旗子", explore: true,
-          desc: "將軍背後插著好幾支旗，跟戲曲裡武將背上的「靠旗」很像，表示他是領兵打仗的大將。" },
-        { id: "minan", img: "assets/photos/sanchuan-back.webp", x: 36, y: 37, title: "「民安」",
-          desc: "側門上的匾寫著「民安」，另一邊是「國泰」，合起來就是「國泰民安」：國家太平、百姓平安。" },
-        { id: "guotai", img: "assets/photos/sanchuan-back.webp", x: 56.3, y: 37.4, title: "「國泰」",
-          desc: "「國泰」是國家太平的意思，跟另一邊的「民安」配成一對。" },
-        { id: "backCouplet", img: "assets/photos/sanchuan-back.webp", x: 30.6, y: 50, title: "門內的對聯",
-          desc: "大門裡面的柱子上也刻著金色的對聯。進廟、出廟的時候都可以停下來讀讀看。" },
-        { id: "roof", x: 55, y: 22, title: "門後的屋頂", explore: true,
-          desc: "從兩扇門中間望進去，看得到廟裡屋頂上彩色的人物和花鳥裝飾。等一下進廟，記得抬頭看！" },
-      ],
-
-      script: [
-        { pose: "wave", focus: 50,
-          say: "我們就從大門開始吧！" },
-        { pose: "point", focus: 50,
-          say: "進廟之前，先看大門上這兩位。他們是「門神」，專門幫廟守門的將軍。" },
-        { say: "一位是秦叔寶，一位是尉遲恭，兩位都是唐朝的大將。" },
-        { type: "quiz", pose: "think", focus: 50,
-          say: "考考你：黑臉、眼睛瞪得大大的，是哪一位？在畫面上點點看！",
-          choices: ["weichi", "qin"], answer: "weichi",
-          wrong: "嘿，這位臉比較白、留長鬍子，再找找另一位！",
-          right: "答對了！黑臉的就是尉遲恭，白臉長鬍子的是秦叔寶。" },
-        { pose: "explain",
-          say: "傳說唐太宗晚上被惡鬼吵得睡不好，就請這兩位將軍站在宮門口守夜。後來民間就把他們畫在門上保平安。" },
-        { type: "explore", pose: "point",
-          say: "畫裡還藏了很多細節！把畫面左右滑一滑，發光的地方都點開看看。" },
-        { type: "lookup",
-          say: "好，現在把手機放下，抬頭看看真正的門神，找找剛剛看到的鋼鞭和頭盔在哪裡？" },
-        { image: "assets/photos/sanchuan-back.webp", focus: 45, pose: "wave",
-          say: "跨過門檻走進廟裡，轉身面對大門。這是三川門的背面。" },
-        { type: "explore", pose: "point", targets: ["minan", "guotai", "backCouplet"],
-          say: "大門背面也藏了東西，左右滑一滑找找看！",
-          done: "門神在外面守著，門裡面寫著給大家的祝福。" },
-        { image: "assets/photos/main-hall-front.webp", focus: 50,
-          say: "再轉回來，前面這座就是正殿，三山國王就在裡面。" },
-        { pose: "happy",
-          say: "門神這關過了，來蓋個章！接下來走進正殿看看。" },
+          say: "認識大茅埔了，來蓋個章！接下來走到山門前的階梯看看。" },
       ],
     },
     {
       id: "kaojiang",
       title: "龍邊階梯・犒將",
-      pin: { n: 3, x: 81, y: 71 },
+      pin: { n: 2, x: 62.5, y: 74.5, tag: "right" },   // 山門前階梯的龍邊（右側）；標籤放右邊，才不會壓到第 1、3 站
       ready: true,
       intro: "每月農曆初二、十六下午，庄民在這裡犒賞王爺的兵馬，還會在龍邊階梯放上馬草和水，讓戰馬吃喝。",
       image: "assets/img/kaojiang-scroll.svg",
@@ -597,7 +528,7 @@ window.TOUR = {
       // 順序：先看眼前實景 → 進插畫聽故事 → 回到實景
       script: [
         { image: "assets/photos/front-steps.webp", focus: 50, pose: "wave",
-          say: "這裡是廟前的階梯。每個月有兩天，階梯上會出現一桶草和一桶水，你猜是給誰的？" },
+          say: "我們走到山門前的階梯。每個月有兩天，階梯上會出現一桶草和一桶水，你猜是給誰的？" },
         { say: "答案是：給王爺公兵馬的「戰馬」吃的！這個儀式叫做「犒將」。" },
         { pose: "point",
           say: "馬草和水要放在「龍邊」的階梯。龍邊是用神明的角度來看：神明坐在廟裡往外看，左手邊就是龍邊。" },
@@ -632,9 +563,75 @@ window.TOUR = {
           right: "答對！北方屬水，所以是黑色。" },
         { focus: 52, pose: "wave", say: "{lunarHint}" },
         { type: "lookup",
-          say: "走到廟前右手邊的龍邊階梯看看。如果剛好遇到犒將，請在旁邊安靜觀看，不要碰供品喔！" },
+          say: "看看你右手邊的龍邊階梯，就是放馬草和水的地方。如果剛好遇到犒將，請在旁邊安靜觀看，不要碰供品喔！" },
         { pose: "happy",
-          say: "犒將學會了，來蓋個章！" },
+          say: "犒將學會了，來蓋個章！接下來走上階梯，看看大門上的兩位將軍。" },
+      ],
+    },
+    {
+      id: "door-gods",
+      title: "三川門・門神",
+      // 已確認：Commons「202104 WMTW x HPCF workshop 188」拍到同一組門神與對聯，位於山門（三川門）
+      pin: { n: 3, x: 50, y: 62 },
+      ready: true,
+      intro: "大門上的兩位將軍日夜守著廟門。你認得哪一位是誰嗎？",
+      // 照片：Commons workshop 190（Isocyclo），沒有人入鏡；原本的 young1.jpg 版本被人物擋住，已停用
+      image: "assets/photos/door-gods-photo.webp",
+      stamp: "門神",
+
+      hotspots: [
+        { id: "weichi", x: 22, y: 47, title: "尉遲恭",
+          desc: "黑臉、圓眼，表情最兇的這位是尉遲恭，唐朝開國名將。臉畫得這麼威猛，就是要把邪祟嚇跑。" },
+        { id: "qin", x: 83, y: 45, title: "秦叔寶",
+          desc: "白臉、留長鬍子，神情比較沉穩，他是秦叔寶，民間也叫他「秦瓊」，同樣是唐朝名將。" },
+        { id: "helmet", x: 22, y: 27, title: "華麗的頭盔", explore: true,
+          desc: "把頭盔放大看：頂上有一隻展翅的鳥形裝飾，旁邊還有捲雲花紋。畫師連這麼小的地方都沒放過。" },
+        { id: "whip", x: 9.5, y: 62, title: "一節一節的兵器", explore: true,
+          desc: "尉遲恭手邊這根金色兵器，一節一節像竹子，就是他的招牌武器「竹節鋼鞭」。" },
+        { id: "flags", x: 35, y: 28, title: "背後的旗子", explore: true,
+          desc: "將軍背後插著好幾支旗，跟戲曲裡武將背上的「靠旗」很像，表示他是領兵打仗的大將。" },
+        { id: "minan", img: "assets/photos/sanchuan-back.webp", x: 36, y: 37, title: "「民安」",
+          desc: "側門上的匾寫著「民安」，另一邊是「國泰」，合起來就是「國泰民安」：國家太平、百姓平安。" },
+        { id: "guotai", img: "assets/photos/sanchuan-back.webp", x: 56.3, y: 37.4, title: "「國泰」",
+          desc: "「國泰」是國家太平的意思，跟另一邊的「民安」配成一對。" },
+        { id: "backCouplet", img: "assets/photos/sanchuan-back.webp", x: 30.6, y: 50, title: "門內的對聯",
+          desc: "大門裡面的柱子上也刻著金色的對聯。進廟、出廟的時候都可以停下來讀讀看。" },
+        { id: "roof", x: 55, y: 22, title: "門後的屋頂", explore: true,
+          desc: "從兩扇門中間望進去，看得到廟裡屋頂上彩色的人物和花鳥裝飾。等一下進廟，記得抬頭看！" },
+      ],
+
+      script: [
+        { pose: "wave", focus: 50,
+          say: "走上階梯，就到了山門口！" },
+        { pose: "point", focus: 50,
+          say: "進廟之前，先看大門上這兩位。他們是「門神」，專門幫廟守門的將軍。" },
+        { say: "一位是秦叔寶，一位是尉遲恭，兩位都是唐朝的大將。" },
+        { type: "quiz", pose: "think", focus: 50,
+          say: "考考你：黑臉、眼睛瞪得大大的，是哪一位？在畫面上點點看！",
+          choices: ["weichi", "qin"], answer: "weichi",
+          wrong: "嘿，這位臉比較白、留長鬍子，再找找另一位！",
+          right: "答對了！黑臉的就是尉遲恭，白臉長鬍子的是秦叔寶。" },
+        { pose: "explain",
+          say: "傳說唐太宗晚上被惡鬼吵得睡不好，就請這兩位將軍站在宮門口守夜。後來民間就把他們畫在門上保平安。" },
+        { type: "explore", pose: "point",
+          say: "畫裡還藏了很多細節！把畫面左右滑一滑，發光的地方都點開看看。" },
+        { type: "lookup",
+          say: "好，現在把手機放下，抬頭看看真正的門神，找找剛剛看到的鋼鞭和頭盔在哪裡？" },
+        // 現場標示（front-steps、sanchuan-back 照片）：中門拉紅繩，「入口」貼在龍邊側門、「出口」貼在虎邊側門
+        { image: "assets/photos/front-steps.webp", focus: 72, pose: "point",
+          say: "要進廟囉！中間的大門是給神明走的，平常用紅繩攔著。我們從右手邊貼著「入口」的側門進去，這叫「龍進虎出」：龍邊進、虎邊出。" },
+        { say: "跨過門檻的時候，腳抬高一點，不要踩在門檻上喔。" },
+        { image: "assets/photos/main-hall-front.webp", focus: 50, pose: "wave",
+          say: "一走進來，正前方就是正殿，三山國王就在裡面。" },
+        { image: "assets/photos/sanchuan-back.webp", focus: 45,
+          say: "先回頭看一下，大門的背面也寫了字。" },
+        { type: "explore", pose: "point", targets: ["minan", "guotai", "backCouplet"],
+          say: "大門背面也藏了東西，左右滑一滑找找看！",
+          done: "門神在外面守著，門裡面寫著給大家的祝福。" },
+        { focus: 62,
+          say: "看到右邊柱子上的「出口」了嗎？離開的時候，記得從這邊的虎邊側門出去。" },
+        { pose: "happy",
+          say: "門神這關過了，來蓋個章！接下來走進正殿看看。" },
       ],
     },
     {
@@ -648,6 +645,7 @@ window.TOUR = {
       // 360° 環景（等距長方投影 2:1）。目前是程式產生的示意圖，拍到正殿實景後直接替換，並調整下方熱點的 yaw / pitch
       // 正殿半圈環景：團隊用手機全景模式拍（IMG_6338），只有水平約 220°，上下約 80°
       pano: "assets/photos/main-hall-pano.webp",
+      thumb: "assets/photos/main-hall-pano.webp",   // 地圖小卡縮圖（第一句是木牌直式照，不適合當縮圖）
       panoView: { haov: 220, vaov: 80 },
       stamp: "國王",
 
@@ -682,16 +680,11 @@ window.TOUR = {
           desc: "燈籠上寫著「合家平安」，是大家來這裡最常求的心願。" },
       ],
 
-      // 順序：先看實物（國王宮木牌）→ 進插畫聽故事 → 回到木牌 → 環景
-      // 木牌照片是團隊實拍（IMG_6332）；正殿實景（IMG_6340、6341）之後可改成正殿開場
+      // 順序照遊客實際動線：走上正殿台階 → 前廊柱子上的國王宮木牌 → 進插畫聽故事 → 回到木牌 → 從「入口」進殿看環景 → 神龕
+      // 木牌在正殿前廊、「入口→」標示旁邊（board-wide 照片）；環景和神龕照片是從正中間拍的，台詞提醒到現場站兩旁
       script: [
-        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "這裡是正殿，供奉我們大茅埔的「王爺公」，也就是三山國王。用手指左右拖曳畫面，或按「轉動手機看」，看看四周。" },
-        { type: "explore", pose: "point", targets: ["altar", "ceiling", "lantern"],
-          say: "找找看三個發光的地方，有一個要往右邊轉才看得到喔！",
-          done: "正殿看過一遍了！殿裡還有一樣寶貝，我們走近看。" },
-        { image: "assets/photos/guowang-board.webp", focus: 20,
-          say: "就是這塊木牌，上面寫著廟最早的名字。" },
+        { image: "assets/photos/guowang-board.webp", focus: 20, pose: "wave",
+          say: "穿過中庭，走上正殿前的台階，先別急著進去。旁邊柱子上有一塊黑色木牌，上面寫著廟最早的名字。" },
         { type: "explore", pose: "point", targets: ["boardName"],
           say: "找找看，「國王宮」三個字在哪裡？",
           done: "「國王宮」就是泰興宮最早的名字。為什麼叫國王宮？我們從頭說起！" },
@@ -722,8 +715,16 @@ window.TOUR = {
         { type: "explore", pose: "point", targets: ["boardYear", "boardDonors", "houtang"],
           say: "點點看，木牌上還寫了什麼？",
           done: "一百七十多年前的事，就刻在這塊木牌上！" },
+        { pose: "point",
+          say: "故事聽完了，跟著柱子上「入口」的箭頭走進正殿。進殿要放輕腳步、小聲說話喔。" },
+        { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
+          say: "這裡是正殿，供奉我們大茅埔的「王爺公」，也就是三山國王。用手指左右拖曳畫面，或按「轉動手機看」，看看四周。" },
+        { say: "這張照片是站在正中間拍的，讓你看清楚神龕。到現場請站在兩旁看，不要擋在神明正前方，讓別人好好拜拜。" },
+        { type: "explore", pose: "point", targets: ["altar", "ceiling", "lantern"],
+          say: "找找看三個發光的地方，有一個要往右邊轉才看得到喔！",
+          done: "正殿看過一遍了！我們再走近一點看神龕。" },
         { image: "assets/photos/main-hall-altar.webp", focus: 50, pose: "wave",
-          say: "故事聽完了，走到神龕正前方。到現場記得也抬頭看看樑上的木雕！" },
+          say: "這就是正殿的神龕。站在旁邊看就好，別擋到正在拜拜的人。到現場記得也抬頭看看樑上的木雕！" },
         { type: "lookup",
           say: "現在抬頭看看正殿裡的三位王爺，比一比他們的臉色和鬍子，有什麼不一樣？" },
         { pose: "explain", say: "民國 88 年 921 大地震，庄裡的老屋全倒了，廟卻安然無恙，庄民都說是王爺公在保佑。" },
@@ -773,10 +774,11 @@ window.TOUR = {
       ],
 
       // 順序：先看眼前實景 → 進插畫聽故事 → 回到實景（神龕）
+      // TODO：請到現場確認往後殿要走正殿哪一邊（龍邊或虎邊）的拱門，再把台詞寫明
       script: [
         { scene: "pano", pano: "assets/photos/houyuan-pano.webp", panoView: { haov: 187, vaov: 80 },
           focus: { yaw: 0, pitch: 0 }, pose: "wave",
-          say: "穿過正殿，正殿後方有一座小庭園，中間這棵是桂花樹。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
+          say: "從正殿旁邊的拱門走到後面，有一座小庭園，中間這棵是桂花樹。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
         { say: "桂花開的時候，整個庭園都香香的。秋天來的話，記得聞聞看！" },
         { scene: "pano", focus: { yaw: 0, pitch: 0 }, pose: "wave",
           say: "再往前走，就是後面的中庭。用手指左右拖曳，或按「轉動手機看」，看看四周。" },
@@ -825,13 +827,14 @@ window.TOUR = {
       ready: true,
       intro: "泰興宮最裡面的化胎上種著大榕樹，樹下供奉著守護大茅埔的龍神。客家人把山叫作「龍」，龍神其實就是山神。",
       image: "assets/photos/longshen.webp",
-      // 順序：龍神（找細節、石雕）→ 龍神香位特寫與化胎 → 取水習俗 → 龍神山水祭
+      // 順序沿著「山和水」一條線：山（龍神、化胎）→ 水（取水）→ 找回來（龍神山水祭）→ 志永哥的心願
+      // 石虎、咬人貓、紙船的細節交給山水籤（籤詩 note 裡都有），這站不再逐項介紹
       stamp: "龍神",
 
       // 內容來源：中央社〈從龍神信仰變成最美慶典 大茅埔調查團找回客家根〉、臺中觀光旅遊網〈東勢大茅埔 尋龍探圳〉、
       //           教育部數位走讀〈大茅埔泰興宮〉、遠見〈大茅埔聚落的化胎龍神榕〉、客新聞〈重現東勢大茅埔古老「取水祭典」〉、維基百科〈慶東泰興宮〉、
       //           客新聞〈2025、2026 龍神山水祭〉、客家公共傳播基金會〈首屆大茅埔龍神山水祭〉
-      // TODO：兩側石雕是什麼動物、左邊貼紅紙的小屋供奉什麼，請志永哥確認後補進台詞
+      // TODO：左邊貼紅紙的小屋供奉什麼，請志永哥確認後補進台詞
       hotspots: [
         { id: "longshenSign", img: "assets/photos/longshen.webp", x: 47.5, y: 49, title: "「龍神」",
           desc: "亭子上的匾寫著「龍神」。龍神就設在泰興宮最裡面的大榕樹前，這棵榕樹本身也被當作龍神來祭拜。" },
@@ -839,16 +842,10 @@ window.TOUR = {
           desc: "樹幹上圍著紅布，代表這棵樹受到大家敬重。經過的時候，記得不要攀爬、不要折樹枝喔！" },
         { id: "banyan", img: "assets/photos/longshen.webp", x: 33, y: 18, title: "老榕樹",
           desc: "枝葉往四面八方伸展，夏天樹下特別涼快，是庄裡人休息聊天的好地方。" },
-        { id: "urticaHair", img: "assets/photos/yaorenmao.webp", x: 30, y: 49, title: "細刺：碰到會「咬人」",
-          desc: "咬人貓的莖和葉長滿細刺，碰到會又紅又刺痛。萬一碰到：不要抓、不要揉，先用清水沖洗，再用膠帶輕輕黏掉細刺。紅腫一直沒退，或出現呼吸不順、全身起疹子，請盡快就醫。" },
         { id: "huatai", img: "assets/photos/longshen-xiangwei.webp", x: 24, y: 88, title: "化胎",
           desc: "榕樹底下用土和石頭堆起來的小丘，就是「化胎」。客家人相信它把後山的龍脈引進來，象徵背後有靠山。" },
         { id: "xiangwei", img: "assets/photos/longshen-xiangwei.webp", x: 46, y: 91, title: "龍神香位",
           desc: "化胎前面這個紅磚小台，就是祭拜龍神的香位。" },
-        { id: "stoneL", img: "assets/photos/longshen.webp", x: 6.5, y: 66, title: "左邊的石雕",
-          desc: "脖子上綁著紅布的石雕。牠是什麼動物？到現場仔細看看！" },
-        { id: "stoneR", img: "assets/photos/longshen.webp", x: 86, y: 64, title: "右邊的石雕",
-          desc: "右邊也有一隻，跟左邊的是一對。" },
       ],
 
       script: [
@@ -865,43 +862,32 @@ window.TOUR = {
           right: "答對！客家人把山叫作「龍」。大茅埔庄子後面就是屋背山，拜龍神，就是把山上的靈氣引到庄裡來。" },
         { type: "lookup",
           say: "抬頭看看廟後面的屋背山，像不像一頭趴著的牛？" },
-        { type: "explore", pose: "point", targets: ["stoneL", "stoneR"],
-          say: "大樹兩邊各有一隻石雕，脖子還綁著紅布，找找看！",
-          done: "牠們是什麼動物呢？到現場看看，也可以問問庄裡的人！" },
         { image: "assets/photos/longshen-xiangwei.webp", focus: 75, pose: "point",
           say: "走近一點看。大茅埔的龍神，就安座在這棵榕樹底下。" },
         { type: "explore", pose: "point", targets: ["huatai", "xiangwei"],
           say: "上下滑一滑，找找兩個發光的地方！",
           done: "客家人蓋房子，會在屋後堆一個「化胎」，把後山的龍脈引進來。大茅埔把龍神安座在泰興宮殿後的化胎上，再種一棵枝葉茂盛的榕樹。" },
-        { image: "assets/photos/qushui.webp", focus: 50, pose: "default",
-          say: "說到山和水，大茅埔還有一個老習俗，叫作「取水」。" },
-        { pose: "explain", say: "以前庄裡有瘟疫，或是牲畜、作物出狀況，就會在神明帶領下到大甲溪取「平安水」，帶回廟埕讓大家沐浴、飲用，祈求平安。" },
+        // 志永哥是調查團成員，這段用第一人稱「我們」來說；心願出自《農村慢時光》頁 71
+        { image: "assets/photos/qushui.webp", focus: 50, pose: "explain",
+          say: "有山，也要有水。以前庄裡有瘟疫，或是牲畜、作物出狀況，就會跟著神明到大甲溪取「平安水」，帶回來讓大家沐浴、飲用，祈求平安。" },
         { type: "choice", pose: "think",
           say: "考考你：「平安水」是從哪裡取來的？",
           options: ["大甲溪", "廟裡的井", "山上的瀑布"], answer: 0,
           wrong: "提示：就是泰興宮面向的那條溪喔！",
-          right: "答對！就是大甲溪。這個習俗停了將近六十年，2020 年新冠疫情的時候，庄裡的耆老和居民又把它找了回來。" },
+          right: "答對！就是大甲溪。這個習俗斷了快六十年，2020 年庄裡的人又把它找了回來。" },
         { image: "assets/photos/shanshui-ji.webp", focus: 50, pose: "default",
-          say: "龍神信仰原本慢慢被大家淡忘。2020 年起，泰興宮和大茅埔調查團辦起「龍神山水祭」，到 2026 年已經是第 7 屆。" },
-        { pose: "explain", say: "祭典在每年年末舉辦，感謝王爺公保佑庄裡一年的豐收。最重要的活動是「尋庄繞山水」：大家跟著王爺公巡庄，經過將寮和伯公廟，繞山也繞水。" },
-        { say: "傍晚最熱鬧：大家用五種顏色的紙摺小船，代表守護庄頭的五座將寮，寫上心願放進大茅埔圳，讓願望順著水流走。" },
+          say: "這些快被忘記的山和水，我們調查團就想說：把它找回來。所以從 2020 年開始，跟泰興宮一起辦「龍神山水祭」。" },
+        { pose: "explain",
+          say: "祭典那天，大家跟著王爺公巡庄，繞山也繞水。傍晚再把寫上心願的五色紙船，放進大茅埔圳，讓願望順著水流走。" },
         { type: "choice", pose: "think",
           say: "考考你：紙船的船底塗了什麼，才不會一下子就沉下去？",
           options: ["蜂蠟", "油漆", "膠水"], answer: 0,
           wrong: "提示：是在地蜂農提供的喔！",
           right: "答對！是在地蜂農的蜂蠟。" },
-        { image: "assets/photos/shihu.webp", focus: 50,
-          say: "祭典也照顧石虎。石虎是台灣原生的小型野貓，額頭有白色條紋，大茅埔附近的淺山就有牠們出沒。" },
-        { image: "assets/photos/yaorenmao.webp", focus: 50,
-          say: "山上有一種植物叫「咬人貓」，有它的地方流浪狗不會靠近，等於是石虎的天然庇護所。所以祭典還推出咬人貓做的粄和飲料，請大家別急著把它除掉。" },
-        { type: "explore", pose: "point", targets: ["urticaHair"],
-          say: "仔細看照片，咬人貓為什麼叫「咬人」？點點看發光的地方！",
-          done: "記住了：到山上看到這種鋸齒葉子，手不要亂摸喔！" },
-        { say: "祭典現場還有「拓繪」：把布貼在樹幹上，用蠟筆輕輕抹，伯公樹、泰興宮的紋路就會印出來。伯公樹小樹苗的紋理，就是每年龍神山水祭的主視覺。" },
-        { pose: "default",
-          say: "龍神山水祭每年年末舉辦。放紙船、拓繪、彩繪四季大神臉譜，都歡迎來現場親手體驗！日期請以泰興宮和大茅埔調查團的公告為準。" },
+        { pose: "happy",
+          say: "我最大的心願，是讓山水祭像白沙屯媽祖那樣，有很多人願意來。年底有空，來跟我們一起繞山水！日期請看泰興宮和大茅埔調查團的公告。" },
         { pose: "fruit",
-          say: "回地圖右上角，可以抽一支「大茅埔山水籤」，看看金木水火土想跟你說什麼！" },
+          say: "想知道石虎和咬人貓的故事？回地圖右上角抽一支「大茅埔山水籤」，說不定就抽到喔！" },
         { pose: "happy",
           say: "龍神也拜訪過了，蓋個章！回地圖看看你收集了幾個章吧！" },
       ],

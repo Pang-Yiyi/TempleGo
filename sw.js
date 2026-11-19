@@ -1,6 +1,6 @@
 // TempleGo 離線快取
 // ⚠️ 新增或改名圖片時：把路徑加進 PRECACHE，並把 VERSION 加 1，遊客手機才會更新快取
-const VERSION = "v65";
+const VERSION = "v73";
 const CACHE = `templego-${VERSION}`;
 const FONT_CACHE = "templego-fonts";
 
@@ -55,8 +55,6 @@ const PRECACHE = [
   "assets/photos/longshen-xiangwei.webp",
   "assets/photos/qushui.webp",
   "assets/photos/shanshui-ji.webp",
-  "assets/photos/shihu.webp",
-  "assets/photos/yaorenmao.webp",
   "assets/icons/icon-192.png",
   "assets/icons/favicon.png",
   "https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css",
