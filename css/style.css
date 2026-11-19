@@ -515,6 +515,13 @@ h1 {
 }
 .qian-top { display: flex; align-items: center; gap: 10px; padding: max(8px, env(safe-area-inset-top)) 12px 8px; }
 .qian-top h2 { margin: 0; font: 600 18px var(--serif); letter-spacing: .08em; }
+.sfx-btn {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 12px;
+  border: 1px solid var(--glass-line); border-radius: 18px; background: var(--glass); color: #fff;
+  font: 500 14px var(--sans); cursor: pointer;
+}
+.sfx-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.sfx-btn span { font-size: 16px; }
 .qian-stage {
   flex: 1; min-height: 0; overflow-y: auto;
   display: flex; flex-direction: column; align-items: center;
