@@ -229,7 +229,7 @@
       <p class="note">導覽內容參考：邱民雄〈大茅埔泰興宮三山國王〉、徐登志〈犒將〉（教育部臺灣客語辭典）、《茅埔成庄》（臺中市文化局）、農業部〈我的幸福小地方〉、維基百科〈慶東泰興宮〉、東勢後生添手團〈泰興宮裝置藝術調查〉。</p>
       <p class="note">導覽員介紹：逢甲大學人文社會學院《農村慢時光：東勢大茅埔的農業故事》（2025）。</p>
       <p class="note">志永哥的語音是用本人現場錄音當樣本，以 AI（F5-TTS）合成，不是本人逐句錄製。</p>
-      <p class="note">求籤音效（CC0，經剪輯）：搖籤筒取自 al.barbosa〈<a href="https://freesound.org/s/149070/" target="_blank" rel="noopener">Ama Temple Ceremony with Omikuji</a>〉（澳門媽閣廟）；出籤取自 Rvgerxini〈<a href="https://freesound.org/s/462109/" target="_blank" rel="noopener">Dropping pencil</a>〉；擲筊取自 kingsrow〈<a href="https://freesound.org/s/194692/" target="_blank" rel="noopener">PieceofWood05</a>〉〈<a href="https://freesound.org/s/194695/" target="_blank" rel="noopener">PieceofWood06</a>〉。磬聲與翻紙聲為程式合成。</p>`;
+      <p class="note">求籤音效（CC0，經剪輯）：搖籤筒與出籤取自 al.barbosa〈<a href="https://freesound.org/s/149070/" target="_blank" rel="noopener">Ama Temple Ceremony with Omikuji</a>〉（澳門媽閣廟）；擲筊取自 Rvgerxini〈<a href="https://freesound.org/s/462109/" target="_blank" rel="noopener">Dropping pencil</a>〉；翻紙取自 Beussa〈<a href="https://freesound.org/s/749880/" target="_blank" rel="noopener">Page turned</a>〉。磬聲為程式合成。</p>`;
   }
   $("creditsBtn").onclick = () => { renderCredits(); $("creditsSheet").hidden = false; };
   $("creditsClose").onclick = () => ($("creditsSheet").hidden = true);
@@ -1184,8 +1184,8 @@
   // ---------- 求籤音效 ----------
   // 聲音在 js/sfx.js 合成（不放音效檔）；預設關閉，免得在殿內突然出聲
   const SFX_KEY = "templego-sfx";
-  const sfx = { on: false, ctx: null, kit: null };
-  try { sfx.on = localStorage.getItem(SFX_KEY) === "1"; } catch {}
+  const sfx = { on: false, asked: false, ctx: null, kit: null };
+  try { const v = localStorage.getItem(SFX_KEY); sfx.on = v === "1"; sfx.asked = v !== null; } catch { sfx.asked = true; }
   function sfxCtx() {
     if (!sfx.on || !window.SfxKit) return null;
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -1197,7 +1197,7 @@
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       const out = c.createGain(); out.gain.value = .7; out.connect(c.destination);
       const bufs = {};
-      ["shake", "drop", "jiao"].forEach((n) => fetch(`assets/sfx/${n}.mp3`).then((r) => r.arrayBuffer())
+      ["shake", "jiao", "paper"].forEach((n) => fetch(`assets/sfx/${n}.mp3`).then((r) => r.arrayBuffer())
         .then((a) => new Promise((ok, no) => c.decodeAudioData(a, ok, no))).then((b) => { bufs[n] = b; }).catch(() => {}));
       sfx.kit = window.SfxKit(c, out, noise, bufs);
     }
@@ -1213,7 +1213,8 @@
     land: (at) => sfxPlay("pair", at),
     bell: () => sfxPlay("bell"),
     soft: () => sfxPlay("soft"),
-    paper: () => sfxPlay("paper"),
+    paper: () => { sfxPlay("hush"); sfxPlay("paper"); },
+    pick: () => sfxPlay("pick"),   // 先收掉擲筊的尾巴，籤詩出來只聽到翻紙
   };
   function renderSfxBtn() {
     const b = $("qianSfx");
@@ -1222,7 +1223,8 @@
     b.innerHTML = `<span aria-hidden="true">${sfx.on ? "🔊" : "🔇"}</span>音效`;
   }
   function setSfx(on) {
-    sfx.on = on;
+    sfx.on = on; sfx.asked = true;
+    $("sfxAsk").hidden = true;
     try { localStorage.setItem(SFX_KEY, on ? "1" : "0"); } catch {}
     renderSfxBtn();
     if (on) { SFX.bell(); toast("音效開了，在殿內記得把音量調小"); }
@@ -1232,7 +1234,10 @@
   function openQian() {
     $("qianSpeaker").textContent = T.guide.name;
     $("qianLayer").hidden = false;
+    sfxCtx();   // 趁這次點擊先準備好聲音（iOS 要在點擊當下才能啟動），錄音也先開始載入
     qianPick();
+    // 第一次進來問一次要不要開音效；選過就記住，之後用右上角的開關
+    if (!sfx.asked) $("sfxAsk").hidden = false;
   }
   // 先選籤筒：山水籤或藥籤新解（沒有藥籤資料就直接進山水籤）
   function qianPick() {
@@ -1263,6 +1268,8 @@
         picks.forEach((x) => { x.disabled = true; x.classList.toggle("off", x !== b); });
         b.classList.add("chosen");
         b.querySelector(".tube").classList.add("shaking");
+        $("sfxAsk").hidden = true;   // 沒回答就直接選籤筒：先收起來，下次進來再問
+        SFX.pick();
         buzz(30);
         setTimeout(() => qianStart(b.dataset.k === "lao" ? L : Y), matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 750);
       };
@@ -1277,7 +1284,7 @@
   function qianIntro() {
     const last = qian.introStep >= K.intro.length - 1;
     qSay(K.intro[qian.introStep]);
-    qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "繼續聽"}</button>`);
+    qStage(`${tubeSvg()}<button class="btn primary" id="qNext">${last ? "我要求籤" : "然後呢？"}</button>`);
     $("qNext").onclick = () => {
       if (last) return K === Y && qian.born === null ? qianBorn() : qianShake();
       qian.introStep++;
@@ -1694,6 +1701,8 @@
   $("qianClose").onclick = qClose;
   renderSfxBtn();
   $("qianSfx").onclick = () => setSfx(!sfx.on);
+  $("sfxYes").onclick = () => setSfx(true);
+  $("sfxNo").onclick = () => setSfx(false);
   // iOS 要在點擊當下才能啟動聲音：在求籤畫面點任何地方都先喚醒一次，之後搖手機才出得了聲
   ["touchend", "click"].forEach((ev) => $("qianLayer").addEventListener(ev, () => sfxCtx(), { passive: true }));
 

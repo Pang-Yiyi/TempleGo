@@ -1,6 +1,6 @@
 // 求籤音效
-// 搖籤、出籤、擲筊用真實錄音（assets/sfx/，Freesound CC0，來源見「照片與資料來源」）；
-// 磬聲、翻紙用 Web Audio 合成。錄音還沒載入完時，先用合成的敲擊聲代替
+// 搖籤、出籤（同一段搖籤錄音裡的單聲）、擲筊、翻紙用真實錄音（assets/sfx/，Freesound CC0，來源見「照片與資料來源」）；
+// 磬聲用 Web Audio 合成。錄音還沒載入完時，先用合成的聲音代替
 // SfxKit(ctx, out, noise, buf) 回傳一組函式，每個都吃「從幾秒開始」t（AudioContext 時間）；buf 是載入好的錄音
 window.SfxKit = (c, out, noise, buf = {}) => {
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -8,12 +8,17 @@ window.SfxKit = (c, out, noise, buf = {}) => {
   const HITS = [.103, .422, .758, .948, 1.073, 1.375, 1.7, 2.031];
   const grain = (t, vol) => sample("shake", t, { from: HITS[Math.floor(Math.random() * HITS.length)], dur: .13, vol });
 
+  // 正在播的錄音：換畫面時要能收掉，免得上一段的尾巴拖到下一個畫面
+  const playing = new Set();
   // 播一段錄音；沒載入就回傳 false
   function sample(name, t, { from = 0, dur = 0, vol = 1 } = {}) {
     const b = buf[name];
     if (!b) return false;
     const src = c.createBufferSource(); src.buffer = b;
     const g = c.createGain();
+    const item = { src, g };
+    playing.add(item);
+    src.onended = () => playing.delete(item);
     g.gain.setValueAtTime(vol, t);
     if (dur) { g.gain.setValueAtTime(vol, t + Math.max(0, dur - .05)); g.gain.linearRampToValueAtTime(0, t + dur); }
     src.connect(g).connect(out);
@@ -68,6 +73,13 @@ window.SfxKit = (c, out, noise, buf = {}) => {
   const block = (f) => [[f, 10, 1], [f * 2.3, 11, .55], [f * 3.9, 8, .3]];
 
   return {
+    // 收掉還在播（或排好還沒播）的錄音
+    hush(t) {
+      for (const { src, g } of playing) {
+        try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + .04); src.stop(t + .05); } catch {}
+      }
+      playing.clear();
+    },
     // 搖一下籤筒：籤筒換方向時一群竹籤撞在一起（前面最密），加上撞到筒壁的低一點的聲音
     // power 0~1：搖得越用力，碰撞越多、越大聲
     rattle(t, power = .5) {
@@ -87,9 +99,25 @@ window.SfxKit = (c, out, noise, buf = {}) => {
         if (!grain(t + k * .14 + .01, rnd(.7, 1))) this.rattle(t + k * .14 + .01, .5);
       }
     },
-    // 一支籤掉到桌上：「喀啦啦」彈三四下
+    // 在供桌上點籤筒：籤筒底座「叩」一聲（木頭聲濾掉高音，聽起來比筊悶），竹籤跟著晃（CSS 晃 5 下，每 .14 秒）
+    pick(t) {
+      if (buf.jiao) {
+        const src = c.createBufferSource(); src.buffer = buf.jiao;
+        const lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1400;
+        const g = c.createGain();
+        g.gain.setValueAtTime(1.1, t); g.gain.setValueAtTime(1.1, t + .1); g.gain.linearRampToValueAtTime(0, t + .14);
+        src.connect(lp).connect(g).connect(out);
+        src.start(t, 0, .15);
+      } else hit(t, [[420, 6, 1], [1100, 9, .45]], .8);
+      for (let k = 1; k <= 5; k++) grain(t + k * .14 + .01, rnd(.22, .34));
+    },
+    // 一支籤掉到桌上：用搖籤錄音裡竹籤的「喀」（比筊輕、比較尖，才不會聽成擲筊），落地一聲、彈起再落一聲
+    // 時間對齊 CSS stickDrop：t 落地，t + .234 第二次落地
     drop(t) {
-      if (sample("drop", t - .019, { vol: .9 })) return;   // 錄音第一聲在 0.019 秒；第二聲（彈一下）在 0.254 秒
+      if (sample("shake", t - .005, { from: .758, dur: .12, vol: 1 })) {
+        sample("shake", t + .229, { from: 1.073, dur: .1, vol: .45 });
+        return;
+      }
       const f = rnd(1600, 1800);
       [[0, 1], [.065, .45], [.11, .25], [.145, .12]].forEach(([d, v], i) => {
         hit(t + d, stick(f * rnd(.97, 1.03)), v * 1.6, { click: i ? 0 : .6 });
@@ -104,7 +132,7 @@ window.SfxKit = (c, out, noise, buf = {}) => {
     },
     // 一對筊：兩片差一點點落地
     pair(t) {
-      // 錄音：第一片 0 秒落地、第二片 0.11 秒，第一片 0.50 秒彈一下、0.60 和 0.83 秒在地上晃（CSS tossA／tossB 照這個排）
+      // 錄音（約 1 秒，用木頭落地聲排成）：第一片 0 秒落地、第二片 0.11 秒，第一片 0.50 秒彈一下、0.60 和 0.83 秒在地上晃（CSS tossA／tossB 照這個排）
       if (sample("jiao", t)) return;
       this.land(t, rnd(660, 720)); this.land(t + .08, rnd(760, 820)); },
     // 聖筊：磬聲「噹～」（不成諧音的泛音，餘音長）
@@ -119,8 +147,9 @@ window.SfxKit = (c, out, noise, buf = {}) => {
       tone(t, 523, .6, .2);
       tone(t, 523 * 2.76, .25, .05);
     },
-    // 籤詩攤開：翻紙「唰」
+    // 籤詩攤開：翻紙「唰」（錄音 0.68 秒，最響在 0.46 秒）
     paper(t) {
+      if (sample("paper", t, { vol: .9 })) return;
       hiss(t, .3, { f: 900, f2: 5200, q: .7, vol: .3, atk: .07 });
       hiss(t + .05, .18, { type: "highpass", f: 3500, vol: .1, atk: .04 });
     },

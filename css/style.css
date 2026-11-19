@@ -522,6 +522,11 @@ h1 {
 }
 .sfx-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
 .sfx-btn span { font-size: 16px; }
+.sfx-ask { z-index: 8; text-align: center; }
+.sfx-ask p { margin: 8px 0 16px; }
+.sfx-ask .btn { width: min(100%, 280px); }
+.sfx-ask .btn + .btn { margin-top: 10px; }
+.sfx-ask .sfx-ask-note { margin: 12px 0 0; font-size: 13px; color: var(--cream); opacity: .75; }
 .qian-stage {
   flex: 1; min-height: 0; overflow-y: auto;
   display: flex; flex-direction: column; align-items: center;
