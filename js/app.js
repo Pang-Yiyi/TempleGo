@@ -1181,102 +1181,35 @@
   const buzz = (ms) => { try { navigator.vibrate?.(ms); } catch {} };
 
   // ---------- 求籤音效 ----------
-  // 用 Web Audio 直接合成，不放音效檔（離線可用、沒有版權問題）；預設關閉，免得在殿內突然出聲
+  // 聲音在 js/sfx.js 合成（不放音效檔）；預設關閉，免得在殿內突然出聲
   const SFX_KEY = "templego-sfx";
-  const sfx = { on: false, ctx: null, noise: null, out: null };
+  const sfx = { on: false, ctx: null, kit: null };
   try { sfx.on = localStorage.getItem(SFX_KEY) === "1"; } catch {}
   function sfxCtx() {
-    if (!sfx.on) return null;
+    if (!sfx.on || !window.SfxKit) return null;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     if (!sfx.ctx) {
       try { sfx.ctx = new AC(); } catch { return null; }
       const c = sfx.ctx, len = c.sampleRate;
-      sfx.noise = c.createBuffer(1, len, len);
-      const d = sfx.noise.getChannelData(0);
+      const noise = c.createBuffer(1, len, len), d = noise.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-      sfx.out = c.createGain(); sfx.out.gain.value = .7; sfx.out.connect(c.destination);
+      const out = c.createGain(); out.gain.value = .7; out.connect(c.destination);
+      sfx.kit = window.SfxKit(c, out, noise);
     }
     if (sfx.ctx.state === "suspended") sfx.ctx.resume().catch(() => {});
     return sfx.ctx;
   }
-  // 濾過的雜訊：竹籤碰撞、翻紙
-  function sfxNoise(c, t, dur, { type = "bandpass", f = 3000, f2 = 0, q = 1, vol = .5, atk = .003 } = {}) {
-    const src = c.createBufferSource(); src.buffer = sfx.noise;
-    const flt = c.createBiquadFilter(); flt.type = type; flt.Q.value = q;
-    flt.frequency.setValueAtTime(f, t);
-    if (f2) flt.frequency.exponentialRampToValueAtTime(f2, t + dur);
-    const g = c.createGain();
-    g.gain.setValueAtTime(.0001, t);
-    g.gain.exponentialRampToValueAtTime(vol, t + atk);
-    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-    src.connect(flt).connect(g).connect(sfx.out);
-    src.start(t, Math.random() * .5, dur + .05);
-  }
-  function sfxTone(c, t, f, dur, { vol = .3, type = "sine", drop = 1 } = {}) {
-    const o = c.createOscillator(); o.type = type;
-    o.frequency.setValueAtTime(f, t);
-    if (drop !== 1) o.frequency.exponentialRampToValueAtTime(f * drop, t + dur);
-    const g = c.createGain();
-    g.gain.setValueAtTime(.0001, t);
-    g.gain.exponentialRampToValueAtTime(vol, t + .004);
-    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-    o.connect(g).connect(sfx.out);
-    o.start(t); o.stop(t + dur + .05);
-  }
-  // 木頭敲一下：短促的音高＋一點雜訊
-  function sfxWood(c, t, f, vol, dur = .07) {
-    sfxTone(c, t, f, dur, { vol, type: "triangle", drop: .8 });
-    sfxNoise(c, t, .03, { f: f * 2.2, q: 3, vol: vol * .7 });
-  }
+  // 播一個聲音：at = 幾秒後
+  const sfxPlay = (name, at = 0, ...args) => { const c = sfxCtx(); if (c) sfx.kit[name](c.currentTime + at, ...args); };
   const SFX = {
-    // 竹籤在筒裡互相碰撞；n 越大（搖越用力）聲音越多
-    rattle(n = 4, at = 0) {
-      const c = sfxCtx(); if (!c) return;
-      const t0 = c.currentTime + at;
-      for (let i = 0; i < n; i++) sfxWood(c, t0 + Math.random() * .13, 1500 + Math.random() * 1700, .08 + Math.random() * .1, .045);
-    },
-    // 點的抽籤：籤筒晃多久就響多久
-    rattleFor(ms) { for (let k = 0; k * 140 < ms; k++) SFX.rattle(4, k * .14); },
-    // 一支籤掉出來：「喀」，再輕彈一下
-    drop(at = 0) {
-      const c = sfxCtx(); if (!c) return;
-      const t = c.currentTime + at;
-      sfxWood(c, t, 1150, .5, .09);
-      sfxWood(c, t + .1, 1350, .16, .05);
-    },
-    // 兩片筊落地，各彈一下
-    land(at = 0) {
-      const c = sfxCtx(); if (!c) return;
-      const t = c.currentTime + at;
-      [0, .08].forEach((d, i) => {
-        sfxWood(c, t + d, 480 + i * 70, .6, .1);
-        sfxNoise(c, t + d, .06, { type: "lowpass", f: 1000, vol: .35 });
-        sfxWood(c, t + d + .12, 560 + i * 70, .18, .06);
-      });
-    },
-    // 聖筊：磬聲「噹～」（不成諧音的泛音，餘音長）
-    bell() {
-      const c = sfxCtx(); if (!c) return;
-      const t = c.currentTime, f = 988;
-      [[1, .32, 3], [2.76, .1, 1.6], [5.4, .045, .8], [8.9, .02, .4]].forEach(([r, v, d]) => sfxTone(c, t, f * r, d, { vol: v }));
-      sfxTone(c, t, f * 1.004, 2.6, { vol: .12 });   // 稍微走音的第二層，聽起來會「嗡」
-      sfxNoise(c, t, .02, { f: 4000, q: 2, vol: .15 });
-    },
-    // 笑筊、陰筊：低一點、短一點，不做成「失敗」的聲音
-    soft() {
-      const c = sfxCtx(); if (!c) return;
-      const t = c.currentTime, f = 523;
-      sfxTone(c, t, f, .6, { vol: .2 });
-      sfxTone(c, t, f * 2.76, .25, { vol: .05 });
-    },
-    // 籤詩攤開：翻紙「唰」
-    paper() {
-      const c = sfxCtx(); if (!c) return;
-      const t = c.currentTime;
-      sfxNoise(c, t, .3, { f: 900, f2: 5200, q: .7, vol: .3, atk: .07 });
-      sfxNoise(c, t + .05, .18, { type: "highpass", f: 3500, vol: .1, atk: .04 });
-    },
+    rattle: (power) => sfxPlay("rattle", 0, power),   // 搖一下；power 0~1 是力道
+    rattleFor(ms) { for (let k = 0; k * 140 < ms; k++) sfxPlay("rattle", k * .14, .5); },   // 點的抽籤：籤筒晃多久就響多久
+    drop: (at) => sfxPlay("drop", at),
+    land: (at) => sfxPlay("pair", at),
+    bell: () => sfxPlay("bell"),
+    soft: () => sfxPlay("soft"),
+    paper: () => sfxPlay("paper"),
   };
   function renderSfxBtn() {
     const b = $("qianSfx");
@@ -1382,7 +1315,7 @@
       motionListen(SHAKE, {
         onHit: (n, dev) => {
           buzz(30);
-          SFX.rattle(3 + Math.min(6, Math.round((dev - SHAKE.thresh) / 3)));
+          SFX.rattle(Math.min(1, (dev - SHAKE.thresh) / 15));
           tube.classList.remove("jolt"); void tube.getBoundingClientRect(); tube.classList.add("jolt");
           tube.style.setProperty("--lift", n * 5);
           dots[n - 1]?.classList.add("on");

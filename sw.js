@@ -1,6 +1,6 @@
 // TempleGo 離線快取
 // ⚠️ 新增或改名圖片時：把路徑加進 PRECACHE，並把 VERSION 加 1，遊客手機才會更新快取
-const VERSION = "v54";
+const VERSION = "v55";
 const CACHE = `templego-${VERSION}`;
 const FONT_CACHE = "templego-fonts";
 
@@ -11,6 +11,7 @@ const PRECACHE = [
   "css/style.css",
   "js/data.js",
   "js/app.js",
+  "js/sfx.js",
   "assets/img/guide-real-intro.webp",
   "assets/img/guide-real-default.webp",
   "assets/img/guide-real-wave.webp",

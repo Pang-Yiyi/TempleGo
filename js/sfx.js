@@ -1,0 +1,100 @@
+// 求籤音效：用 Web Audio 直接合成，不放音效檔（離線可用、沒有版權問題）
+// 敲擊聲的做法：一小段雜訊打進幾個共振頻率（木頭、竹子本身會響的頻率），再排出彈跳、晃動的節奏
+// SfxKit(ctx, out, noise) 回傳一組函式，每個都吃「從幾秒開始」t（AudioContext 時間）
+window.SfxKit = (c, out, noise) => {
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  // 一次敲擊：modes = [[頻率, Q, 音量], ...]
+  function hit(t, modes, vol, { len = .004, click = 0 } = {}) {
+    const src = c.createBufferSource(); src.buffer = noise;
+    const ex = c.createGain();
+    ex.gain.setValueAtTime(vol, t);
+    ex.gain.exponentialRampToValueAtTime(.0001, t + len);
+    src.connect(ex);
+    for (const [f, q, v] of modes) {
+      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = f; bp.Q.value = q;
+      const g = c.createGain(); g.gain.value = v * Math.sqrt(q) * 3;   // Q 越高通過的能量越少，補回來
+      ex.connect(bp).connect(g).connect(out);
+    }
+    if (click) {   // 硬東西碰到地板那一下「喀」
+      const hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 3500;
+      const g = c.createGain(); g.gain.value = click;
+      ex.connect(hp).connect(g).connect(out);
+    }
+    src.start(t, rnd(0, .5), len + .01);
+  }
+  function tone(t, f, dur, vol) {
+    const o = c.createOscillator(); o.frequency.value = f;
+    const g = c.createGain();
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + .004);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(out);
+    o.start(t); o.stop(t + dur + .05);
+  }
+  function hiss(t, dur, { type = "bandpass", f = 3000, f2 = 0, q = 1, vol = .5, atk = .003 } = {}) {
+    const src = c.createBufferSource(); src.buffer = noise;
+    const flt = c.createBiquadFilter(); flt.type = type; flt.Q.value = q;
+    flt.frequency.setValueAtTime(f, t);
+    if (f2) flt.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + atk);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    src.connect(flt).connect(g).connect(out);
+    src.start(t, rnd(0, .5), dur + .05);
+  }
+
+  // 一根竹籤：細竹片，聲音偏高、很短
+  const stick = (f) => [[f, 14, 1], [f * 1.58, 11, .5], [f * 2.4, 8, .25]];
+  // 筊：中空的木頭，聲音比較厚
+  const block = (f) => [[f, 10, 1], [f * 2.3, 11, .55], [f * 3.9, 8, .3]];
+
+  return {
+    // 搖一下籤筒：籤筒換方向時一群竹籤撞在一起（前面最密），加上撞到筒壁的低一點的聲音
+    // power 0~1：搖得越用力，碰撞越多、越大聲
+    rattle(t, power = .5) {
+      const n = Math.round(8 + power * 14);
+      for (let i = 0; i < n; i++) {
+        const dt = .13 * Math.pow(Math.random(), 1.8);
+        hit(t + dt, stick(rnd(1900, 4300)), rnd(.25, 1) * (.6 + power * .4) * (1 - dt * 3));
+      }
+      for (let i = 0; i < 2 + Math.round(power * 2); i++) {
+        hit(t + rnd(0, .05), [[rnd(380, 460), 6, 1], [rnd(1000, 1200), 9, .45]], rnd(.5, .9) * (.6 + power * .4));
+      }
+    },
+    // 一支籤掉到桌上：「喀啦啦」彈三四下
+    drop(t) {
+      const f = rnd(1600, 1800);
+      [[0, 1], [.065, .45], [.11, .25], [.145, .12]].forEach(([d, v], i) => {
+        hit(t + d, stick(f * rnd(.97, 1.03)), v * 1.6, { click: i ? 0 : .6 });
+      });
+      hit(t, [[240, 4, .5]], .6);   // 桌面「咚」一點點
+    },
+    // 一片筊落地：重重一下，接著越彈越快、越小，最後在地上晃幾下
+    land(t, f = 700) {
+      const bounces = [[0, 1], [.17, .55], [.28, .4], [.355, .28], [.405, .2], [.44, .14]];
+      bounces.forEach(([d, v], i) => hit(t + d, block(f * rnd(.98, 1.02)), v * 1.9, { click: v * .6, len: i ? .003 : .006 }));
+      for (let k = 0; k < 4; k++) hit(t + .47 + k * .028, block(f), (.1 - k * .02) * 1.9);
+    },
+    // 一對筊：兩片差一點點落地
+    pair(t) { this.land(t, rnd(660, 720)); this.land(t + .08, rnd(760, 820)); },
+    // 聖筊：磬聲「噹～」（不成諧音的泛音，餘音長）
+    bell(t) {
+      const f = 988;
+      [[1, .32, 3], [2.76, .1, 1.6], [5.4, .045, .8], [8.9, .02, .4]].forEach(([r, v, d]) => tone(t, f * r, d, v));
+      tone(t, f * 1.004, 2.6, .12);   // 稍微走音的第二層，聽起來會「嗡」
+      hiss(t, .02, { f: 4000, q: 2, vol: .15 });
+    },
+    // 笑筊、陰筊：低一點、短一點，不做成「失敗」的聲音
+    soft(t) {
+      tone(t, 523, .6, .2);
+      tone(t, 523 * 2.76, .25, .05);
+    },
+    // 籤詩攤開：翻紙「唰」
+    paper(t) {
+      hiss(t, .3, { f: 900, f2: 5200, q: .7, vol: .3, atk: .07 });
+      hiss(t + .05, .18, { type: "highpass", f: 3500, vol: .1, atk: .04 });
+    },
+  };
+};
